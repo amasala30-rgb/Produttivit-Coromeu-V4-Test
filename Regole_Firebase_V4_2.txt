@@ -1,0 +1,65 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function authorized() {
+      return request.auth != null && request.auth.uid in [
+        'ZE3YtwFtAgfQkK4Fqic6pWfJre42',
+        'GM8UHnoiMdShIEaw9g4sa8UaefH2',
+        'el0dBvUTjHegNj9bJu6qFoUJ9vi1',
+        'DE7NcoFEuUQZx7vRliB1ANA8cdg2'
+      ];
+    }
+    function logPath(day, auditId) {
+      return /databases/$(database)/documents/giornate/$(day)/modifiche/$(auditId);
+    }
+    function parentPath(day) {
+      return /databases/$(database)/documents/giornate/$(day);
+    }
+    function validLog(day, auditId) {
+      return auditId is string && auditId.size() > 0
+        && !exists(logPath(day, auditId))
+        && getAfter(logPath(day, auditId)).data.uid == request.auth.uid
+        && getAfter(logPath(day, auditId)).data.day == day
+        && getAfter(logPath(day, auditId)).data.auditId == auditId;
+    }
+    function parentAudit(day) {
+      return getAfter(parentPath(day)).data.lastAuditId is string
+        && validLog(day, getAfter(parentPath(day)).data.lastAuditId);
+    }
+    match /giornate/{day} {
+      allow read: if authorized();
+      allow create, update: if authorized()
+        && request.resource.data.date == day
+        && request.resource.data.lastAuditId is string
+        && validLog(day, request.resource.data.lastAuditId);
+      allow delete: if false;
+      match /presenze/{employee} {
+        allow read: if authorized();
+        allow create, update: if authorized()
+          && request.resource.data.auditId is string
+          && parentAudit(day)
+          && request.resource.data.auditId == getAfter(parentPath(day)).data.lastAuditId;
+        allow delete: if false;
+      }
+      match /note/{noteId} {
+        allow read: if authorized();
+        allow create: if authorized()
+          && request.resource.data.uid == request.auth.uid
+          && request.resource.data.auditId is string
+          && parentAudit(day)
+          && request.resource.data.auditId == getAfter(parentPath(day)).data.lastAuditId;
+        allow update, delete: if false;
+      }
+      match /modifiche/{auditId} {
+        allow read: if authorized();
+        allow create: if authorized()
+          && request.resource.data.uid == request.auth.uid
+          && request.resource.data.day == day
+          && request.resource.data.auditId == auditId
+          && request.resource.data.at is string
+          && request.resource.data.action is string;
+        allow update, delete: if false;
+      }
+    }
+  }
+}
