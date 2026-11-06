@@ -11,7 +11,7 @@
 <div class="card"><h2>Riepilogo automatico</h2><div class="metric-grid"><div class="metric"><b id="sum-hours">0 h 00</b><span>Ore lavorate</span></div><div class="metric"><b id="sum-kg">0,00</b><span>Kg totali</span></div><div class="metric"><b id="sum-prod">—</b><span>Kg per ora lavorata</span></div><div class="metric"><b id="sum-workers">0</b><span>Dipendenti presenti</span></div></div><p id="form-error" class="error"></p><div class="actions"><button id="save" class="btn">Salva e invia PDF</button><button id="reset" class="btn alt">Nuova giornata</button></div></div></section>
 <section id="report" class="hidden"><div class="card"><h2>Report produttività</h2><label for="period">Periodo</label><select id="period"><option value="day">Giornaliero</option><option value="week">Settimanale progressivo</option><option value="month">Mensile progressivo</option><option value="year">Annuale progressivo</option></select><label for="reference">Data di riferimento (fino a questo giorno)</label><input type="date" id="reference"><div id="report-content"></div><div class="actions"><button id="print" class="btn">🖨️ Stampa / PDF</button><button id="share" class="btn alt">📲 Condividi PDF</button></div><p class="muted">Su iPhone, da Stampa puoi salvare il PDF tramite Condividi → Salva su File. La condivisione PDF diretta dipende dal browser; in alternativa condividi il riepilogo testuale.</p></div></section>
 <section id="venduto" class="hidden"><div class="card"><h2>🛒 Produttività del venduto</h2><p class="muted">Calcolo indipendente dalla lavorazione. Le ore di pulizia e sanificazione non vengono sottratte.</p><label for="sales-period">Periodo</label><select id="sales-period"><option value="day">Giornata</option><option value="week">Settimana progressiva</option><option value="month">Mese progressivo</option></select><label for="sales-reference">Data di riferimento</label><input id="sales-reference" type="date"><div id="sales-report-content"></div><button id="sales-pdf" class="btn" style="width:100%;background:#137d4b">🖨️ Stampa / Salva PDF del venduto</button></div></section><section id="storico" class="hidden"><div class="card"><h2>Storico giornate</h2><div id="history"></div></div></section>
-<section id="personale" class="hidden"><div class="card"><h2>Anagrafica dipendenti</h2><p class="muted">Aggiungi qui i nominativi una sola volta: compariranno ogni giorno nel modulo presenze.</p><label for="new-name">Nome e cognome</label><input id="new-name" placeholder="Nome Cognome"><div class="actions"><button id="add-person" class="btn">Aggiungi dipendente</button></div><div id="names"></div></div><div class="card"><h2>Backup dati</h2><p class="notice">I dati condivisi sono salvati su Firebase. Per sicurezza esporta periodicamente una copia JSON. Il ripristino locale non modifica Firebase.</p><div class="actions"><button id="export" class="btn">Esporta backup JSON</button><label class="btn alt" style="text-align:center;margin:0;cursor:pointer">Importa copia locale (non Firebase)<input id="import" type="file" accept="application/json,.json" style="display:none"></label></div></div></section></main><footer>Produttività Coromeu · Versione 4.17.2 · Archivio condiviso Firebase</footer><div id="print-area"></div><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script><script>
+<section id="personale" class="hidden"><div class="card"><h2>Anagrafica dipendenti</h2><p class="muted">Aggiungi qui i nominativi una sola volta: compariranno ogni giorno nel modulo presenze.</p><label for="new-name">Nome e cognome</label><input id="new-name" placeholder="Nome Cognome"><div class="actions"><button id="add-person" class="btn">Aggiungi dipendente</button></div><div id="names"></div></div><div class="card"><h2>Backup dati</h2><p class="notice">I dati condivisi sono salvati su Firebase. Per sicurezza esporta periodicamente una copia JSON. Il ripristino locale non modifica Firebase.</p><div class="actions"><button id="export" class="btn">Esporta backup JSON</button><label class="btn alt" style="text-align:center;margin:0;cursor:pointer">Importa copia locale (non Firebase)<input id="import" type="file" accept="application/json,.json" style="display:none"></label></div></div></section></main><footer>Produttività Coromeu · Versione 4.17.3 · Archivio condiviso Firebase</footer><div id="print-area"></div><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script><script>
 const PHASE_KEYS=['filoni_tonno_estratti','filoni_spada_estratti','filoni_tonno','filoni_spada','filoni_tonno_pesati','filoni_spada_pesati','burger_bistecche','bottarga'];
 const PHASE_NAMES={'filoni_tonno_estratti':'Estrazione tonno','filoni_spada_estratti':'Estrazione spada','filoni_tonno':'Siringatura/confezionamento tonno','filoni_spada':'Siringatura/confezionamento spada','filoni_tonno_pesati':'Pesatura/etichettatura tonno','filoni_spada_pesati':'Pesatura/etichettatura spada','burger_bistecche':'Burger e bistecche','bottarga':'Bottarga grattugiata e in baffa'};
 
@@ -255,7 +255,50 @@ function salesSummary(){const ref=$('sales-reference').value||today(),type=$('sa
 function salesReportHTML(s){return '<p class="muted">Dal '+escape(s.from)+' al '+escape(s.ref)+' · '+s.days.length+' giornate registrate</p><div class="metric-grid"><div class="metric"><b>'+fmt(s.kg)+' kg</b><span>Totale kg venduti</span></div><div class="metric"><b>'+hfmt(s.minutes)+'</b><span>Ore lavorate valide</span></div><div class="metric"><b>'+(s.rate===null?'—':fmt(s.rate)+' kg/h')+'</b><span>Produttività del venduto</span></div></div>'+(s.minutes===0?'<p class="notice">Nessuna ora valida nel periodo: la produttività non è calcolabile.</p>':'')}
 function renderSalesReport(){$('sales-report-content').innerHTML=salesReportHTML(salesSummary())}
 $('sales-reference').value=today();$('sales-reference').addEventListener('change',renderSalesReport);$('sales-period').addEventListener('change',renderSalesReport);
-$('sales-pdf').onclick=()=>{const s=salesSummary();$('print-area').innerHTML='<h1>COROMEU · PRODUTTIVITÀ DEL VENDUTO</h1><h2>Report '+({day:'giornaliero',week:'settimanale',month:'mensile'}[s.type])+'</h2><p>Periodo: '+escape(s.from)+' — '+escape(s.ref)+'</p><table><tr><th>Kg venduti</th><th>Ore lavorate valide</th><th>Produttività</th></tr><tr><td>'+fmt(s.kg)+' kg</td><td>'+hfmt(s.minutes)+'</td><td>'+(s.rate===null?'—':fmt(s.rate)+' kg/ora')+'</td></tr></table><p class="foot">Le ore di pulizia e sanificazione non sono sottratte. Documento distinto dal report lavorazione.</p>';window.print()};
+// V4.17.3: PDF venduto generato direttamente, senza finestra di stampa iOS.
+function makeSalesPDF(s){
+ const clean=v=>String(v??'').normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^\x20-\x7e]/g,' ');
+ const esc=v=>clean(v).replace(/\\/g,'\\\\').replace(/\(/g,'\\(').replace(/\)/g,'\\)');
+ const cmds=[];
+ const navy='0.063 0.176 0.224',teal='0.03 0.48 0.50',muted='0.38 0.44 0.49';
+ function txt(value,x,y,size=12,bold=false,color=navy){cmds.push(color+' rg BT /'+(bold?'F2':'F1')+' '+size+' Tf '+x+' '+y+' Td ('+esc(value)+') Tj ET')}
+ function rect(x,y,w,h,color){cmds.push(color+' rg '+x+' '+y+' '+w+' '+h+' re f')}
+ rect(0,775,595,67,navy);
+ txt('COROMEU  /  PRODUTTIVITA DEL VENDUTO',34,802,17,true,'1 1 1');
+ const period={day:'GIORNALIERO',week:'SETTIMANALE',month:'MENSILE'}[s.type]||'REPORT';
+ txt('REPORT '+period,35,785,9,false,'0.72 0.9 0.9');
+ txt('Periodo: '+s.from+'  -  '+s.ref,36,740,13,true);
+ txt('Giornate registrate: '+s.days.length,36,715,10,false,muted);
+ const values=[['KG VENDUTI',fmt(s.kg)+' kg'],['ORE LAVORATE VALIDE',hfmt(s.minutes)],['PRODUTTIVITA',s.rate===null?'--':fmt(s.rate)+' kg/ora']];
+ values.forEach((v,i)=>{let y=624-i*105;rect(35,y,525,88,'0.92 0.96 0.96');rect(35,y,5,88,teal);txt(v[0],53,y+60,11,true,muted);txt(v[1],53,y+24,23,true,teal)});
+ txt('Calcolo: kg venduti / ore lavorate valide.',36,276,10,false);
+ txt('Le ore di pulizia e sanificazione non sono sottratte.',36,256,10,false);
+ txt('Report indipendente dalla produttivita della lavorazione.',36,236,10,false);
+ txt('Generato il '+new Date().toLocaleString('it-IT'),36,42,9,false,muted);
+ const stream=cmds.join('\n')+'\n';
+ const objects=[null],add=o=>(objects.push(o),objects.length-1);
+ const root=add(''),pages=add('');
+ const font=add('<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>');
+ const bold=add('<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>');
+ const content=add('<< /Length '+stream.length+' >>\nstream\n'+stream+'endstream');
+ const page=add('<< /Type /Page /Parent '+pages+' 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 '+font+' 0 R /F2 '+bold+' 0 R >> >> /Contents '+content+' 0 R >>');
+ objects[root]='<< /Type /Catalog /Pages '+pages+' 0 R >>';
+ objects[pages]='<< /Type /Pages /Kids ['+page+' 0 R] /Count 1 >>';
+ let pdf='%PDF-1.4\n',offsets=[0];
+ for(let i=1;i<objects.length;i++){offsets.push(pdf.length);pdf+=i+' 0 obj\n'+objects[i]+'\nendobj\n'}
+ const xref=pdf.length;
+ pdf+='xref\n0 '+objects.length+'\n0000000000 65535 f \n';
+ for(let i=1;i<objects.length;i++)pdf+=String(offsets[i]).padStart(10,'0')+' 00000 n \n';
+ pdf+='trailer\n<< /Size '+objects.length+' /Root '+root+' 0 R >>\nstartxref\n'+xref+'\n%%EOF';
+ return new Blob([pdf],{type:'application/pdf'});
+}
+$('sales-pdf').onclick=()=>{
+ try{
+  const s=salesSummary();
+  const blob=makeSalesPDF(s);
+  download('Coromeu_Venduto_'+s.type+'_'+s.ref+'.pdf',blob);
+ }catch(err){alert('Impossibile creare il PDF del venduto: '+err.message)}
+};
 const fetchCloudV416=fetchCloud;fetchCloud=async function(){await fetchCloudV416();renderSalesReport()};
 
 
