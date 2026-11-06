@@ -11,7 +11,7 @@
 <div class="card"><h2>Riepilogo automatico</h2><div class="metric-grid"><div class="metric"><b id="sum-hours">0 h 00</b><span>Ore lavorate</span></div><div class="metric"><b id="sum-kg">0,00</b><span>Kg totali</span></div><div class="metric"><b id="sum-prod">—</b><span>Kg per ora lavorata</span></div><div class="metric"><b id="sum-workers">0</b><span>Dipendenti presenti</span></div></div><p id="form-error" class="error"></p><div class="actions"><button id="save" class="btn">Salva e invia PDF</button><button id="reset" class="btn alt">Nuova giornata</button></div></div></section>
 <section id="report" class="hidden"><div class="card"><h2>Report produttività</h2><label for="period">Periodo</label><select id="period"><option value="day">Giornaliero</option><option value="week">Settimanale progressivo</option><option value="month">Mensile progressivo</option><option value="year">Annuale progressivo</option></select><label for="reference">Data di riferimento (fino a questo giorno)</label><input type="date" id="reference"><div id="report-content"></div><div class="actions"><button id="print" class="btn">🖨️ Stampa / PDF</button><button id="share" class="btn alt">📲 Condividi PDF</button></div><p class="muted">Su iPhone, da Stampa puoi salvare il PDF tramite Condividi → Salva su File. La condivisione PDF diretta dipende dal browser; in alternativa condividi il riepilogo testuale.</p></div></section>
 <section id="venduto" class="hidden"><div class="card"><h2>🛒 Produttività del venduto</h2><p class="muted">Calcolo indipendente dalla lavorazione. Le ore di pulizia e sanificazione non vengono sottratte.</p><label for="sales-period">Periodo</label><select id="sales-period"><option value="day">Giornata</option><option value="week">Settimana progressiva</option><option value="month">Mese progressivo</option></select><label for="sales-reference">Data di riferimento</label><input id="sales-reference" type="date"><div id="sales-report-content"></div><button id="sales-pdf" class="btn" style="width:100%;background:#137d4b">🖨️ Stampa / Salva PDF del venduto</button></div></section><section id="storico" class="hidden"><div class="card"><h2>Storico giornate</h2><div id="history"></div></div></section>
-<section id="personale" class="hidden"><div class="card"><h2>Anagrafica dipendenti</h2><p class="muted">Aggiungi qui i nominativi una sola volta: compariranno ogni giorno nel modulo presenze.</p><label for="new-name">Nome e cognome</label><input id="new-name" placeholder="Nome Cognome"><div class="actions"><button id="add-person" class="btn">Aggiungi dipendente</button></div><div id="names"></div></div><div class="card"><h2>Backup dati</h2><p class="notice">I dati condivisi sono salvati su Firebase. Per sicurezza esporta periodicamente una copia JSON. Il ripristino locale non modifica Firebase.</p><div class="actions"><button id="export" class="btn">Esporta backup JSON</button><label class="btn alt" style="text-align:center;margin:0;cursor:pointer">Importa copia locale (non Firebase)<input id="import" type="file" accept="application/json,.json" style="display:none"></label></div></div></section></main><footer>Produttività Coromeu · Versione 4.17.3 · Archivio condiviso Firebase</footer><div id="print-area"></div><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script><script>
+<section id="personale" class="hidden"><div class="card"><h2>Anagrafica dipendenti</h2><p class="muted">Aggiungi qui i nominativi una sola volta: compariranno ogni giorno nel modulo presenze.</p><label for="new-name">Nome e cognome</label><input id="new-name" placeholder="Nome Cognome"><div class="actions"><button id="add-person" class="btn">Aggiungi dipendente</button></div><div id="names"></div></div><div class="card"><h2>Backup dati</h2><p class="notice">I dati condivisi sono salvati su Firebase. Per sicurezza esporta periodicamente una copia JSON. Il ripristino locale non modifica Firebase.</p><div class="actions"><button id="export" class="btn">Esporta backup JSON</button><label class="btn alt" style="text-align:center;margin:0;cursor:pointer">Importa copia locale (non Firebase)<input id="import" type="file" accept="application/json,.json" style="display:none"></label></div></div></section></main><footer>Produttività Coromeu · Versione 4.17.4 · Archivio condiviso Firebase</footer><div id="print-area"></div><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script><script>
 const PHASE_KEYS=['filoni_tonno_estratti','filoni_spada_estratti','filoni_tonno','filoni_spada','filoni_tonno_pesati','filoni_spada_pesati','burger_bistecche','bottarga'];
 const PHASE_NAMES={'filoni_tonno_estratti':'Estrazione tonno','filoni_spada_estratti':'Estrazione spada','filoni_tonno':'Siringatura/confezionamento tonno','filoni_spada':'Siringatura/confezionamento spada','filoni_tonno_pesati':'Pesatura/etichettatura tonno','filoni_spada_pesati':'Pesatura/etichettatura spada','burger_bistecche':'Burger e bistecche','bottarga':'Bottarga grattugiata e in baffa'};
 
@@ -292,11 +292,24 @@ function makeSalesPDF(s){
  pdf+='trailer\n<< /Size '+objects.length+' /Root '+root+' 0 R >>\nstartxref\n'+xref+'\n%%EOF';
  return new Blob([pdf],{type:'application/pdf'});
 }
-$('sales-pdf').onclick=()=>{
+$('sales-pdf').onclick=async()=>{
  try{
   const s=salesSummary();
   const blob=makeSalesPDF(s);
-  download('Coromeu_Venduto_'+s.type+'_'+s.ref+'.pdf',blob);
+  const filename='Coromeu_Venduto_'+s.type+'_'+s.ref+'.pdf';
+  const file=new File([blob],filename,{type:'application/pdf'});
+  // Su iPhone il menu Condividi consente di scegliere Salva su File.
+  if(navigator.share && navigator.canShare?.({files:[file]})){
+   try{
+    await navigator.share({files:[file],title:'Produttivita Coromeu - Venduto'});
+    return;
+   }catch(err){if(err.name==='AbortError')return;}
+  }
+  // Ripiego: prova ad aprire l'anteprima PDF; se bloccata, scarica il file.
+  const url=URL.createObjectURL(blob);
+  const preview=window.open(url,'_blank');
+  if(!preview){download(filename,blob);alert('PDF generato. Controlla i download di Safari.');}
+  setTimeout(()=>URL.revokeObjectURL(url),60000);
  }catch(err){alert('Impossibile creare il PDF del venduto: '+err.message)}
 };
 const fetchCloudV416=fetchCloud;fetchCloud=async function(){await fetchCloudV416();renderSalesReport()};
