@@ -748,4 +748,93 @@ function impPrintPDF(){
  document.querySelector('footer').textContent='Produttività Coromeu · Versione 4.18.5 PROVA · Archivio condiviso Firebase';
  const title=$('imp-panel').querySelector('summary');if(title)title.textContent='👥 Impiego del personale · V4.18.5';
 })();
+
+// V4.18.6 - Modulo di attribuzione direttamente sotto ogni dipendente.
+// Non modifica le presenze ufficiali né la struttura Firebase.
+const impVisualRenderV4185=impVisualRender;
+let impInlineOpen=null;
+function impInlineSave(name,form){
+ const date=form.querySelector('[data-inline-date]').value;
+ const type=form.querySelector('[data-inline-type]').value;
+ const custom=form.querySelector('[data-inline-custom]').value.trim();
+ const mode=form.querySelector('[data-inline-mode]').value;
+ if(!date)return alert('Seleziona la data della lavorazione.');
+ if(type==='altro'&&!custom)return alert('Specifica la lavorazione.');
+ const day=impVisualDay(date).find(p=>p.name.toLocaleLowerCase('it')===name.toLocaleLowerCase('it'));
+ if(!day||day.net<=0)return alert('Nessuna ora netta registrata per questa giornata.');
+ let row={name,type,custom,createdAt:new Date().toISOString()};
+ if(mode==='duration'){
+  const hours=Number(form.querySelector('[data-inline-hours]').value||0);
+  const minutes=Number(form.querySelector('[data-inline-minutes]').value||0);
+  if(!Number.isInteger(hours)||hours<0||!Number.isInteger(minutes)||minutes<0||minutes>59)return alert('Inserisci ore e minuti validi.');
+  const duration=hours*60+minutes;
+  if(duration<=0)return alert('Inserisci una durata superiore a zero.');
+  const available=Math.round((day.classified['Da verificare']||0)+(day.classified.Ufficio||0));
+  if(duration>available)return alert('Tempo disponibile: '+hfmt(available)+'.');
+  row={...row,mode:'duration',duration};
+ }else{
+  const start=form.querySelector('[data-inline-start]').value;
+  const end=form.querySelector('[data-inline-end]').value;
+  const interval=crewIntervals(start,end);
+  if(!interval||interval[1]<=interval[0])return alert('Inserisci orari di inizio e fine validi.');
+  const person=db.days[date]?.people?.[name]||(date===($('date').value||today())?readForm().people[name]:null);
+  const shiftRange=person?crewIntervals(person.in,person.out):null;
+  if(shiftRange&&(interval[0]<shiftRange[0]||interval[1]>shiftRange[1]))return alert('La lavorazione deve rientrare nell’orario di presenza.');
+  const available=Math.round((day.classified['Da verificare']||0)+(day.classified.Ufficio||0));
+  if(interval[1]-interval[0]>available)return alert('Tempo residuo insufficiente: '+hfmt(available)+'.');
+  row={...row,start,end};
+ }
+ const key=IMP_KEY+'-'+date;
+ let rows=[];try{rows=JSON.parse(localStorage.getItem(key)||'[]')}catch(e){}
+ if(!Array.isArray(rows))rows=[];
+ rows.push(row);
+ try{localStorage.setItem(key,JSON.stringify(rows))}catch(e){return alert('Salvataggio non riuscito: controlla lo spazio disponibile.');}
+ impInlineOpen=null;
+ if(date===($('date').value||today()))impLoad();
+ impVisualRender();impDurationList();
+ $('imp-duration-status').textContent='Lavorazione salvata per '+name+' il '+date+'.';
+}
+impVisualRender=function(){
+ impVisualRenderV4185();
+ const cards=[...($('imp-visual')?.children||[])];
+ const people=impVisualRange();
+ people.forEach((p,i)=>{
+  const card=cards[i];if(!card||p.net<=0)return;
+  // Nascondi il vecchio pulsante che portava al modulo generale.
+  [...card.querySelectorAll('button')].filter(b=>b.textContent.includes('Assegna tempo da verificare')).forEach(b=>b.remove());
+  const button=document.createElement('button');button.type='button';button.className='btn alt';
+  button.style.cssText='font-size:12px;padding:9px 11px;margin-top:9px;width:100%';
+  button.textContent=impInlineOpen===p.name?'− Chiudi assegnazione':'+ Assegna tempo da verificare';
+  card.appendChild(button);
+  button.onclick=()=>{impInlineOpen=impInlineOpen===p.name?null:p.name;impVisualRender()};
+  if(impInlineOpen!==p.name)return;
+  const available=Math.round((p.classified['Da verificare']||0)+(p.classified.Ufficio||0));
+  const form=document.createElement('div');form.style.cssText='background:#f3f8f9;border:1px solid #d7e5e7;border-radius:9px;padding:10px;margin-top:10px';
+  form.innerHTML='<strong>Nuova lavorazione · '+escape(p.name)+'</strong><p class="small">Residuo disponibile nel periodo: '+hfmt(available)+'. Per il riepilogo settimanale o mensile scegli la giornata esatta.</p>'+
+   '<label>Data lavorazione</label><input type="date" data-inline-date value="'+escape($('imp-reference').value||today())+'">'+
+   '<label>Attività</label><select data-inline-type>'+Object.entries(IMP_LABELS).map(([k,v])=>'<option value="'+escape(k)+'">'+escape(v)+'</option>').join('')+'</select>'+
+   '<div data-inline-custom-wrap class="hidden"><label>Specifica attività</label><input data-inline-custom placeholder="Descrizione lavorazione"></div>'+
+   '<label>Modalità</label><select data-inline-mode><option value="duration">Durata (ore e minuti)</option><option value="times">Orario inizio e fine</option></select>'+
+   '<div data-inline-duration class="row"><div><label>Ore</label><input type="number" min="0" step="1" inputmode="numeric" data-inline-hours value="0"></div><div><label>Minuti</label><input type="number" min="0" max="59" step="1" inputmode="numeric" data-inline-minutes value="0"></div></div>'+
+   '<div data-inline-times class="row hidden"><div><label>Inizio</label><input type="time" data-inline-start></div><div><label>Fine</label><input type="time" data-inline-end></div></div>'+
+   '<button type="button" class="btn" data-inline-save style="width:100%;margin-top:12px">Salva lavorazione</button>';
+  card.appendChild(form);
+  form.querySelector('[data-inline-type]').value='inventario';
+  form.querySelector('[data-inline-type]').onchange=()=>form.querySelector('[data-inline-custom-wrap]').classList.toggle('hidden',form.querySelector('[data-inline-type]').value!=='altro');
+  form.querySelector('[data-inline-mode]').onchange=()=>{
+   const times=form.querySelector('[data-inline-mode]').value==='times';
+   form.querySelector('[data-inline-duration]').classList.toggle('hidden',times);
+   form.querySelector('[data-inline-times]').classList.toggle('hidden',!times);
+  };
+  form.querySelector('[data-inline-save]').onclick=()=>impInlineSave(p.name,form);
+ });
+};
+(function impV4186Init(){
+ // Il modulo generale rimane disponibile per le assegnazioni già salvate,
+ // ma il comando operativo è ora presente sotto ogni barra personale.
+ const general=$('imp-assign-panel');if(general){general.open=false;general.style.display='none';}
+ const title=$('imp-panel')?.querySelector('summary');if(title)title.textContent='👥 Impiego del personale · V4.18.6';
+ document.querySelector('footer').textContent='Produttività Coromeu · Versione 4.18.6 PROVA · Archivio condiviso Firebase';
+ impVisualRender();
+})();
 </script></body></html>
