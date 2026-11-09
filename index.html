@@ -639,4 +639,113 @@ impRender=function(){
  $('date').addEventListener('change',()=>{$('imp-reference').value=$('date').value;impVisualRender()});
  impRender();
 })();
+
+// V4.18.5 - Attribuzione dei minuti non classificati e stampa PDF.
+// Le nuove assegnazioni rimangono locali, senza modificare Firebase.
+const impVisualDayV4184=impVisualDay;
+impVisualDay=function(date){
+ const result=impVisualDayV4184(date);
+ let local=[];try{local=JSON.parse(localStorage.getItem(IMP_KEY+'-'+date)||'[]')}catch(e){}
+ if(!Array.isArray(local))local=[];
+ for(const p of result){
+  p.durationOverflow=false;
+  for(const r of local.filter(r=>r.name===p.name&&r.mode==='duration')){
+   const requested=Math.max(0,Math.round(Number(r.duration)||0));
+   let left=requested;
+   for(const source of ['Da verificare','Ufficio']){
+    const used=Math.min(left,Math.max(0,p.classified[source]||0));
+    if(used){p.classified[source]-=used;left-=used;}
+   }
+   const label=r.type==='altro'?(r.custom?.trim()||'Altro'):IMP_LABELS[r.type]||r.type;
+   if(requested-left)p.classified[label]=(p.classified[label]||0)+(requested-left);
+   if(left)p.durationOverflow=true;
+  }
+ }
+ return result;
+};
+const impVisualRenderV4184=impVisualRender;
+impVisualRender=function(){
+ impVisualRenderV4184();
+ const data=impVisualRange();
+ const el=$('imp-visual');if(!el)return;
+ const children=[...el.children];
+ data.forEach((p,i)=>{
+  const card=children[i];if(!card)return;
+  if(p.net>0){
+   const btn=document.createElement('button');btn.type='button';btn.className='btn alt';
+   btn.style.cssText='font-size:12px;padding:7px 10px;margin-top:9px';
+   btn.textContent='+ Assegna tempo da verificare';
+   btn.onclick=()=>{const period=$('imp-period').value;if(period!=='day'){$('imp-period').value='day';impVisualRender();} $('imp-assign-name').value=p.name;$('imp-assign-date').value=$('imp-reference').value; $('imp-assign-panel').scrollIntoView({behavior:'smooth',block:'start'});};
+   card.appendChild(btn);
+  }
+ });
+};
+function impSaveDuration(){
+ const date=$('imp-assign-date').value,name=$('imp-assign-name').value,type=$('imp-assign-type').value;
+ const hours=Number($('imp-assign-hours').value||0),minutes=Number($('imp-assign-minutes').value||0);
+ const duration=Math.round(hours*60+minutes),custom=$('imp-assign-custom').value.trim();
+ if(!date||!name)return alert('Seleziona data e dipendente.');
+ if(!Number.isFinite(duration)||duration<=0||hours<0||minutes<0||minutes>=60)return alert('Inserisci una durata valida.');
+ if(type==='altro'&&!custom)return alert('Specifica la lavorazione.');
+ const p=impVisualDay(date).find(x=>x.name===name);
+ if(!p||p.net<=0)return alert('Non ci sono ore nette registrate per questo dipendente nella giornata.');
+ const available=Math.round((p.classified['Da verificare']||0)+(p.classified.Ufficio||0));
+ if(duration>available)return alert('Tempo disponibile: '+hfmt(available)+'. Riduci la durata per evitare il doppio conteggio.');
+ const key=IMP_KEY+'-'+date;
+ let rows=[];try{rows=JSON.parse(localStorage.getItem(key)||'[]')}catch(e){}
+ if(!Array.isArray(rows))rows=[];
+ rows.push({name,type,custom,mode:'duration',duration,createdAt:new Date().toISOString()});
+ try{localStorage.setItem(key,JSON.stringify(rows))}catch(e){return alert('Impossibile salvare sul dispositivo. Esporta un backup dei dati.');}
+ if(date===($('date').value||today()))impLoad();
+ $('imp-assign-hours').value='';$('imp-assign-minutes').value='';$('imp-assign-custom').value='';
+ impVisualRender();impDurationList();
+ $('imp-duration-status').textContent='Assegnazione salvata localmente: '+hfmt(duration)+' a '+name+' ('+date+').';
+}
+function impDurationList(){
+ const date=$('imp-assign-date').value,key=IMP_KEY+'-'+date;
+ let rows=[];try{rows=JSON.parse(localStorage.getItem(key)||'[]')}catch(e){}
+ if(!Array.isArray(rows))rows=[];
+ const el=$('imp-duration-list');if(!el)return;
+ el.innerHTML=rows.map((r,i)=>r.mode==='duration'?'<div class="list-item"><span class="small">'+escape(r.name)+' · '+escape(r.type==='altro'?(r.custom||'Altro'):(IMP_LABELS[r.type]||r.type))+' · '+hfmt(r.duration)+'</span><button class="btn warn" type="button" data-duration-remove="'+i+'">Elimina</button></div>':'').join('')||'<p class="muted">Nessuna assegnazione a durata per questa giornata.</p>';
+ el.querySelectorAll('[data-duration-remove]').forEach(btn=>btn.onclick=()=>{
+  if(!confirm('Eliminare questa assegnazione?'))return;
+  rows.splice(Number(btn.dataset.durationRemove),1);
+  localStorage.setItem(key,JSON.stringify(rows));
+  if(date===($('date').value||today()))impLoad();impVisualRender();impDurationList();
+ });
+}
+function impPrintPDF(){
+ const period=$('imp-period').value,ref=$('imp-reference').value||today();
+ const label={day:'Giornaliero',week:'Settimanale',month:'Mensile'}[period];
+ const data=impVisualRange();
+ const color=k=>IMP_COLORS[k]||'#d946a3';
+ const html='<h1>IMPIEGO PERSONALE · COROMEU</h1><p><b>Report '+label+'</b> · Data riferimento: '+escape(ref)+' · Generato: '+new Date().toLocaleString('it-IT')+'</p>'+
+ '<p>Ore nette ripartite per attività. I dati di assegnazione aggiuntivi sono salvati localmente sul dispositivo.</p>'+
+ data.map(p=>{
+  const parts=Object.entries(p.classified).filter(x=>x[1]>0),total=parts.reduce((a,x)=>a+x[1],0);
+  return '<div style="break-inside:avoid;page-break-inside:avoid;margin:14px 0;padding:9px;border:1px solid #ccd"><b>'+escape(p.name)+'</b> · '+hfmt(Math.round(p.net))+'<div style="display:flex;height:18px;overflow:hidden;margin:7px 0;background:#eee">'+parts.map(([k,v])=>'<span style="display:block;width:'+(total?100*v/total:0)+'%;background:'+color(k)+'"></span>').join('')+'</div><div style="font-size:11px">'+(parts.map(([k,v])=>'<span style="display:inline-block;margin:3px 8px 3px 0"><b style="color:'+color(k)+'">■</b> '+escape(k)+': '+hfmt(Math.round(v))+' ('+(total?fmt(v*100/total,1):'0')+'%)</span>').join('')||'Nessuna presenza')+'</div>'+(p.overlaps?'<p>ATTENZIONE: orari sovrapposti</p>':'')+(p.durationOverflow?'<p>ATTENZIONE: durata superiore al tempo disponibile</p>':'')+'</div>';
+ }).join('');
+ $('print-area').innerHTML=html;
+ window.print();
+}
+(function impV4185Init(){
+ const target=$('imp-visual');if(!target)return;
+ const panel=document.createElement('div');panel.className='card';panel.id='imp-assign-panel';
+ panel.innerHTML='<h3>Assegna il tempo da verificare</h3><p class="muted">Inserisci una durata anche senza conoscere l’ora esatta. I minuti vengono sottratti dal tempo Da verificare (o da Ufficio per gli operatori predefiniti), senza aumentare le ore nette. Per le attività con inizio/fine usa il modulo Aggiungi assegnazione qui sopra.</p><div class="row"><div><label>Data della lavorazione</label><input id="imp-assign-date" type="date"></div><div><label>Operatore</label><select id="imp-assign-name"></select></div></div><label>Attività</label><select id="imp-assign-type"></select><div id="imp-assign-custom-wrap" class="hidden"><label>Descrizione</label><input id="imp-assign-custom" placeholder="Specifica attività"></div><div class="row"><div><label>Ore</label><input id="imp-assign-hours" type="number" min="0" step="1" value="0" inputmode="numeric"></div><div><label>Minuti (0–59)</label><input id="imp-assign-minutes" type="number" min="0" max="59" step="1" value="0" inputmode="numeric"></div></div><button type="button" class="btn" id="imp-assign-save" style="margin-top:12px;width:100%">Salva lavorazione</button><p id="imp-duration-status" class="muted"></p><h4>Assegnazioni a durata della giornata</h4><div id="imp-duration-list"></div>';
+ target.parentNode.insertBefore(panel,target.nextSibling);
+ const pdf=document.createElement('button');pdf.type='button';pdf.className='btn';pdf.id='imp-print-pdf';pdf.style.cssText='width:100%;margin:10px 0;background:#137d4b';pdf.textContent='🖨️ Stampa / Salva PDF impiego personale';
+ target.parentNode.insertBefore(pdf,target);
+ $('imp-assign-date').value=$('imp-reference').value||today();
+ $('imp-assign-name').innerHTML=db.staff.map(n=>'<option value="'+escape(n)+'">'+escape(n)+'</option>').join('');
+ $('imp-assign-type').innerHTML=Object.entries(IMP_LABELS).map(([k,v])=>'<option value="'+escape(k)+'">'+escape(v)+'</option>').join('');
+ $('imp-assign-type').value='inventario';
+ $('imp-assign-type').onchange=()=>$('imp-assign-custom-wrap').classList.toggle('hidden',$('imp-assign-type').value!=='altro');
+ $('imp-assign-date').onchange=impDurationList;
+ $('imp-assign-save').onclick=impSaveDuration;
+ $('imp-print-pdf').onclick=impPrintPDF;
+ $('imp-reference').addEventListener('change',()=>{$('imp-assign-date').value=$('imp-reference').value;impDurationList()});
+ impDurationList();impVisualRender();
+ document.querySelector('footer').textContent='Produttività Coromeu · Versione 4.18.5 PROVA · Archivio condiviso Firebase';
+ const title=$('imp-panel').querySelector('summary');if(title)title.textContent='👥 Impiego del personale · V4.18.5';
+})();
 </script></body></html>
