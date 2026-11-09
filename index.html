@@ -495,16 +495,37 @@ function impDateKey(){return IMP_KEY+'-'+($('date').value||today())}
 function impLoad(){try{const x=JSON.parse(localStorage.getItem(impDateKey())||'[]');impRows=Array.isArray(x)?x:[]}catch{impRows=[]}impRender()}
 function impPersist(){try{localStorage.setItem(impDateKey(),JSON.stringify(impRows));$('imp-status').textContent='Bozza salvata su questo dispositivo alle '+new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'})}catch(e){$('imp-status').textContent='Salvataggio locale non riuscito: esporta un backup'}}
 function impMin(a,b){const r=crewIntervals(a,b);return r&&r[1]>r[0]?r[1]-r[0]:0}
+function impHistoricalRows(){
+ const date=$('date').value||today(),day=db.days[date];
+ const phase=day?.phaseTimes||{};
+ const found=[],seen=new Set();
+ for(const key of CREW_KEYS){
+  const keys=CREW_GROUPS[key],all=[];
+  for(const k of keys)for(const r of (phase[k]?.operators||[]))all.push(r);
+  for(const r of all){
+   if(!r?.name)continue;
+   const signature=[key,r.name,r.start||'',r.end||''].join('|');
+   if(seen.has(signature))continue;
+   seen.add(signature);
+   found.push({name:r.name,type:key,start:r.start||'',end:r.end||'',source:'storico'});
+  }
+ }
+ return found;
+}
 function impAnalyze(){
- const people=readForm().people, names=new Set([...Object.keys(people),...impRows.map(r=>r.name).filter(Boolean)]);
+ const date=$('date').value||today(),day=db.days[date];
+ const people=day?.people||readForm().people;
+ const historical=impHistoricalRows();
+ const allRows=[...historical,...impRows];
+ const names=new Set([...Object.keys(people),...allRows.map(r=>r.name).filter(Boolean)]);
  return [...names].sort((a,b)=>a.localeCompare(b,'it')).map(name=>{
   const p=people[name]||{},shiftRange=crewIntervals(p.in,p.out),net=Number(p.minutes)||0;
-  const rows=impRows.filter(r=>r.name===name&&r.start&&r.end);
+  const rows=allRows.filter(r=>r.name===name&&r.start&&r.end);
   const intervals=rows.map(r=>({r,iv:crewIntervals(r.start,r.end)})).filter(x=>x.iv&&x.iv[1]>x.iv[0]);
   let overlap=false,outside=false,assigned=0;
   intervals.forEach((x,i)=>{assigned+=x.iv[1]-x.iv[0];if(shiftRange&&(x.iv[0]<shiftRange[0]||x.iv[1]>shiftRange[1]))outside=true;for(let j=0;j<i;j++)if(crewOverlap(x.iv,intervals[j].iv)>0)overlap=true});
   const classified=intervals.reduce((acc,x)=>{const label=x.r.type==='altro'?(x.r.custom||'Altra lavorazione'):IMP_LABELS[x.r.type]||x.r.type;acc[label]=(acc[label]||0)+x.iv[1]-x.iv[0];return acc},{});
-  return {name,net,assigned,unassigned:Math.max(0,net-assigned),overlap,outside,classified,incomplete:impRows.some(r=>r.name===name&&(!r.start||!r.end))};
+  return {name,net,assigned,unassigned:Math.max(0,net-assigned),overlap,outside,classified,incomplete:allRows.some(r=>r.name===name&&(!r.start||!r.end))};
  });
 }
 function impRender(){
@@ -513,11 +534,13 @@ function impRender(){
  el.innerHTML=impRows.map((r,i)=>`<div class="person" data-imp="${i}" style="display:block;border:1px solid #d9e4e7;padding:10px;margin:8px 0"><div class="row"><div><label>Dipendente</label><select data-f="name"><option value="">Seleziona</option>${names.map(n=>`<option value="${escape(n)}" ${r.name===n?'selected':''}>${escape(n)}</option>`).join('')}</select></div><div><label>Attività</label><select data-f="type">${Object.entries(IMP_LABELS).map(([k,v])=>`<option value="${k}" ${r.type===k?'selected':''}>${escape(v)}</option>`).join('')}</select></div></div><div class="row"><div><label>Inizio</label><input type="time" data-f="start" value="${escape(r.start||'')}"></div><div><label>Fine</label><input type="time" data-f="end" value="${escape(r.end||'')}"></div></div><div class="row"><div><label>Descrizione personalizzata</label><input data-f="custom" placeholder="Facoltativa" value="${escape(r.custom||'')}"></div><div><label>Durata</label><div class="notice">${hfmt(impMin(r.start,r.end))}</div></div></div><button class="btn warn" type="button" data-del="${i}" style="margin-top:8px">Rimuovi assegnazione</button></div>`).join('')||'<p class="muted">Nessuna assegnazione. Aggiungi una lavorazione per iniziare.</p>';
  el.querySelectorAll('[data-imp]').forEach(div=>{const i=Number(div.dataset.imp);div.querySelectorAll('[data-f]').forEach(input=>input.addEventListener('change',()=>{impRows[i][input.dataset.f]=input.value;impPersist();impRender()}))});
  el.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{impRows.splice(Number(b.dataset.del),1);impPersist();impRender()});
+ const history=impHistoricalRows();
+ $('imp-historical').innerHTML='<h3>Assegnazioni già registrate nelle lavorazioni</h3>'+(history.length?'<div style="overflow-x:auto"><table style="width:100%;font-size:12px"><tr><th>Dipendente</th><th>Fase</th><th>Inizio</th><th>Fine</th></tr>'+history.map(r=>'<tr><td>'+escape(r.name)+'</td><td>'+escape(IMP_LABELS[r.type]||r.type)+'</td><td>'+escape(r.start||'Da verificare')+'</td><td>'+escape(r.end||'Da verificare')+'</td></tr>').join('')+'</table></div>':'<p class="muted">Nessuna assegnazione nominativa trovata per questa data. Le sole ore della fase non identificano gli operatori.</p>');
  const data=impAnalyze();$('imp-summary').innerHTML='<p class="muted"><b>Indice di tempo classificato</b> = minuti registrati nelle attività / minuti netti timbrati. Il tempo da verificare non equivale necessariamente a tempo perso. Le pause sono detratte automaticamente dalle ore nette, ma senza orario preciso non è possibile attribuirle correttamente alle singole fasi.</p>'+'<table style="width:100%;font-size:12px"><tr><th>Dipendente</th><th>Ore nette</th><th>Assegnate</th><th>Da verificare</th><th>Classificato</th></tr>'+data.map(p=>`<tr><td>${escape(p.name)}</td><td>${hfmt(p.net)}</td><td>${hfmt(p.assigned)}</td><td>${hfmt(p.unassigned)}</td><td>${p.net>0?fmt(Math.min(100,p.assigned*100/p.net),1)+'%':'—'}</td></tr><tr><td colspan="5" style="font-size:11px">${Object.entries(p.classified).map(([k,m])=>escape(k)+': '+hfmt(m)).join(' · ')||'Nessuna attività'}${p.overlap?' · ⚠️ Sovrapposizione':''}${p.outside?' · ⚠️ Fuori turno':''}${p.incomplete?' · ⚠️ Orari incompleti':''}${p.assigned>p.net?' · ⚠️ Ore assegnate superiori alle ore nette':''}</td></tr>`).join('')+'</table>';
 }
 (function impInit(){
  const box=document.createElement('details');box.className='card';box.id='imp-panel';box.open=true;
- box.innerHTML='<summary style="font-weight:750;cursor:pointer">👥 Impiego del personale · V4.18.2</summary><p class="notice"><b>Anteprima sicura:</b> queste assegnazioni si salvano automaticamente solo su questo dispositivo, separate da Firebase. Non sostituiscono i dati ufficiali.</p><p class="muted">Registra anche scarico camion, pulizia locali, trasporto merci e altre attività. Per i passaggi tra fasi, inserisci l’ora del cambio. I 15 minuti di pausa sono già sottratti dalle ore nette timbrate: il tempo non assegnato è indicativo finché non viene registrata la pausa effettiva.</p><button class="btn alt" type="button" id="imp-add">+ Aggiungi assegnazione</button><button class="btn alt" type="button" id="imp-export" style="margin-left:5px">Esporta assegnazioni JSON</button><div id="imp-rows"></div><h3>Ripartizione delle ore timbrate</h3><div id="imp-summary"></div><p id="imp-status" class="muted"></p>';
+ box.innerHTML='<summary style="font-weight:750;cursor:pointer">👥 Impiego del personale · V4.18.3</summary><p class="notice"><b>Anteprima sicura:</b> queste assegnazioni si salvano automaticamente solo su questo dispositivo, separate da Firebase. Non sostituiscono i dati ufficiali.</p><p class="muted">Registra anche scarico camion, pulizia locali, trasporto merci e altre attività. Per i passaggi tra fasi, inserisci l’ora del cambio. I 15 minuti di pausa sono già sottratti dalle ore nette timbrate: il tempo non assegnato è indicativo finché non viene registrata la pausa effettiva.</p><button class="btn alt" type="button" id="imp-add">+ Aggiungi assegnazione</button><button class="btn alt" type="button" id="imp-export" style="margin-left:5px">Esporta assegnazioni JSON</button><div id="imp-historical"></div><div id="imp-rows"></div><h3>Ripartizione delle ore timbrate</h3><div id="imp-summary"></div><p id="imp-status" class="muted"></p>';
  const nav=document.querySelector('.tabs');
  const tabButton=document.createElement('button');
  tabButton.type='button';tabButton.dataset.tab='impiego';tabButton.textContent='Impiego personale';
@@ -531,6 +554,7 @@ function impRender(){
  $('imp-add').onclick=()=>{impRows.push({name:'',type:'scarico',start:'',end:'',custom:''});impPersist();impRender();box.open=true};
  $('imp-export').onclick=()=>{const blob=new Blob([JSON.stringify({date:$('date').value,assignments:impRows},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='Coromeu_Impiego_'+$('date').value+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)};
  $('date').addEventListener('change',()=>setTimeout(impLoad,0));
+ const prevFetchImpiego=fetchCloud;fetchCloud=async function(){await prevFetchImpiego();impRender()};
  const prevOpen=openDay;openDay=function(date){prevOpen(date);impLoad()};
  const prevBlank=blank;blank=function(){prevBlank();impLoad()};
  box.addEventListener('toggle',()=>{if(box.open)impRender()});
