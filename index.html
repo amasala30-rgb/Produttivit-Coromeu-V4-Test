@@ -29,7 +29,7 @@
 <div class="card"><h2>Riepilogo automatico</h2><div class="metric-grid"><div class="metric"><b id="sum-hours">0 h 00</b><span>Ore lavorate</span></div><div class="metric"><b id="sum-kg">0,00</b><span>Kg totali</span></div><div class="metric"><b id="sum-prod">—</b><span>Kg per ora lavorata</span></div><div class="metric"><b id="sum-workers">0</b><span>Dipendenti presenti</span></div></div><p id="form-error" class="error"></p><div class="actions"><button id="save" class="btn">Salva e invia PDF</button><button id="reset" class="btn alt">Nuova giornata</button></div></div></section>
 <section id="report" class="hidden"><div class="card"><h2>Report produttività</h2><label for="period">Periodo</label><select id="period"><option value="day">Giornaliero</option><option value="week">Settimanale progressivo</option><option value="month">Mensile progressivo</option><option value="year">Annuale progressivo</option></select><label for="reference">Data di riferimento (fino a questo giorno)</label><input type="date" id="reference"><div id="report-content"></div><div class="actions"><button id="print" class="btn">🖨️ Stampa / PDF</button><button id="share" class="btn alt">📲 Condividi PDF</button></div><p class="muted">Su iPhone, da Stampa puoi salvare il PDF tramite Condividi → Salva su File. La condivisione PDF diretta dipende dal browser; in alternativa condividi il riepilogo testuale.</p></div></section>
 <section id="venduto" class="hidden"><div class="card"><h2>🛒 Produttività del venduto</h2><p class="muted">Calcolo indipendente dalla lavorazione. Le ore di pulizia e sanificazione non vengono sottratte.</p><label for="sales-period">Periodo</label><select id="sales-period"><option value="day">Giornata</option><option value="week">Settimana progressiva</option><option value="month">Mese progressivo</option></select><label for="sales-reference">Data di riferimento</label><input id="sales-reference" type="date"><div id="sales-report-content"></div><button id="sales-pdf" class="btn" style="width:100%;background:#137d4b">🖨️ Stampa / Salva PDF del venduto</button></div></section><section id="storico" class="hidden"><div class="card"><h2>Storico giornate</h2><div id="history"></div></div></section>
-<section id="personale" class="hidden"><div class="card"><h2>Anagrafica dipendenti</h2><p class="muted">Aggiungi qui i nominativi una sola volta: compariranno ogni giorno nel modulo presenze.</p><label for="new-name">Nome e cognome</label><input id="new-name" placeholder="Nome Cognome"><div class="actions"><button id="add-person" class="btn">Aggiungi dipendente</button></div><div id="names"></div></div><div class="card"><h2>Backup dati</h2><p class="notice">I dati condivisi sono salvati su Firebase. Per sicurezza esporta periodicamente una copia JSON. Il ripristino locale non modifica Firebase.</p><div class="actions"><button id="export" class="btn">Esporta backup JSON</button><label class="btn alt" style="text-align:center;margin:0;cursor:pointer">Importa copia locale (non Firebase)<input id="import" type="file" accept="application/json,.json" style="display:none"></label></div></div></section></main><footer>Produttività Coromeu · Versione 4.17.10 · Archivio condiviso Firebase</footer><div id="print-area"></div><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script><script>
+<section id="personale" class="hidden"><div class="card"><h2>Anagrafica dipendenti</h2><p class="muted">Aggiungi qui i nominativi una sola volta: compariranno ogni giorno nel modulo presenze.</p><label for="new-name">Nome e cognome</label><input id="new-name" placeholder="Nome Cognome"><div class="actions"><button id="add-person" class="btn">Aggiungi dipendente</button></div><div id="names"></div></div><div class="card"><h2>Backup dati</h2><p class="notice">I dati condivisi sono salvati su Firebase. Per sicurezza esporta periodicamente una copia JSON. Il ripristino locale non modifica Firebase.</p><div class="actions"><button id="export" class="btn">Esporta backup JSON</button><label class="btn alt" style="text-align:center;margin:0;cursor:pointer">Importa copia locale (non Firebase)<input id="import" type="file" accept="application/json,.json" style="display:none"></label></div></div></section></main><footer>Produttività Coromeu · Versione 4.18 PROVA · Archivio condiviso Firebase</footer><div id="print-area"></div><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script><script>
 window.addEventListener('error',function(e){const el=document.getElementById('cloud-state');if(el)el.textContent='Errore applicazione: '+(e.message||'errore sconosciuto')});
 window.addEventListener('unhandledrejection',function(e){const el=document.getElementById('cloud-state');if(el)el.textContent='Errore applicazione: '+(e.reason?.message||String(e.reason||'errore sconosciuto'))});
 const PHASE_KEYS=['filoni_tonno_estratti','filoni_spada_estratti','filoni_tonno','filoni_spada','filoni_tonno_pesati','filoni_spada_pesati','burger_bistecche','bottarga'];
@@ -485,4 +485,86 @@ const reportHTMLV416=reportHTML;reportHTML=function(s){const old=reportHTMLV416(
 const printHTMLV416=printHTML;printHTML=function(s){const old=printHTMLV416(s);const rows=PHASE_KEYS.map(k=>{let total=0,count=0;for(const d of s.days){const t=d.phaseTimes?.[k];const m=phaseDuration(t?.start,t?.end);if(m!==null){total+=m;count++}}return '<tr><td>'+escape(PHASE_NAMES[k])+'</td><td>'+(count?hfmt(total):'—')+'</td></tr>'}).join('');return old+'<h2>Tempi delle fasi di lavorazione</h2><table><tr><th>Fase</th><th>Durata</th></tr>'+rows+'</table>'};
 const oldSummary=summary;summary=function(){let s=oldSummary();s.notes=s.days.flatMap(d=>(notesByDate[d.date]||[]).map(n=>({...n,date:d.date})));return s};
 const oldReportHTML=reportHTML;reportHTML=function(s){return oldReportHTML(s)+(s.notes.length?'<h3>Note e osservazioni</h3>'+s.notes.map(n=>'<p class="notice"><b>'+escape(n.date)+' · '+escape(n.by)+'</b><br>'+escape(n.text)+'</p>').join(''):'')};
+
+// V4.18 PROVA: produttivita attribuita, senza modificare il modello Firebase.
+const CREW_LABELS_V418={filoni_tonno_estratti:'Estrazione',filoni_tonno:'Siringatura e confezionamento',filoni_tonno_pesati:'Pesatura ed etichettatura',burger_bistecche:'Burger e bistecche',bottarga:'Bottarga'};
+function attributedProductivityV418(day){
+ const groups={};
+ for(const key of CREW_KEYS){
+  const records=(day.phaseTimes?.[key]?.operators||[]).filter(x=>x.name&&x.start&&x.end);
+  let labour=0;const valid=[];
+  for(const r of records){const iv=crewIntervals(r.start,r.end);if(iv&&iv[1]>iv[0]){const m=iv[1]-iv[0];labour+=m;valid.push({name:r.name,minutes:m})}}
+  const p=day.production||{};
+  let kg=0;
+  if(key==='burger_bistecche')kg=Object.entries(p).filter(([k])=>k.startsWith('burger_')||k.startsWith('bistecche_')).reduce((a,[,v])=>a+(Number(v)||0),0);
+  else if(key==='bottarga')kg=(Number(p.bottarga_grattugiata)||0)+(Number(p.bottarga_baffa)||0);
+  else kg=CREW_GROUPS[key].reduce((a,k)=>a+(Number(p[k])||0),0);
+  groups[key]={kg,labour,rate:labour>0?kg*60/labour:null,valid};
+ }
+ const persons={};
+ for(const [key,g] of Object.entries(groups))for(const r of g.valid){
+  const p=persons[r.name]||(persons[r.name]={minutes:0,attributedKg:0,phases:[]});
+  const share=g.labour?g.kg*r.minutes/g.labour:0;
+  p.minutes+=r.minutes;p.attributedKg+=share;
+  p.phases.push({phase:CREW_LABELS_V418[key],minutes:r.minutes,kg:share});
+ }
+ return {groups,persons};
+}
+function individualReportV418(){
+ const date=$('date').value,form=readForm();
+ const day={production:form.production,phaseTimes:readPhaseTimes()};
+ const result=attributedProductivityV418(day);
+ const rows=Object.entries(result.persons).sort((a,b)=>a[0].localeCompare(b[0],'it')).map(([name,p])=>'<tr><td>'+escape(name)+'</td><td>'+hfmt(p.minutes)+'</td><td>'+fmt(p.attributedKg)+'</td><td>'+(p.minutes?fmt(p.attributedKg*60/p.minutes):'—')+'</td></tr>').join('');
+ const phaseRows=Object.entries(result.groups).map(([k,g])=>'<tr><td>'+escape(CREW_LABELS_V418[k])+'</td><td>'+fmt(g.kg)+'</td><td>'+hfmt(g.labour)+'</td><td>'+(g.rate===null?'—':fmt(g.rate))+'</td></tr>').join('');
+ return '<p class="muted">'+escape(date)+' · Calcolo provvisorio sui dati attualmente compilati.</p><h3>Produttività attribuita per dipendente</h3><div style="overflow:auto"><table style="width:100%;font-size:12px"><tr><th>Dipendente</th><th>Ore-uomo</th><th>Kg attribuiti</th><th>Kg/h</th></tr>'+(rows||'<tr><td colspan="4">Assegna gli operatori alle fasi per vedere il risultato.</td></tr>')+'</table></div><h3>Produttività delle squadre</h3><div style="overflow:auto"><table style="width:100%;font-size:12px"><tr><th>Fase</th><th>Kg</th><th>Ore-uomo</th><th>Kg/h</th></tr>'+phaseRows+'</table></div><p class="notice">I kg attribuiti sono ripartiti proporzionalmente alle ore-uomo di ogni squadra. Non rappresentano kg misurati individualmente. I kg delle diverse fasi non sono sommabili come prodotto unico.</p>';
+}
+function showIndividualReportV418(){const el=$('individual-v418');if(el)el.innerHTML=individualReportV418()}
+(function initIndividualV418(){
+ const box=document.createElement('details');box.className='card';box.id='individual-v418-panel';
+ box.innerHTML='<summary style="font-weight:750;cursor:pointer">👥 Produttività per dipendente · Anteprima V4.18</summary><p class="muted">La tabella usa le assegnazioni e gli orari già inseriti nelle cinque squadre.</p><button type="button" class="btn alt" id="individual-v418-refresh">Aggiorna calcolo</button><div id="individual-v418"></div>';
+ const anchor=$('notes-panel');anchor.parentNode.insertBefore(box,anchor);
+ $('individual-v418-refresh').onclick=showIndividualReportV418;
+ box.addEventListener('toggle',()=>{if(box.open)showIndividualReportV418()});
+})();
+
+// V4.18.1: impiego personale, prototipo locale isolato dai dati cloud.
+const IMP_LABELS={filoni_tonno_estratti:'Estrazione',filoni_tonno:'Siringatura e confezionamento',filoni_tonno_pesati:'Pesatura ed etichettatura',burger_bistecche:'Burger e bistecche',bottarga:'Bottarga',scarico:'Scarico camion',pulizia:'Pulizia locali',trasporto:'Trasporto merci',celle:'Sistemazione celle',carico:'Carico camion',altro:'Altra lavorazione'};
+const IMP_KEY='coromeu-impiego-v4181';
+let impRows=[];
+function impDateKey(){return IMP_KEY+'-'+($('date').value||today())}
+function impLoad(){try{const x=JSON.parse(localStorage.getItem(impDateKey())||'[]');impRows=Array.isArray(x)?x:[]}catch{impRows=[]}impRender()}
+function impPersist(){try{localStorage.setItem(impDateKey(),JSON.stringify(impRows));$('imp-status').textContent='Bozza salvata su questo dispositivo alle '+new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'})}catch(e){$('imp-status').textContent='Salvataggio locale non riuscito: esporta un backup'}}
+function impMin(a,b){const r=crewIntervals(a,b);return r&&r[1]>r[0]?r[1]-r[0]:0}
+function impAnalyze(){
+ const people=readForm().people, names=new Set([...Object.keys(people),...impRows.map(r=>r.name).filter(Boolean)]);
+ return [...names].sort((a,b)=>a.localeCompare(b,'it')).map(name=>{
+  const p=people[name]||{},shiftRange=crewIntervals(p.in,p.out),net=Number(p.minutes)||0;
+  const rows=impRows.filter(r=>r.name===name&&r.start&&r.end);
+  const intervals=rows.map(r=>({r,iv:crewIntervals(r.start,r.end)})).filter(x=>x.iv&&x.iv[1]>x.iv[0]);
+  let overlap=false,outside=false,assigned=0;
+  intervals.forEach((x,i)=>{assigned+=x.iv[1]-x.iv[0];if(shiftRange&&(x.iv[0]<shiftRange[0]||x.iv[1]>shiftRange[1]))outside=true;for(let j=0;j<i;j++)if(crewOverlap(x.iv,intervals[j].iv)>0)overlap=true});
+  const classified=intervals.reduce((acc,x)=>{const label=x.r.type==='altro'?(x.r.custom||'Altra lavorazione'):IMP_LABELS[x.r.type]||x.r.type;acc[label]=(acc[label]||0)+x.iv[1]-x.iv[0];return acc},{});
+  return {name,net,assigned,unassigned:Math.max(0,net-assigned),overlap,outside,classified,incomplete:impRows.some(r=>r.name===name&&(!r.start||!r.end))};
+ });
+}
+function impRender(){
+ const el=$('imp-rows');if(!el)return;
+ const names=[...new Set([...db.staff,...Object.keys(readForm().people),...impRows.map(r=>r.name).filter(Boolean)])];
+ el.innerHTML=impRows.map((r,i)=>`<div class="person" data-imp="${i}" style="display:block;border:1px solid #d9e4e7;padding:10px;margin:8px 0"><div class="row"><div><label>Dipendente</label><select data-f="name"><option value="">Seleziona</option>${names.map(n=>`<option value="${escape(n)}" ${r.name===n?'selected':''}>${escape(n)}</option>`).join('')}</select></div><div><label>Attività</label><select data-f="type">${Object.entries(IMP_LABELS).map(([k,v])=>`<option value="${k}" ${r.type===k?'selected':''}>${escape(v)}</option>`).join('')}</select></div></div><div class="row"><div><label>Inizio</label><input type="time" data-f="start" value="${escape(r.start||'')}"></div><div><label>Fine</label><input type="time" data-f="end" value="${escape(r.end||'')}"></div></div><div class="row"><div><label>Descrizione personalizzata</label><input data-f="custom" placeholder="Facoltativa" value="${escape(r.custom||'')}"></div><div><label>Durata</label><div class="notice">${hfmt(impMin(r.start,r.end))}</div></div></div><button class="btn warn" type="button" data-del="${i}" style="margin-top:8px">Rimuovi assegnazione</button></div>`).join('')||'<p class="muted">Nessuna assegnazione. Aggiungi una lavorazione per iniziare.</p>';
+ el.querySelectorAll('[data-imp]').forEach(div=>{const i=Number(div.dataset.imp);div.querySelectorAll('[data-f]').forEach(input=>input.addEventListener('change',()=>{impRows[i][input.dataset.f]=input.value;impPersist();impRender()}))});
+ el.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{impRows.splice(Number(b.dataset.del),1);impPersist();impRender()});
+ const data=impAnalyze();$('imp-summary').innerHTML='<table style="width:100%;font-size:12px"><tr><th>Dipendente</th><th>Ore nette</th><th>Assegnate</th><th>Da verificare</th></tr>'+data.map(p=>`<tr><td>${escape(p.name)}</td><td>${hfmt(p.net)}</td><td>${hfmt(p.assigned)}</td><td>${hfmt(p.unassigned)}</td></tr><tr><td colspan="4" style="font-size:11px">${Object.entries(p.classified).map(([k,m])=>escape(k)+': '+hfmt(m)).join(' · ')||'Nessuna attività'}${p.overlap?' · ⚠️ Sovrapposizione':''}${p.outside?' · ⚠️ Fuori turno':''}${p.incomplete?' · ⚠️ Orari incompleti':''}${p.assigned>p.net?' · ⚠️ Ore assegnate superiori alle ore nette':''}</td></tr>`).join('')+'</table>';
+}
+(function impInit(){
+ const box=document.createElement('details');box.className='card';box.id='imp-panel';box.open=false;
+ box.innerHTML='<summary style="font-weight:750;cursor:pointer">👥 Impiego del personale · V4.18.1</summary><p class="notice"><b>Anteprima sicura:</b> queste assegnazioni si salvano automaticamente solo su questo dispositivo, separate da Firebase. Non sostituiscono i dati ufficiali.</p><p class="muted">Registra anche scarico camion, pulizia locali, trasporto merci e altre attività. Per i passaggi tra fasi, inserisci l’ora del cambio. I 15 minuti di pausa sono già sottratti dalle ore nette timbrate: il tempo non assegnato è indicativo finché non viene registrata la pausa effettiva.</p><button class="btn alt" type="button" id="imp-add">+ Aggiungi assegnazione</button><button class="btn alt" type="button" id="imp-export" style="margin-left:5px">Esporta assegnazioni JSON</button><div id="imp-rows"></div><h3>Ripartizione delle ore timbrate</h3><div id="imp-summary"></div><p id="imp-status" class="muted"></p>';
+ $('notes-panel').parentNode.insertBefore(box,$('notes-panel'));
+ $('imp-add').onclick=()=>{impRows.push({name:'',type:'scarico',start:'',end:'',custom:''});impPersist();impRender();box.open=true};
+ $('imp-export').onclick=()=>{const blob=new Blob([JSON.stringify({date:$('date').value,assignments:impRows},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='Coromeu_Impiego_'+$('date').value+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)};
+ $('date').addEventListener('change',()=>setTimeout(impLoad,0));
+ const prevOpen=openDay;openDay=function(date){prevOpen(date);impLoad()};
+ const prevBlank=blank;blank=function(){prevBlank();impLoad()};
+ box.addEventListener('toggle',()=>{if(box.open)impRender()});
+ impLoad();
+})();
 </script></body></html>
