@@ -832,7 +832,7 @@ impVisualRender=function(){
  // Il modulo generale rimane disponibile per le assegnazioni già salvate,
  // ma il comando operativo è ora presente sotto ogni barra personale.
  const general=$('imp-assign-panel');if(general){general.open=false;general.style.display='none';}
- const title=$('imp-panel')?.querySelector('summary');if(title)title.textContent='👥 Impiego del personale · V4.19.5';
+ const title=$('imp-panel')?.querySelector('summary');if(title)title.textContent='👥 Impiego del personale · V4.19.7';
  document.querySelector('footer').textContent='Produttività Coromeu · Versione 4.18.7 PROVA · Archivio condiviso Firebase';
  impVisualRender();
 })();
@@ -840,9 +840,9 @@ impVisualRender=function(){
 // V4.18.7: presenze e assegnazioni impiego usano selettori distinti.
 
 // V4.19.0 - Fasi aggiuntive e analisi sanificazione, isolate dal database ufficiale.
-Object.assign(IMP_LABELS,{pulizia_carrelli:'Pulizia e sanificazione carrelli',preparazione_burger:'Preparazione burger tonno e spada',inscatolamento:'Inscatolamento',estrazione_bottarga:'Estrazione bottarga'});
-Object.assign(IMP_COLORS,{'Pulizia e sanificazione carrelli':'#b45309','Preparazione burger tonno e spada':'#c026d3','Inscatolamento':'#0891b2','Estrazione bottarga':'#7c3aed'});
-const EXTRA_PHASES=[['pulizia_carrelli','Pulizia e sanificazione carrelli'],['estrazione_bottarga','Estrazione bottarga'],['preparazione_burger','Preparazione burger tonno e spada'],['inscatolamento','Inscatolamento']];
+Object.assign(IMP_LABELS,{pulizia_carrelli:'Pulizia e sanificazione carrelli',preparazione_burger:'Preparazione burger tonno e spada',inscatolamento:'Inscatolamento',estrazione_bottarga:'Estrazione bottarga',confezionamento_bottarga:'Confezionamento bottarga',estrazione_salmone:'Estrazione salmone',lavorazione_salmone:'Lavorazione salmone',confezionamento_salmone:'Confezionamento salmone',estrazione_polpo:'Estrazione polpo',lavorazione_polpo:'Lavorazione polpo'});
+Object.assign(IMP_COLORS,{'Pulizia e sanificazione carrelli':'#b45309','Preparazione burger tonno e spada':'#c026d3','Inscatolamento':'#0891b2','Estrazione bottarga':'#7c3aed','Confezionamento bottarga':'#6d28d9','Estrazione salmone':'#e11d48','Lavorazione salmone':'#be123c','Confezionamento salmone':'#9f1239'});
+const EXTRA_PHASES=[['pulizia_carrelli','Pulizia e sanificazione carrelli'],['estrazione_bottarga','Estrazione bottarga'],['confezionamento_bottarga','Confezionamento bottarga'],['preparazione_burger','Preparazione burger tonno e spada'],['inscatolamento','Inscatolamento'],['estrazione_salmone','Estrazione salmone'],['lavorazione_salmone','Lavorazione salmone'],['confezionamento_salmone','Confezionamento salmone'],['estrazione_polpo','Estrazione polpo'],['lavorazione_polpo','Lavorazione polpo']];
 const extraKey=d=>'coromeu-fasi-v419-'+d;
 function extraRead(d){try{return JSON.parse(localStorage.getItem(extraKey(d))||'{}')}catch(e){return {}}}
 function extraSave(){const d=$('date').value||today(),out={};for(const [k] of EXTRA_PHASES){const el=$('extra-'+k);out[k]={start:el.querySelector('[data-start]').value,end:el.querySelector('[data-end]').value,operator:el.querySelector('[data-operator]').value,kg:Number(el.querySelector('[data-kg]').value||0),pieces:Number(el.querySelector('[data-pieces]').value||0)};}try{localStorage.setItem(extraKey(d),JSON.stringify(out))}catch(e){alert('Impossibile salvare la bozza locale. Esporta un backup.')}extraReport()}
@@ -852,7 +852,7 @@ function extraPeriod(){const ref=$('extra-reference').value||today(),mode=$('ext
 function extraReport(){const el=$('extra-report');if(!el)return;const period=extraPeriod(),by=new Map(),daily=[];let carts=0,minutes=0,days=0;for(const d of period.dates){const r=extraRead(d).pulizia_carrelli||{},n=Number(r.pieces||0),m=extraMinutes(r.start,r.end);if(!n&&!m)continue;carts+=n;minutes+=m;days++;daily.push({d,n,m});if(r.operator){const a=by.get(r.operator)||{m:0,n:0};a.m+=m;a.n+=n;by.set(r.operator,a)}}const avg=carts?minutes/carts:0;el.innerHTML='<div class="metric-grid"><div class="metric"><b>'+carts+'</b><span>Carrelli lavati</span></div><div class="metric"><b>'+hfmt(minutes)+'</b><span>Ore-uomo pulizia</span></div><div class="metric"><b>'+fmt(avg,1)+' min</b><span>Media effettiva/carrello</span></div><div class="metric"><b>'+hfmt(days?Math.round(minutes/days):0)+'</b><span>Media per giornata con pulizia</span></div></div><p class="small">Tempo teorico (8 min/carrello): '+hfmt(carts*8)+' · Scostamento effettivo: '+(minutes-carts*8)+' minuti. Nessun costo orario richiesto.</p><h4>Ore per dipendente</h4>'+(by.size?[...by].map(([name,v])=>'<p class="small">'+escape(name)+': <b>'+hfmt(v.m)+'</b> · '+v.n+' carrelli</p>').join(''):'<p class="small">Nessuna pulizia registrata nel periodo.</p>')+'<h4>Dettaglio giornaliero</h4>'+daily.map(v=>'<p class="small">'+v.d+' · '+v.n+' carrelli · '+hfmt(v.m)+'</p>').join('');}
 function extraPrint(){const html='<h1>Coromeu · Pulizia e sanificazione carrelli</h1><p>Periodo: '+escape($('extra-period').selectedOptions[0].text)+' · '+escape($('extra-reference').value)+'</p>'+$('extra-report').innerHTML+'<p>Tempi reali, non stime. Standard: 8 minuti per carrello. Registrazioni locali al dispositivo.</p>';$('print-area').innerHTML=html;window.print()}
 (function extraInit(){
- const host=document.createElement('details');host.className='card';host.open=false;host.id='extra-phases';host.innerHTML='<summary>🧼 Nuove fasi operative · V4.19.5</summary><p class="notice">I nuovi dati sono salvati in una bozza locale su questo dispositivo, senza modificare Firebase. Per ogni fase inserisci un solo orario generale e scegli l’operatore. Se due attività si sovrappongono, puoi scegliere la priorità nella sezione Impiego personale.</p>';
+ const host=document.createElement('details');host.className='card';host.open=false;host.id='extra-phases';host.innerHTML='<summary>🧼 Nuove fasi operative · V4.19.7</summary><p class="notice">I nuovi dati sono salvati in una bozza locale su questo dispositivo, senza modificare Firebase. Per ogni fase inserisci un solo orario generale e scegli l’operatore. Se due attività si sovrappongono, puoi scegliere la priorità nella sezione Impiego personale.</p>';
  for(const [key,label] of EXTRA_PHASES){const item=document.createElement('div');item.className='phase-group';item.id='extra-'+key;item.innerHTML='<details class="extra-phase-toggle"><summary>'+label+'</summary><div class="extra-phase-fields"><div class="row"><div><label>Inizio fase</label><input type="time" data-start></div><div><label>Fine fase</label><input type="time" data-end></div></div><label>Operatore responsabile</label><select data-operator><option value="">Da assegnare</option></select><div class="row"><div><label>'+(key==='pulizia_carrelli'?'Carrelli lavati':'Kg lavorati (facoltativo)')+'</label><input type="number" min="0" step="'+(key==='pulizia_carrelli'?'1':'0.01')+'" data-'+(key==='pulizia_carrelli'?'pieces':'kg')+'></div><div><label>'+(key==='pulizia_carrelli'?'Kg (non richiesti)':'Pezzi (facoltativo)')+'</label><input type="number" min="0" step="1" data-'+(key==='pulizia_carrelli'?'kg':'pieces')+' '+(key==='pulizia_carrelli'?'disabled':'')+'></div></div>'+(key==='pulizia_carrelli'?'<p class="small">Riferimento teorico: 8 minuti per carrello. Le ore-uomo sono calcolate sugli orari effettivi.</p>':'')+'</div></details>';host.appendChild(item);item.querySelectorAll('input,select').forEach(x=>x.addEventListener('change',extraSave));}
  const existing=document.querySelector('#oggi .prod-details');existing.parentNode.insertBefore(host,existing);
  const r=document.createElement('div');r.className='card';r.innerHTML='<h2>📊 Analisi pulizia carrelli</h2><div class="row"><div><label>Periodo</label><select id="extra-period"><option value="day">Giornaliero</option><option value="week">Settimanale</option><option value="month">Mensile</option></select></div><div><label>Data riferimento</label><input type="date" id="extra-reference"></div></div><div id="extra-report"></div><button class="btn" id="extra-print" type="button">🖨️ Stampa / PDF pulizia carrelli</button><p class="muted">Il report comprende solo i dati salvati su questo dispositivo. Per una vista aziendale condivisa servirà una successiva migrazione controllata su Firebase.</p>';
@@ -861,7 +861,7 @@ function extraPrint(){const html='<h1>Coromeu · Pulizia e sanificazione carrell
  const oldVisualDay=impVisualDay;impVisualDay=function(date){const out=oldVisualDay(date),ph=extraRead(date);for(const [k] of EXTRA_PHASES){const v=ph[k];if(!v?.operator||!v.start||!v.end)continue;const p=out.find(p=>p.name===v.operator);if(!p||!p.net)continue;const m=Math.min(extraMinutes(v.start,v.end),Math.max(0,(p.classified['Da verificare']||0)+(p.classified.Ufficio||0)));let remain=m;for(const source of ['Da verificare','Ufficio']){const taken=Math.min(remain,p.classified[source]||0);p.classified[source]=(p.classified[source]||0)-taken;remain-=taken;}const label=IMP_LABELS[k];p.classified[label]=(p.classified[label]||0)+m;}return out;};
  const oldVisualRender=impVisualRender;impVisualRender=function(){oldVisualRender();const el=$('imp-visual');if(!el)return;for(const p of impVisualRange()){if(!p.overlaps)continue;const cards=[...el.children],i=impVisualRange().findIndex(x=>x.name===p.name),card=cards[i];if(!card)continue;const select=document.createElement('select');select.innerHTML='<option value="">Scegli fase predominante in caso di sovrapposizione</option>'+Object.entries(IMP_LABELS).map(([k,v])=>'<option value="'+escape(k)+'">'+escape(v)+'</option>').join('');const key='coromeu-priorita-v419-'+($('imp-reference').value||today())+'-'+p.name;select.value=localStorage.getItem(key)||'';select.onchange=()=>{localStorage.setItem(key,select.value);};card.appendChild(select);}}
  for(const [key] of EXTRA_PHASES){const select=$('extra-'+key).querySelector('[data-operator]');select.innerHTML='<option value="">Da assegnare</option>'+db.staff.map(n=>'<option value="'+escape(n)+'">'+escape(n)+'</option>').join('');}
- extraLoad();impVisualRender();document.querySelector('footer').textContent='Produttività Coromeu · Versione 4.19.5 PROVA · Archivio condiviso Firebase';$('cloud-card').querySelector('h2').textContent='☁️ Archivio condiviso Firebase · V4.19.5';
+ extraLoad();impVisualRender();document.querySelector('footer').textContent='Produttività Coromeu · Versione 4.19.7 PROVA · Archivio condiviso Firebase';$('cloud-card').querySelector('h2').textContent='☁️ Archivio condiviso Firebase · V4.19.7';
 })();
 
 (function(){
@@ -873,8 +873,10 @@ const phases=[
  ['preparazione_burger','Preparazione burger'],
  ['burger_bistecche','Burger e bistecche'],
  ['inscatolamento','Inscatolamento'],
- ['estrazione_bottarga','Estrazione bottarga'],
+ ['estrazione_bottarga','Estrazione bottarga'],['confezionamento_bottarga','Confezionamento bottarga'],
  ['bottarga','Lavorazione bottarga'],
+ ['estrazione_salmone','Estrazione salmone'],['lavorazione_salmone','Lavorazione salmone'],['confezionamento_salmone','Confezionamento salmone'],
+ ['estrazione_polpo','Estrazione polpo'],['lavorazione_polpo','Lavorazione polpo'],
  ['pulizia_carrelli','Pulizia e sanificazione carrelli']
 ];
 const key=d=>'coromeu-programmazione-operatori-v4194-'+d;
@@ -929,6 +931,49 @@ const originalOpen=openDay;
 openDay=function(d){originalOpen(d);if(root.open)render()};
 const originalBlank=blank;
 blank=function(){originalBlank();if(root.open)render()};
+})();
+
+
+(function(){
+'use strict';
+// Le schede sono spostate nel DOM, non ricreate: i valori e gli handler originali rimangono intatti.
+const prod=document.querySelector('#oggi .prod-details');
+const extras=document.getElementById('extra-phases');
+if(!prod||!extras)return;
+const prodGrid=prod.querySelector('.row');
+function card(title,emoji){
+ const d=document.createElement('details');d.className='phase-group family-menu';
+ d.innerHTML='<summary style="font-weight:800;cursor:pointer;font-size:1.05rem">'+emoji+' '+title+'</summary><div class="family-content" style="padding-top:12px"></div>';
+ prod.appendChild(d);return d.querySelector('.family-content');
+}
+function prodInput(key){return document.getElementById('prod_'+key)?.parentElement}
+function take(node,to){if(node)to.appendChild(node)}
+function takeExtra(key,to){const el=document.getElementById('extra-'+key);if(el){const inner=el.querySelector('.extra-phase-toggle');if(inner){inner.open=false;}take(el,to)}}
+function takePhase(key,to){const phase=document.querySelector('.phase-time[data-phase="'+key+'"]');if(phase){const group=phase.closest('.phase-group');if(group&&group.parentElement===prod){take(group,to)}}}
+const burger=card('Burger e bistecche','🍔');
+const prep=document.createElement('div');prep.className='family-subsection';prep.innerHTML='<h3>Preparazione burger</h3>';burger.appendChild(prep);takeExtra('preparazione_burger',prep);
+const products=document.createElement('div');products.className='row';burger.appendChild(products);
+for(const k of ['burger_tonno','burger_spada','burger_salmone','bistecche_tonno','bistecche_spada','bistecche_salmone'])take(prodInput(k),products);
+takePhase('burger_bistecche',burger);
+const boxes=document.createElement('div');boxes.className='family-subsection';boxes.innerHTML='<h3>Inscatolamento</h3>';burger.appendChild(boxes);takeExtra('inscatolamento',boxes);
+const bottarga=card('Bottarga','🐟');
+const extraction=document.createElement('div');extraction.className='family-subsection';extraction.innerHTML='<h3>1. Estrazione</h3>';bottarga.appendChild(extraction);takeExtra('estrazione_bottarga',extraction);
+const processing=document.createElement('div');processing.className='family-subsection';processing.innerHTML='<h3>2. Lavorazione</h3>';bottarga.appendChild(processing);takePhase('bottarga',processing);
+const bottargaProducts=document.createElement('div');bottargaProducts.className='row';processing.appendChild(bottargaProducts);
+for(const k of ['bottarga_grattugiata','bottarga_baffa'])take(prodInput(k),bottargaProducts);
+const packaging=document.createElement('div');packaging.className='family-subsection';packaging.innerHTML='<h3>3. Confezionamento</h3>';bottarga.appendChild(packaging);takeExtra('confezionamento_bottarga',packaging);
+const salmon=card('Salmone','🐟');
+for(const [key,label] of [['estrazione_salmone','1. Estrazione'],['lavorazione_salmone','2. Lavorazione'],['confezionamento_salmone','3. Confezionamento']]){
+ const section=document.createElement('div');section.className='family-subsection';section.innerHTML='<h3>'+label+'</h3>';salmon.appendChild(section);takeExtra(key,section);
+}
+const polpo=card('Polpo','🐙');
+for(const [key,label] of [['estrazione_polpo','1. Estrazione'],['lavorazione_polpo','2. Lavorazione']]){
+ const section=document.createElement('div');section.className='family-subsection';section.innerHTML='<h3>'+label+'</h3>';polpo.appendChild(section);takeExtra(key,section);
+}
+// Le fasi non appartenenti alle famiglie rimangono disponibili nella sezione originale.
+const style=document.createElement('style');
+style.textContent='.family-menu{background:#f6fafb;margin:12px 0}.family-menu>.family-content{display:block}.family-subsection{padding:8px 0;border-bottom:1px solid #dbe7ea}.family-subsection:last-child{border-bottom:0}.family-subsection h3{margin:8px 0;color:#075a62}.family-menu .phase-group{margin:8px 0}.family-menu .row>div{min-width:0}.family-menu summary{list-style-position:inside}';
+document.head.appendChild(style);
 })();
 
 </script></body></html>
