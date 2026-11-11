@@ -832,7 +832,7 @@ impVisualRender=function(){
  // Il modulo generale rimane disponibile per le assegnazioni già salvate,
  // ma il comando operativo è ora presente sotto ogni barra personale.
  const general=$('imp-assign-panel');if(general){general.open=false;general.style.display='none';}
- const title=$('imp-panel')?.querySelector('summary');if(title)title.textContent='👥 Impiego del personale · V4.19.9';
+ const title=$('imp-panel')?.querySelector('summary');if(title)title.textContent='👥 Impiego del personale · V4.20.0';
  document.querySelector('footer').textContent='Produttività Coromeu · Versione 4.18.7 PROVA · Archivio condiviso Firebase';
  impVisualRender();
 })();
@@ -866,7 +866,7 @@ function extraPeriod(){const ref=$('extra-reference').value||today(),mode=$('ext
 function extraReport(){const el=$('extra-report');if(!el)return;const period=extraPeriod(),by=new Map(),daily=[];let carts=0,minutes=0,days=0;for(const d of period.dates){const r=extraRead(d).pulizia_carrelli||{},n=Number(r.pieces||0),m=extraMinutes(r.start,r.end);if(!n&&!m)continue;carts+=n;minutes+=m*Math.max(1,extraOperators(r).length);days++;daily.push({d,n,m});for(const name of extraOperators(r)){const a=by.get(name)||{m:0,n:0};a.m+=m;a.n+=n/Math.max(1,extraOperators(r).length);by.set(name,a)}}const avg=carts?minutes/carts:0;el.innerHTML='<div class="metric-grid"><div class="metric"><b>'+carts+'</b><span>Carrelli lavati</span></div><div class="metric"><b>'+hfmt(minutes)+'</b><span>Ore-uomo pulizia</span></div><div class="metric"><b>'+fmt(avg,1)+' min</b><span>Media effettiva/carrello</span></div><div class="metric"><b>'+hfmt(days?Math.round(minutes/days):0)+'</b><span>Media per giornata con pulizia</span></div></div><p class="small">Tempo teorico (8 min/carrello): '+hfmt(carts*8)+' · Scostamento effettivo: '+(minutes-carts*8)+' minuti. Nessun costo orario richiesto.</p><h4>Ore per dipendente</h4>'+(by.size?[...by].map(([name,v])=>'<p class="small">'+escape(name)+': <b>'+hfmt(v.m)+'</b> · '+v.n+' carrelli</p>').join(''):'<p class="small">Nessuna pulizia registrata nel periodo.</p>')+'<h4>Dettaglio giornaliero</h4>'+daily.map(v=>'<p class="small">'+v.d+' · '+v.n+' carrelli · '+hfmt(v.m)+'</p>').join('');}
 function extraPrint(){const html='<h1>Coromeu · Pulizia e sanificazione carrelli</h1><p>Periodo: '+escape($('extra-period').selectedOptions[0].text)+' · '+escape($('extra-reference').value)+'</p>'+$('extra-report').innerHTML+'<p>Tempi reali, non stime. Standard: 8 minuti per carrello. Registrazioni locali al dispositivo.</p>';$('print-area').innerHTML=html;window.print()}
 (function extraInit(){
- const host=document.createElement('details');host.className='card';host.open=false;host.id='extra-phases';host.innerHTML='<summary>🧼 Nuove fasi operative · V4.19.9</summary><p class="notice">I nuovi dati sono salvati in una bozza locale su questo dispositivo, senza modificare Firebase. Per ogni fase inserisci un solo orario generale e scegli l’operatore. Se due attività si sovrappongono, puoi scegliere la priorità nella sezione Impiego personale.</p>';
+ const host=document.createElement('details');host.className='card';host.open=false;host.id='extra-phases';host.innerHTML='<summary>🧼 Nuove fasi operative · V4.20.0</summary><p class="notice">I nuovi dati sono salvati in una bozza locale su questo dispositivo, senza modificare Firebase. Per ogni fase inserisci un solo orario generale e scegli l’operatore. Se due attività si sovrappongono, puoi scegliere la priorità nella sezione Impiego personale.</p>';
  for(const [key,label] of EXTRA_PHASES){const item=document.createElement('div');item.className='phase-group';item.id='extra-'+key;item.innerHTML='<details class="extra-phase-toggle"><summary>'+label+'</summary><div class="extra-phase-fields"><div class="row"><div><label>Inizio fase</label><input type="time" data-start></div><div><label>Fine fase</label><input type="time" data-end></div></div><label>Operatori assegnati (anche senza orari)</label><div data-operator-list></div><button class="btn" type="button" data-add-operator>+ Aggiungi operatore</button><div class="row"><div><label>'+(key==='pulizia_carrelli'?'Carrelli lavati':'Kg lavorati (facoltativo)')+'</label><input type="number" min="0" step="'+(key==='pulizia_carrelli'?'1':'0.01')+'" data-'+(key==='pulizia_carrelli'?'pieces':'kg')+'></div><div><label>'+(key==='pulizia_carrelli'?'Kg (non richiesti)':'Pezzi (facoltativo)')+'</label><input type="number" min="0" step="1" data-'+(key==='pulizia_carrelli'?'kg':'pieces')+' '+(key==='pulizia_carrelli'?'disabled':'')+'></div></div>'+(key==='pulizia_carrelli'?'<p class="small">Riferimento teorico: 8 minuti per carrello. Le ore-uomo sono calcolate sugli orari effettivi.</p>':'')+'</div></details>';host.appendChild(item);item.querySelectorAll('input,select').forEach(x=>x.addEventListener('change',extraSave));}
  const existing=document.querySelector('#oggi .prod-details');existing.parentNode.insertBefore(host,existing);
  const r=document.createElement('div');r.className='card';r.innerHTML='<h2>📊 Analisi pulizia carrelli</h2><div class="row"><div><label>Periodo</label><select id="extra-period"><option value="day">Giornaliero</option><option value="week">Settimanale</option><option value="month">Mensile</option></select></div><div><label>Data riferimento</label><input type="date" id="extra-reference"></div></div><div id="extra-report"></div><button class="btn" id="extra-print" type="button">🖨️ Stampa / PDF pulizia carrelli</button><p class="muted">Il report comprende solo i dati salvati su questo dispositivo. Per una vista aziendale condivisa servirà una successiva migrazione controllata su Firebase.</p>';
@@ -875,7 +875,7 @@ function extraPrint(){const html='<h1>Coromeu · Pulizia e sanificazione carrell
  const oldVisualDay=impVisualDay;impVisualDay=function(date){const out=oldVisualDay(date),ph=extraRead(date);for(const [k] of EXTRA_PHASES){const v=ph[k];if(!v?.start||!v.end)continue;for(const name of extraOperators(v)){const p=out.find(p=>p.name===name);if(!p||!p.net)continue;const m=Math.min(extraMinutes(v.start,v.end),Math.max(0,(p.classified['Da verificare']||0)+(p.classified.Ufficio||0)));let remain=m;for(const source of ['Da verificare','Ufficio']){const taken=Math.min(remain,p.classified[source]||0);p.classified[source]=(p.classified[source]||0)-taken;remain-=taken;}const label=IMP_LABELS[k];p.classified[label]=(p.classified[label]||0)+m;}}return out;};
  const oldVisualRender=impVisualRender;impVisualRender=function(){oldVisualRender();const el=$('imp-visual');if(!el)return;for(const p of impVisualRange()){if(!p.overlaps)continue;const cards=[...el.children],i=impVisualRange().findIndex(x=>x.name===p.name),card=cards[i];if(!card)continue;const select=document.createElement('select');select.innerHTML='<option value="">Scegli fase predominante in caso di sovrapposizione</option>'+Object.entries(IMP_LABELS).map(([k,v])=>'<option value="'+escape(k)+'">'+escape(v)+'</option>').join('');const key='coromeu-priorita-v419-'+($('imp-reference').value||today())+'-'+p.name;select.value=localStorage.getItem(key)||'';select.onchange=()=>{localStorage.setItem(key,select.value);};card.appendChild(select);}}
  
- extraLoad();impVisualRender();document.querySelector('footer').textContent='Produttività Coromeu · Versione 4.19.9 PROVA · Archivio condiviso Firebase';$('cloud-card').querySelector('h2').textContent='☁️ Archivio condiviso Firebase · V4.19.9';
+ extraLoad();impVisualRender();document.querySelector('footer').textContent='Produttività Coromeu · Versione 4.20.0 PROVA · Archivio condiviso Firebase';$('cloud-card').querySelector('h2').textContent='☁️ Archivio condiviso Firebase · V4.20.0';
 })();
 
 (function(){
@@ -988,6 +988,52 @@ for(const [key,label] of [['estrazione_polpo','1. Estrazione'],['lavorazione_pol
 const style=document.createElement('style');
 style.textContent='.family-menu{background:#f6fafb;margin:12px 0}.family-menu>.family-content{display:block}.family-subsection{padding:8px 0;border-bottom:1px solid #dbe7ea}.family-subsection:last-child{border-bottom:0}.family-subsection h3{margin:8px 0;color:#075a62}.family-menu .phase-group{margin:8px 0}.family-menu .row>div{min-width:0}.family-menu summary{list-style-position:inside}';
 document.head.appendChild(style);
+})();
+
+
+(function(){
+'use strict';
+// Multi-selezione indipendente per TUTTE le nuove lavorazioni.
+// Riutilizza il campo operators[] già previsto in extraSave/extraLoad.
+function namesFor(k){
+ const current=extraOperators(extraRead(document.getElementById('date').value||today())[k]||{});
+ return [...new Set([...(db.staff||[]),...(typeof extra!=='undefined'?extra:[]),...current].filter(Boolean))].sort((a,b)=>a.localeCompare(b,'it'));
+}
+function selected(el){return [...new Set([...el.querySelectorAll('[data-operator]')].map(x=>x.value).filter(Boolean))]}
+function makeSelector(key){
+ const el=document.getElementById('extra-'+key);if(!el)return;
+ const old=el.querySelector('[data-add-operator]');
+ if(old)old.style.display='none';
+ let panel=el.querySelector('.multi-operators-v4200');
+ if(!panel){panel=document.createElement('details');panel.className='multi-operators-v4200';
+ panel.style.cssText='border:1px solid #bdd5da;border-radius:8px;padding:10px;margin:10px 0;background:#f7fbfc';
+ panel.innerHTML='<summary style="font-weight:700;cursor:pointer">👥 Seleziona più operatori <span data-count></span></summary><div data-checks style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:9px;padding:12px 0"></div><button type="button" class="btn" data-apply>✓ Conferma operatori</button><p class="small" data-status></p>';
+ const list=el.querySelector('[data-operator-list]');list?.parentNode.insertBefore(panel,list);
+ if(list)list.style.display='none';
+ }
+ const current=new Set(selected(el));
+ const choices=panel.querySelector('[data-checks]');
+ choices.innerHTML='';
+ for(const name of namesFor(key)){
+  const label=document.createElement('label');label.style.cssText='display:flex;align-items:center;gap:8px;font-size:.9rem';
+  const box=document.createElement('input');box.type='checkbox';box.value=name;box.checked=current.has(name);
+  label.append(box,document.createTextNode(name));choices.append(label);
+ }
+ const count=panel.querySelector('[data-count]');count.textContent='('+current.size+' selezionati)';
+ panel.querySelector('[data-apply]').onclick=()=>{
+  const picked=[...choices.querySelectorAll('input:checked')].map(x=>x.value);
+  extraSetOperators(el,picked);
+  extraSave();
+  count.textContent='('+picked.length+' selezionati)';
+  panel.querySelector('[data-status]').textContent='✓ Salvati: '+(picked.join(', ')||'nessun operatore');
+ };
+ panel.addEventListener('toggle',()=>{if(panel.open){const cur=new Set(selected(el));for(const cb of choices.querySelectorAll('input'))cb.checked=cur.has(cb.value)}},{once:false});
+}
+function refresh(){for(const [k] of EXTRA_PHASES)makeSelector(k)}
+refresh();
+document.getElementById('date')?.addEventListener('change',()=>setTimeout(refresh,30));
+const oldOpen=openDay;openDay=function(d){oldOpen(d);refresh()};
+const oldBlank=blank;blank=function(){oldBlank();refresh()};
 })();
 
 </script></body></html>
