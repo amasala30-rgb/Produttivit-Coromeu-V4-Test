@@ -1,0 +1,1009 @@
+<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#102d39"><title>Produttività Coromeu</title><style>
+:root{--navy:#102d39;--teal:#087e83;--bg:#f2f6f7;--muted:#64747b;--line:#d9e4e7}*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#17313c}header{background:var(--navy);color:white;padding:22px 17px 15px}h1{margin:0;font-size:24px}header p{margin:5px 0 0;color:#bed3d8;font-size:13px}.wrap{max-width:760px;margin:auto;padding:14px 13px 85px}.tabs{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-bottom:13px}.tabs button{padding:12px 2px;border:0;border-radius:9px;background:white;color:var(--navy);font-size:13px;font-weight:700}.tabs button.active{background:var(--teal);color:white}.card{background:white;border-radius:14px;padding:17px;margin-bottom:13px;box-shadow:0 2px 10px #122e3810}.card h2{font-size:18px;margin:0 0 14px}label{display:block;font-size:13px;font-weight:700;margin:12px 0 5px}input,select{width:100%;font-size:16px;padding:11px;border:1px solid var(--line);border-radius:9px;background:white;color:#142e3b}input[type=file]{font-size:13px}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.btn{border:0;border-radius:9px;background:var(--teal);color:white;padding:12px 14px;font-size:15px;font-weight:700;cursor:pointer}.btn.alt{background:#e7f1f2;color:#12545b}.btn.warn{background:#fff1ec;color:#9b4229}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}.actions>*{flex:1}.muted{color:var(--muted);font-size:13px;line-height:1.5}.person{border:1px solid var(--line);border-radius:11px;padding:12px;margin:10px 0}.person-top{display:flex;justify-content:space-between;align-items:center;gap:8px}.person-top strong{font-size:15px}.person .row{grid-template-columns:1fr 1fr}.small{font-size:12px;color:var(--muted)}.metric-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.metric{background:#eaf5f5;border-radius:11px;padding:13px}.metric b{font-size:23px;display:block;color:#0a6d71}.metric span{font-size:12px}.error{color:#a43125;font-size:13px}.hidden{display:none!important}.list-item{border-bottom:1px solid var(--line);padding:11px 0;display:flex;align-items:center;justify-content:space-between;gap:10px}.list-item:last-child{border:0}.list-item button{font-size:12px;padding:8px}.preview{max-width:100%;max-height:280px;object-fit:contain;border-radius:9px;margin-top:10px}.notice{background:#fff7df;border-radius:9px;padding:11px;font-size:13px;line-height:1.5}footer{font-size:11px;text-align:center;color:#64747b;padding:10px}#print-area{display:none}@media print{body>*:not(#print-area){display:none!important}#print-area{display:block!important;color:#172b34;padding:15mm;font:12px Arial,sans-serif}#print-area h1{font-size:23px}#print-area table{width:100%;border-collapse:collapse;margin:15px 0}#print-area td,#print-area th{border:1px solid #b7c5c9;padding:8px;text-align:left}#print-area .foot{font-size:10px;color:#667}}
+.time-tools{display:flex;gap:5px;margin-top:6px}.time-tools button{flex:1;padding:7px 3px;border:1px solid #c9e0e3;border-radius:7px;background:#eef7f7;color:#12545b;font-weight:700}details.card>summary{cursor:pointer;font-weight:750;font-size:1.15rem;padding:6px 0;list-style:revert}details.card[open]>summary{margin-bottom:15px;border-bottom:1px solid #dce5e9;padding-bottom:12px}details.card>summary::marker{color:#167e80} .prod-details{border:1px solid #d9e4e7;border-radius:10px;padding:12px;margin-top:12px}.prod-details summary{font-weight:750;cursor:pointer;color:#12545b}.prod-details .row{margin-top:8px}.prod-details input{max-width:100%}input[readonly]{background:#eff5f6;color:#28525a}</style><style>
+.person{display:grid;grid-template-columns:minmax(115px,1.2fr) minmax(0,2fr);gap:8px;align-items:center;margin:4px 0;padding:8px 5px;border-radius:6px;background:#fff}
+.person:nth-child(even){background:#f0f6f7}.person-top{display:block}.person-top strong{font-size:12px;line-height:1.2;display:block}.person-top .person-total{display:block;font-size:11px;color:#007579;margin-top:5px}
+.person .row{gap:6px}.person .row label{font-size:11px;margin:0 0 3px}.person .row input{font-size:14px;padding:8px 3px;min-width:0}.time-tools{gap:2px}.time-tools button{font-size:10px;padding:5px 0;min-width:0}
+ .time-tools button[data-clear]{background:#fff0f0;color:#a32129;border-color:#edc2c5;font-size:15px;font-weight:800;min-width:24px;flex:0 0 27px} .time-tools{display:flex;flex-wrap:nowrap} .time-tools button{white-space:nowrap} </style><style>.phase-time{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;margin:8px 0 10px;padding:8px;border-radius:9px;background:#eef7f8}.phase-time span{font-size:10px;font-weight:700;color:#3d6670}.phase-time input{font-size:13px;padding:7px 2px;min-width:0}.phase-time output{font-size:12px;font-weight:800;color:#075a62;align-self:center;text-align:center}.phase-group{margin:14px 0;padding:12px;background:#f4f8f9;border:1px solid #d5e4e8;border-radius:10px}.phase-group h3{font-size:14px;margin:0}.phase-group .muted{font-size:12px}.tabs button{font-size:11px}@media(max-width:420px){.phase-time{grid-template-columns:repeat(3,minmax(0,1fr))}.tabs button{font-size:10px;padding:10px 1px}}#sales-report-content .metric-grid{margin:16px 0}#sales-report-content .metric:last-child{background:#e1f6e9}</style>
+<style>
+.extra-phase-toggle{border:1px solid #d8e7e9;border-radius:9px;padding:10px;margin:8px 0;background:#fff}.extra-phase-toggle summary{font-weight:700;color:#075a62;cursor:pointer}.extra-phase-fields{padding-top:12px}.phase-crew{margin:-5px 0 12px;border:1px solid #d8e7e9;border-radius:9px;background:#fff;overflow:hidden}
+.phase-crew summary{cursor:pointer;padding:9px 10px;color:#075a62;font-weight:700;font-size:12px;list-style:none}
+.phase-crew summary::-webkit-details-marker{display:none}
+.phase-crew summary:after{content:' ▾';float:right}
+.phase-crew[open] summary:after{content:' ▴'}
+.phase-crew-body{padding:3px 9px 10px}
+.crew-entry{border-top:1px solid #e5edef;padding:8px 0}
+.crew-line{display:flex;align-items:center;gap:5px}
+.crew-line select{flex:1;min-width:0;font-size:12px;padding:9px 4px}
+.crew-remove{width:30px;flex:none;background:#fff4f4;border:1px solid #e5c5c5;border-radius:6px;color:#9d2732}
+.crew-times{display:flex;align-items:center;gap:6px;margin-top:5px;font-size:11px}
+.crew-times input{width:45%;min-width:0;font-size:12px;padding:6px 2px}
+.crew-add{width:100%;border:1px dashed #087e83;border-radius:7px;background:#f1faf9;color:#075a62;font-weight:700;padding:9px;margin:6px 0}
+.crew-metric{font-size:12px;color:#17434b;padding:6px 0;font-weight:700}
+.crew-warning{color:#a32d2d;font-size:11px;line-height:1.4}
+</style>
+<style>.tabs{grid-template-columns:repeat(3,minmax(0,1fr))}.tabs button{min-height:46px;font-size:12px}@media(min-width:700px){.tabs{grid-template-columns:repeat(6,minmax(0,1fr))}.tabs button{font-size:11px}}</style></head><body><header><h1>Produttività Coromeu</h1><p>Ore effettive · Produzione · Report progressivi</p></header><main class="wrap"><nav class="tabs"><button data-tab="oggi" class="active">Oggi</button><button data-tab="report">Report lavorazione</button><button data-tab="venduto">Venduto</button><button data-tab="storico">Storico</button><button data-tab="personale">Personale</button></nav>
+<section id="oggi"><div class="card" id="cloud-card"><h2>☁️ Archivio condiviso V4.17.10</h2><p id="cloud-state" class="notice">Connettiti con l'account Firebase autorizzato.</p><div id="login-fields"><label>Email</label><input type="email" id="login-email" autocomplete="username"><label>Password</label><input type="password" id="login-password" autocomplete="current-password"><div class="actions"><button class="btn" id="login-btn">Accedi</button></div></div><div id="cloud-actions" class="hidden"><div class="actions"><button class="btn alt" id="refresh-cloud">Aggiorna dati</button><button class="btn alt" id="cloud-export">Backup locale JSON</button><button class="btn warn" id="logout-btn">Esci</button></div><p class="muted">I dati salvati nella V4 rimangono disponibili online. La V3.6 resta separata.</p><p class="notice">Le giornate sono archiviate online su Firebase.</p><input type="file" id="migrate-file" accept=".json" style="display:none"></div></div><div class="card"><h2>Registrazione giornaliera</h2>
+<div class="notice" style="margin:12px 0"><b>🛟 Recupero sicuro da backup</b><p class="muted">Se una giornata appare vuota in modifica, seleziona il backup JSON. I dati vengono caricati soltanto sul modulo, non salvati automaticamente online.</p><label class="btn alt" for="recover-file" style="display:block;text-align:center;cursor:pointer">📂 Seleziona backup JSON e recupera la giornata</label><input type="file" id="recover-file" accept=".json,application/json" style="display:none"><button type="button" class="btn alt" id="restore-local-draft" style="margin-top:10px;width:100%">↩️ Recupera bozza locale (solo se necessaria)</button></div><label for="date">Data</label><input id="date" type="date"><div class="row"><div><label for="cleaning-hours">Pulizie straordinarie (ore)</label><input id="cleaning-hours" type="number" min="0" step="0.25" inputmode="decimal" placeholder="0,00"></div><div><label for="carts-sanitized">Pulizia e sanificazione carrelli (numero)</label><input id="carts-sanitized" type="number" min="0" step="1" inputmode="numeric" placeholder="0"><p class="small">8 minuti per carrello · Tempo totale: <strong id="carts-time">0 h 00 min</strong></p></div><div><label>Ore nette per produttività</label><div class="notice"><strong id="net-production-hours">0 h 00 min</strong></div></div></div><p class="muted">Le ore di pulizia e 8 minuti per ogni carrello lavato/sanificato si sottraggono dalle ore complessive lavorate per calcolare la produttività, senza modificare le ore individuali dei dipendenti.</p><div class="card" style="background:#f1f6f7;margin:16px 0"><h3>🚚 Uscite e fatturato — dati separati dalla produzione</h3><div class="row"><div><label for="sales-kg">Kg venduti / usciti</label><input id="sales-kg" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0,00"></div><div><label for="revenue">Fatturato delle uscite (€)</label><input id="revenue" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0,00"></div></div><p class="muted">Questi valori sono solo informativi e non si sommano né si sottraggono ai kg prodotti. Non modificano la produttività.</p></div><div class="row"><div><label for="pieces">Totale pezzi prodotti</label><input id="pieces" type="number" min="0" step="1" inputmode="numeric" placeholder="0"></div></div><p class="muted">Inserisci il numero complessivo dei pezzi prodotti. I kg venduti e il fatturato delle uscite sono registrati separatamente dalla produzione.</p><details class="prod-details" open><summary>🐟 Dettaglio produzione per prodotto</summary><div class="row"><div><label for="prod_filoni_tonno_estratti">Filoni · Tonno estratti</label><input id="prod_filoni_tonno_estratti" class="prod-field" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0,00"><div class="phase-time" data-phase="filoni_tonno_estratti"><span>Ora inizio</span><input type="time" id="phase_filoni_tonno_estratti_start"><span>Ora fine</span><input type="time" id="phase_filoni_tonno_estratti_end"><span>Durata</span><output id="phase_filoni_tonno_estratti_total">—</output></div><details class="phase-crew" data-crew="filoni_tonno_estratti"><summary>Estrazione · Tonno + Spada · Operatori · <span class="crew-count">0</span> · <span class="crew-rate">— kg/h</span></summary><div class="phase-crew-body"><p class="small">Puoi assegnare i nominativi anche prima di registrare turni e orari. Le ore si calcoleranno quando disponibili.</p><div class="crew-entries"></div><button type="button" class="crew-add">+ Aggiungi operatore</button><div class="crew-metric"></div><div class="crew-warning"></div></div></details></div><div><label for="prod_filoni_spada_estratti">Filoni · Spada estratti</label><input id="prod_filoni_spada_estratti" class="prod-field" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0,00"><div class="phase-time" data-phase="filoni_spada_estratti"><span>Ora inizio</span><input type="time" id="phase_filoni_spada_estratti_start"><span>Ora fine</span><input type="time" id="phase_filoni_spada_estratti_end"><span>Durata</span><output id="phase_filoni_spada_estratti_total">—</output></div></div><div><label for="prod_filoni_tonno">Filoni · Tonno siringati/confezionati</label><input id="prod_filoni_tonno" class="prod-field" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0,00"><div class="phase-time" data-phase="filoni_tonno"><span>Ora inizio</span><input type="time" id="phase_filoni_tonno_start"><span>Ora fine</span><input type="time" id="phase_filoni_tonno_end"><span>Durata</span><output id="phase_filoni_tonno_total">—</output></div><details class="phase-crew" data-crew="filoni_tonno"><summary>Siringatura/confezionamento · Tonno + Spada · Operatori · <span class="crew-count">0</span> · <span class="crew-rate">— kg/h</span></summary><div class="phase-crew-body"><p class="small">Puoi assegnare i nominativi anche prima di registrare turni e orari. Le ore si calcoleranno quando disponibili.</p><div class="crew-entries"></div><button type="button" class="crew-add">+ Aggiungi operatore</button><div class="crew-metric"></div><div class="crew-warning"></div></div></details></div><div><label for="prod_filoni_spada">Filoni · Spada siringati/confezionati</label><input id="prod_filoni_spada" class="prod-field" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0,00"><div class="phase-time" data-phase="filoni_spada"><span>Ora inizio</span><input type="time" id="phase_filoni_spada_start"><span>Ora fine</span><input type="time" id="phase_filoni_spada_end"><span>Durata</span><output id="phase_filoni_spada_total">—</output></div></div><div><label for="prod_filoni_tonno_pesati">Filoni · Tonno pesati/etichettati</label><input id="prod_filoni_tonno_pesati" class="prod-field" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0,00"><div class="phase-time" data-phase="filoni_tonno_pesati"><span>Ora inizio</span><input type="time" id="phase_filoni_tonno_pesati_start"><span>Ora fine</span><input type="time" id="phase_filoni_tonno_pesati_end"><span>Durata</span><output id="phase_filoni_tonno_pesati_total">—</output></div><details class="phase-crew" data-crew="filoni_tonno_pesati"><summary>Pesatura/etichettatura · Tonno + Spada · Operatori · <span class="crew-count">0</span> · <span class="crew-rate">— kg/h</span></summary><div class="phase-crew-body"><p class="small">Puoi assegnare i nominativi anche prima di registrare turni e orari. Le ore si calcoleranno quando disponibili.</p><div class="crew-entries"></div><button type="button" class="crew-add">+ Aggiungi operatore</button><div class="crew-metric"></div><div class="crew-warning"></div></div></details></div><div><label for="prod_filoni_spada_pesati">Filoni · Spada pesati/etichettati</label><input id="prod_filoni_spada_pesati" class="prod-field" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0,00"><div class="phase-time" data-phase="filoni_spada_pesati"><span>Ora inizio</span><input type="time" id="phase_filoni_spada_pesati_start"><span>Ora fine</span><input type="time" id="phase_filoni_spada_pesati_end"><span>Durata</span><output id="phase_filoni_spada_pesati_total">—</output></div></div><div><label for="prod_burger_tonno">Burger · Tonno</label><input id="prod_burger_tonno" class="prod-field" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0,00"></div><div><label for="prod_burger_spada">Burger · Pesce spada</label><input id="prod_burger_spada" class="prod-field" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0,00"></div><div><label for="prod_burger_salmone">Burger · Salmone</label><input id="prod_burger_salmone" class="prod-field" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0,00"></div><div><label for="prod_bistecche_tonno">Bistecche · Tonno</label><input id="prod_bistecche_tonno" class="prod-field" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0,00"></div><div><label for="prod_bistecche_spada">Bistecche · Pesce spada</label><input id="prod_bistecche_spada" class="prod-field" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0,00"></div><div><label for="prod_bistecche_salmone">Bistecche · Salmone</label><input id="prod_bistecche_salmone" class="prod-field" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0,00"></div><div><label for="prod_bottarga_grattugiata">Bottarga · Grattugiata</label><input id="prod_bottarga_grattugiata" class="prod-field" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0,00"></div><div><label for="prod_bottarga_baffa">Bottarga · Baffa</label><input id="prod_bottarga_baffa" class="prod-field" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0,00"></div></div><div class="phase-group"><h3>⏱️ Orario unico · Burger e bistecche</h3><p class="muted">I kg rimangono separati per prodotto; l’orario è unico.</p><div class="phase-time" data-phase="burger_bistecche"><span>Ora inizio</span><input type="time" id="phase_burger_bistecche_start"><span>Ora fine</span><input type="time" id="phase_burger_bistecche_end"><span>Durata</span><output id="phase_burger_bistecche_total">—</output></div><details class="phase-crew" data-crew="burger_bistecche"><summary>Operatori · <span class="crew-count">0</span> · <span class="crew-rate">— kg/h</span></summary><div class="phase-crew-body"><p class="small">Puoi assegnare i nominativi anche prima di registrare turni e orari. Le ore si calcoleranno quando disponibili.</p><div class="crew-entries"></div><button type="button" class="crew-add">+ Aggiungi operatore</button><div class="crew-metric"></div><div class="crew-warning"></div></div></details></div><div class="phase-group"><h3>⏱️ Orario unico · Bottarga grattugiata e in baffa</h3><p class="muted">I kg rimangono separati; l’orario è unico.</p><div class="phase-time" data-phase="bottarga"><span>Ora inizio</span><input type="time" id="phase_bottarga_start"><span>Ora fine</span><input type="time" id="phase_bottarga_end"><span>Durata</span><output id="phase_bottarga_total">—</output></div><details class="phase-crew" data-crew="bottarga"><summary>Operatori · <span class="crew-count">0</span> · <span class="crew-rate">— kg/h</span></summary><div class="phase-crew-body"><p class="small">Puoi assegnare i nominativi anche prima di registrare turni e orari. Le ore si calcoleranno quando disponibili.</p><div class="crew-entries"></div><button type="button" class="crew-add">+ Aggiungi operatore</button><div class="crew-metric"></div><div class="crew-warning"></div></div></details></div></details><div class="metric-grid" style="margin-top:12px"><div class="metric"><b id="filoni-total">0,00</b><span>Kg produzione filoni (tonno + spada)</span></div><div class="metric"><b id="finished-total">0,00</b><span>Kg prodotto finito realizzato oggi</span></div><div class="metric"><b id="total-produced">0,00</b><span>Kg totali prodotti</span></div></div><p class="muted">Kg totali lavorati = somma dei kg registrati nelle tre fasi dei filoni + prodotto finito. Lo stesso filone può essere conteggiato in più fasi.</p></div>
+<details class="card" id="notes-panel"><summary>📝 Note e osservazioni</summary><p class="muted">Le note si aggiungono senza cancellare le precedenti, anche dopo la chiusura della giornata.</p><div id="notes-list"></div><textarea id="new-note" rows="3" placeholder="Aggiungi una nota o un chiarimento..."></textarea><div class="actions"><button class="btn alt" id="add-note">Aggiungi nota</button><button class="btn alt" id="close-day">Chiudi / Riapri giornata</button></div><p id="day-status" class="muted"></p></details><details class="card" id="audit-panel"><summary>📋 Registro modifiche</summary><p class="muted">Visibile a tutti e quattro gli operatori. Le registrazioni non possono essere modificate o eliminate dall’app.</p><label for="audit-date">Giornata da consultare</label><input id="audit-date" type="date"><div class="actions"><button id="audit-refresh" class="btn alt">Aggiorna registro</button></div><div id="audit-list"><p class="muted">Accedi per consultare il registro.</p></div></details><div class="card"><div class="actions"><button type="button" id="restore-26" class="btn alt" style="width:100%">↩️ Recupera orari del 26 ottobre dalle foto</button></div><p class="muted">Carica gli orari sul modulo senza salvarli: verifica i dati, poi premi Salva.</p><h2>Presenze e orari</h2><p class="muted">Inserisci ingresso e uscita per ogni dipendente. Si sottraggono automaticamente 15 minuti di pausa per ogni persona con turno valido.</p><p class="muted">Nominativi precaricati dal foglio presenze aziendale. Compila solo ingresso e uscita: 15 minuti di pausa sono sottratti automaticamente. Gli assenti restano vuoti.</p><div class="notice" style="margin:12px 0"><strong>📷 Foglio presenze</strong><p class="muted">Scegli una foto dalla galleria o scattane una nuova. La foto si apre sotto, ingrandibile; trascrivi solo entrata e uscita nei campi già associati ai nominativi.</p><div class="actions"><label class="btn alt" style="margin:0;text-align:center">🖼️ Scegli dalla galleria<input id="gallery-presenze" type="file" accept="image/*" style="display:none"></label><label class="btn alt" style="margin:0;text-align:center">📸 Scatta foto<input id="camera-presenze" type="file" accept="image/*" capture="environment" style="display:none"></label></div><div id="photo-area" class="hidden" style="margin-top:12px"><a id="photo-open" target="_blank" rel="noopener" title="Apri foto ingrandita"><img id="photo-preview" alt="Foto foglio presenze" style="display:block;width:100%;max-height:520px;object-fit:contain;border:1px solid #ccd;border-radius:9px"></a><button id="remove-photo" type="button" class="btn alt" style="margin-top:8px">Rimuovi foto</button></div><p class="small">La foto è un riferimento visivo: gli orari scritti a mano non vengono letti automaticamente.</p></div><div id="people-inputs"></div><div class="actions"><button class="btn alt" id="add-temp">+ Dipendente per oggi</button></div></div>
+<div class="card"><h2>Riepilogo automatico</h2><div class="metric-grid"><div class="metric"><b id="sum-hours">0 h 00</b><span>Ore lavorate</span></div><div class="metric"><b id="sum-kg">0,00</b><span>Kg totali</span></div><div class="metric"><b id="sum-prod">—</b><span>Kg per ora lavorata</span></div><div class="metric"><b id="sum-workers">0</b><span>Dipendenti presenti</span></div></div><p id="form-error" class="error"></p><div class="actions"><button id="save" class="btn">Salva e invia PDF</button><button id="reset" class="btn alt">Nuova giornata</button></div></div></section>
+<section id="report" class="hidden"><div class="card"><h2>Report produttività</h2><label for="period">Periodo</label><select id="period"><option value="day">Giornaliero</option><option value="week">Settimanale progressivo</option><option value="month">Mensile progressivo</option><option value="year">Annuale progressivo</option></select><label for="reference">Data di riferimento (fino a questo giorno)</label><input type="date" id="reference"><div id="report-content"></div><div class="actions"><button id="print" class="btn">🖨️ Stampa / PDF</button><button id="share" class="btn alt">📲 Condividi PDF</button></div><p class="muted">Su iPhone, da Stampa puoi salvare il PDF tramite Condividi → Salva su File. La condivisione PDF diretta dipende dal browser; in alternativa condividi il riepilogo testuale.</p></div></section>
+<section id="venduto" class="hidden"><div class="card"><h2>🛒 Produttività del venduto</h2><p class="muted">Calcolo indipendente dalla lavorazione. Le ore di pulizia e sanificazione non vengono sottratte.</p><label for="sales-period">Periodo</label><select id="sales-period"><option value="day">Giornata</option><option value="week">Settimana progressiva</option><option value="month">Mese progressivo</option></select><label for="sales-reference">Data di riferimento</label><input id="sales-reference" type="date"><div id="sales-report-content"></div><button id="sales-pdf" class="btn" style="width:100%;background:#137d4b">🖨️ Stampa / Salva PDF del venduto</button></div></section><section id="storico" class="hidden"><div class="card"><h2>Storico giornate</h2><div id="history"></div></div></section>
+<section id="personale" class="hidden"><div class="card"><h2>Anagrafica dipendenti</h2><p class="muted">Aggiungi qui i nominativi una sola volta: compariranno ogni giorno nel modulo presenze.</p><label for="new-name">Nome e cognome</label><input id="new-name" placeholder="Nome Cognome"><div class="actions"><button id="add-person" class="btn">Aggiungi dipendente</button></div><div id="names"></div></div><div class="card"><h2>Backup dati</h2><p class="notice">I dati condivisi sono salvati su Firebase. Per sicurezza esporta periodicamente una copia JSON. Il ripristino locale non modifica Firebase.</p><div class="actions"><button id="export" class="btn">Esporta backup JSON</button><label class="btn alt" style="text-align:center;margin:0;cursor:pointer">Importa copia locale (non Firebase)<input id="import" type="file" accept="application/json,.json" style="display:none"></label></div></div></section></main><footer>Produttività Coromeu · Versione 4.18.4 PROVA · Archivio condiviso Firebase</footer><div id="print-area"></div><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script><script>
+window.addEventListener('error',function(e){const el=document.getElementById('cloud-state');if(el)el.textContent='Errore applicazione: '+(e.message||'errore sconosciuto')});
+window.addEventListener('unhandledrejection',function(e){const el=document.getElementById('cloud-state');if(el)el.textContent='Errore applicazione: '+(e.reason?.message||String(e.reason||'errore sconosciuto'))});
+const PHASE_KEYS=['filoni_tonno_estratti','filoni_spada_estratti','filoni_tonno','filoni_spada','filoni_tonno_pesati','filoni_spada_pesati','burger_bistecche','bottarga'];
+const PHASE_NAMES={'filoni_tonno_estratti':'Estrazione tonno','filoni_spada_estratti':'Estrazione spada','filoni_tonno':'Siringatura/confezionamento tonno','filoni_spada':'Siringatura/confezionamento spada','filoni_tonno_pesati':'Pesatura/etichettatura tonno','filoni_spada_pesati':'Pesatura/etichettatura spada','burger_bistecche':'Burger e bistecche','bottarga':'Bottarga grattugiata e in baffa'};
+
+const CREW_GROUPS={
+ filoni_tonno_estratti:['filoni_tonno_estratti','filoni_spada_estratti'],
+ filoni_tonno:['filoni_tonno','filoni_spada'],
+ filoni_tonno_pesati:['filoni_tonno_pesati','filoni_spada_pesati'],
+ burger_bistecche:['burger_bistecche'],bottarga:['bottarga']
+};
+const CREW_KEYS=Object.keys(CREW_GROUPS);
+const phaseCrew=Object.fromEntries(PHASE_KEYS.map(k=>[k,[]]));
+const FIREBASE_CONFIG={apiKey:"AIzaSyAjvXRLetArmzPrhjViqf9UswYfcHyJ384",authDomain:"produttivita-coromeu.firebaseapp.com",projectId:"produttivita-coromeu",appId:"1:241160439090:web:7e383d31de8a9a9b5e432b"};
+'use strict';const KEY='coromeu-prod-v4-beta';const $=id=>document.getElementById(id);const today=()=>{let d=new Date();return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-')};const fmt=(n,d=2)=>Number(n||0).toLocaleString('it-IT',{minimumFractionDigits:d,maximumFractionDigits:d});const escape=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));const load=()=>{try{let x=JSON.parse(localStorage.getItem(KEY));return x&&Array.isArray(x.staff)&&x.days&&typeof x.days==='object'?x:{staff:[],days:{}}}catch{return {staff:[],days:{}}}};let db=load(),extra=[],photoUrl=null;const STAFF_PREDEFINITO=["GABRIELE CARLINI", "FABRIZIO CELESTE", "ANTONIO CARBONI", "MARIUS SCURTU", "SERGIO ARMINIU", "GIOMARIA SECHI", "GIUSEPPE LIGIOS", "IOAN ARDELEANU", "GIOVANNI COSSU", "GIANMARCO MARRAS", "MASSIMO PALA", "MAURIZIO COSSU", "TETYANA MARTSYNOVSKA", "RICCARDO BALLONE", "ALICE MURA", "GIAN LUCA PAOLINO", "MORENO MARTINEZ", "VALTER ARDUINI", "ANDREA MASALA"];if(!db.staff.length){db.staff=[...STAFF_PREDEFINITO];try{localStorage.setItem(KEY,JSON.stringify(db))}catch(e){}}function persist(){try{localStorage.setItem(KEY,JSON.stringify(db));return true}catch{alert('Memoria dispositivo piena o non disponibile. Esporta un backup.');return false}}
+let selectedPhotoUrl=null;function setPresenzePhoto(file){if(!file)return;if(!file.type.startsWith('image/'))return alert('Seleziona una fotografia.');if(selectedPhotoUrl)URL.revokeObjectURL(selectedPhotoUrl);selectedPhotoUrl=URL.createObjectURL(file);$('photo-preview').src=selectedPhotoUrl;$('photo-open').href=selectedPhotoUrl;$('photo-area').classList.remove('hidden')}['gallery-presenze','camera-presenze'].forEach(id=>$(id).addEventListener('change',e=>{setPresenzePhoto(e.target.files?.[0]);e.target.value=''}));$('remove-photo').onclick=()=>{if(selectedPhotoUrl)URL.revokeObjectURL(selectedPhotoUrl);selectedPhotoUrl=null;$('photo-preview').removeAttribute('src');$('photo-area').classList.add('hidden')};
+function mins(t){if(!/^\d{2}:\d{2}$/.test(t||''))return null;let [h,m]=t.split(':').map(Number);return h<24&&m<60?h*60+m:null}function shift(a,b){let x=mins(a),y=mins(b);if(x===null||y===null)return null;let diff=y-x;if(diff<0)diff+=1440;return Math.max(0,diff-15)}function hfmt(m){return Math.floor(m/60)+' h '+String(m%60).padStart(2,'0')}
+function renderPeople(data){let names=[...db.staff,...extra.filter(n=>!db.staff.includes(n))];let old=data||{};$('people-inputs').innerHTML=names.map((name,i)=>{let p=old[name]||{};return `<div class="person" data-name="${escape(name)}"><div class="person-top"><strong>${escape(name)}</strong><span class="small person-total">Assente</span></div><div class="row"><div><label>Ingresso</label><input class="in" type="time" value="${escape(p.in||'')}"><div class="time-tools"><button type="button" data-field="in" data-step="-15">−15m</button><button type="button" data-field="in" data-now="1">Adesso</button><button type="button" data-field="in" data-step="15">+15m</button><button type="button" data-field="in" data-clear="1" aria-label="Cancella orario" title="Cancella orario">✕</button></div></div><div><label>Uscita</label><input class="out" type="time" value="${escape(p.out||'')}"><div class="time-tools"><button type="button" data-field="out" data-step="-15">−15m</button><button type="button" data-field="out" data-now="1">Adesso</button><button type="button" data-field="out" data-step="15">+15m</button><button type="button" data-field="out" data-clear="1" aria-label="Cancella orario" title="Cancella orario">✕</button></div></div></div></div>`}).join('')||'<p class="muted">Nessun dipendente. Apri Personale per aggiungere i nominativi.</p>';document.querySelectorAll('.person input').forEach(el=>el.addEventListener('input',update));document.querySelectorAll('.time-tools button').forEach(b=>b.onclick=()=>{let input=b.closest('.person').querySelector('.'+b.dataset.field),v;if(b.dataset.clear){v=''}else if(b.dataset.now){let d=new Date();v=String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')}else{let start=mins(input.value),total=((start===null?360:start)+Number(b.dataset.step)+1440)%1440;v=String(Math.floor(total/60)).padStart(2,'0')+':'+String(total%60).padStart(2,'0')}input.value=v;update()});update()}
+const PROD_FIELDS={"filoni_tonno_estratti": "Filoni · Tonno estratti", "filoni_spada_estratti": "Filoni · Spada estratti", "filoni_tonno": "Filoni · Tonno siringati/confezionati", "filoni_spada": "Filoni · Spada siringati/confezionati", "filoni_tonno_pesati": "Filoni · Tonno pesati/etichettati", "filoni_spada_pesati": "Filoni · Spada pesati/etichettati", "burger_tonno": "Burger · Tonno", "burger_spada": "Burger · Pesce spada", "burger_salmone": "Burger · Salmone", "bistecche_tonno": "Bistecche · Tonno", "bistecche_spada": "Bistecche · Pesce spada", "bistecche_salmone": "Bistecche · Salmone", "bottarga_grattugiata": "Bottarga · Grattugiata", "bottarga_baffa": "Bottarga · Baffa"};function productionFromForm(){let p={},total=0;for(const k of Object.keys(PROD_FIELDS)){let raw=$('prod_'+k).value;let v=Number(raw||0);p[k]=v;total+=v}return {production:p,produced:Math.round(total*100)/100}};const FILONI_KEYS=['filoni_tonno_estratti','filoni_spada_estratti','filoni_tonno','filoni_spada','filoni_tonno_pesati','filoni_spada_pesati'];
+function productionGroups(p){const filoni=FILONI_KEYS.reduce((a,k)=>a+Number(p?.[k]||0),0);const finito=Object.keys(PROD_FIELDS).filter(k=>!FILONI_KEYS.includes(k)).reduce((a,k)=>a+Number(p?.[k]||0),0);return {filoni:Math.round(filoni*1000)/1000,finito:Math.round(finito*1000)/1000}}
+function producedOf(d){return d.production?Object.values(d.production).reduce((a,b)=>a+Number(b||0),0):Number(d.usciti||0)+Number(d.previsti||0)};
+function readForm(){let people={},minutes=0,workers=0,issues=[];document.querySelectorAll('#people-inputs .person').forEach(el=>{let name=el.dataset.name,a=el.querySelector('.in').value,b=el.querySelector('.out').value;if(a||b){if(!a||!b){people[name]={in:a,out:b,minutes:0};el.querySelector('.person-total').textContent=a?'In servizio · uscita da inserire':'Uscita da verificare';return}let m=shift(a,b);if(m===null||m===0){issues.push('Controlla il turno di '+name);return}people[name]={in:a,out:b,minutes:m};minutes+=m;workers++;el.querySelector('.person-total').textContent=hfmt(m)}else el.querySelector('.person-total').textContent='Assente'});let pieces=Number($('pieces').value||0),revenue=Number($('revenue').value||0),salesKg=Number($('sales-kg').value||0);if(!Number.isFinite(salesKg)||salesKg<0)issues.push('I kg venduti devono essere un valore positivo');if(!Number.isInteger(pieces)||pieces<0)issues.push('Il totale pezzi deve essere un numero intero positivo');if(!Number.isFinite(revenue)||revenue<0)issues.push('Il fatturato deve essere un valore positivo');let a=0,pr=productionFromForm(),b=pr.produced;if(Object.values(pr.production).some(x=>x<0||!Number.isFinite(x)))issues.push('I kg devono essere valori positivi');let cartsSanitized=Number($('carts-sanitized').value||0);if(!Number.isInteger(cartsSanitized)||cartsSanitized<0)issues.push('Il numero dei carrelli deve essere un intero non negativo');let cleaningHours=Number($('cleaning-hours').value||0);if(!Number.isFinite(cleaningHours)||cleaningHours<0)issues.push('Ore pulizie non valide');if(cleaningHours*60+cartsSanitized*8>minutes&&minutes>0)issues.push('Le ore di pulizia non possono superare le ore lavorate');return {date:$('date').value,usciti:a,previsti:b,production:pr.production,produced:pr.produced,pieces,revenue,salesKg,cleaningHours,cartsSanitized,people,minutes,workers,phaseTimes:readPhaseTimes(),issues}}
+function update(){let v=readForm();$('sum-hours').textContent=hfmt(v.minutes);$('net-production-hours').textContent=hfmt(Math.max(0,v.minutes-v.cleaningHours*60-v.cartsSanitized*8));$('carts-time').textContent=hfmt(v.cartsSanitized*8);const groups=productionGroups(v.production);$('filoni-total').textContent=fmt(groups.filoni);$('finished-total').textContent=fmt(groups.finito);$('total-produced').textContent=fmt(v.produced);$('sum-kg').textContent=fmt(v.produced);$('sum-prod').textContent=v.minutes-v.cleaningHours*60-v.cartsSanitized*8>0?fmt(v.produced*60/(v.minutes-v.cleaningHours*60-v.cartsSanitized*8)):'—';$('sum-workers').textContent=v.workers;$('form-error').textContent=v.issues.join(' · ')}
+function openDay(date){let d=db.days[date];$('date').value=date;for(const k of Object.keys(PROD_FIELDS))$('prod_'+k).value=d?.production?.[k]??'';$('pieces').value=d?.pieces??'';$('revenue').value=d?.revenue??'';$('sales-kg').value=d?.salesKg??d?.usciti??'';$('cleaning-hours').value=d?.cleaningHours??'';$('carts-sanitized').value=d?.cartsSanitized??'';writePhaseTimes(d?.phaseTimes||{});extra=d?Object.keys(d.people).filter(n=>!db.staff.includes(n)):[];renderPeople(d?.people);document.querySelector('[data-tab="oggi"]').click();scrollTo(0,0)}function blank(){extra=[];$('date').value=today();$('pieces').value='';$('revenue').value='';$('sales-kg').value='';$('cleaning-hours').value='';$('carts-sanitized').value='';for(const k of Object.keys(PROD_FIELDS))$('prod_'+k).value='';writePhaseTimes({});renderPeople()}
+$('date').value=today();$('reference').value=today();renderPeople();['pieces','revenue','sales-kg','cleaning-hours','carts-sanitized',...Object.keys(PROD_FIELDS).map(k=>'prod_'+k)].forEach(id=>$(id).addEventListener('input',update));$('date').addEventListener('change',()=>openDay($('date').value));$('reset').onclick=blank;$('save').onclick=()=>{let v=readForm();if(v.issues.length)return alert(v.issues.join('\n'));if(!v.date)return alert('Seleziona una data');if(!v.minutes)return alert('Inserisci almeno un turno valido');if(!confirm('Salvare la giornata '+v.date+'? Se già presente, verrà aggiornata.'))return;db.days[v.date]={date:v.date,usciti:v.usciti,previsti:v.previsti,production:v.production,pieces:v.pieces,revenue:v.revenue,salesKg:v.salesKg,cleaningHours:v.cleaningHours,cartsSanitized:v.cartsSanitized,people:v.people,minutes:v.minutes,workers:v.workers,updated:new Date().toISOString()};if(persist()){renderHistory();$('reference').value=v.date;$('period').value='day';renderReport();setTimeout(()=>sharePDF(summary(),true),100)}};
+$('add-temp').onclick=()=>{let n=prompt('Nome e cognome del dipendente per questa giornata:')?.trim();if(n&&!db.staff.includes(n)&&!extra.includes(n)){let cur=readForm().people;extra.push(n);renderPeople(cur)}};
+function tab(name){document.querySelectorAll('main section').forEach(x=>x.classList.toggle('hidden',x.id!==name));document.querySelectorAll('.tabs button').forEach(x=>x.classList.toggle('active',x.dataset.tab===name));if(name==='report')renderReport();if(name==='venduto')renderSalesReport();if(name==='storico')renderHistory();if(name==='personale')renderNames()}document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>tab(b.dataset.tab));
+$('add-person').onclick=()=>{let n=$('new-name').value.trim();if(!n)return;if(db.staff.includes(n))return alert('Dipendente già presente');db.staff.push(n);if(persist()){$('new-name').value='';renderNames();renderPeople(readForm().people)}};function renderNames(){$('names').innerHTML=db.staff.map((n,i)=>`<div class="list-item"><span>${escape(n)}</span><button class="btn warn" data-i="${i}">Rimuovi</button></div>`).join('')||'<p class="muted">Nessun nominativo inserito.</p>';$('names').querySelectorAll('button').forEach(b=>b.onclick=()=>{let n=db.staff[Number(b.dataset.i)];if(confirm('Rimuovere '+n+' dall’elenco? I dati storici resteranno salvati.')){db.staff.splice(Number(b.dataset.i),1);persist();renderNames();renderPeople(readForm().people)}})}
+function periodDays(){let ref=$('reference').value||today(),type=$('period').value;let r=new Date(ref+'T12:00:00');let start=new Date(r);if(type==='week'){let weekday=(r.getDay()+6)%7;start.setDate(r.getDate()-weekday)}if(type==='month')start.setDate(1);if(type==='year'){start.setMonth(0);start.setDate(1)}let from=[start.getFullYear(),String(start.getMonth()+1).padStart(2,'0'),String(start.getDate()).padStart(2,'0')].join('-');return {ref,from,type,days:Object.values(db.days).filter(d=>d.date>=from&&d.date<=ref).sort((a,b)=>a.date.localeCompare(b.date))}}
+function summary(){let x=periodDays(),kgOut=0,kgFuture=0,minutes=x.days.reduce((s,d)=>s+d.minutes,0);let cleaningMinutes=x.days.reduce((a,d)=>a+Number(d.cleaningHours||0)*60,0),cartsSanitized=x.days.reduce((a,d)=>a+Number(d.cartsSanitized||0),0),cartsMinutes=cartsSanitized*8,productiveMinutes=Math.max(0,minutes-cleaningMinutes-cartsMinutes);return {...x,kgOut,kgFuture,kg:x.days.reduce((a,d)=>a+producedOf(d),0),minutes,cleaningMinutes,cartsSanitized,cartsMinutes,productiveMinutes,pieces:x.days.reduce((a,d)=>a+Number(d.pieces||0),0),revenue:x.days.reduce((a,d)=>a+Number(d.revenue||0),0),salesKg:x.days.reduce((a,d)=>a+Number(d.salesKg??d.usciti??0),0),productionTotals:Object.fromEntries(Object.keys(PROD_FIELDS).map(k=>[k,x.days.reduce((sum,d)=>sum+Number(d.production?.[k]||0),0)])),filoniKg:x.days.reduce((a,d)=>a+productionGroups(d.production).filoni,0),finishedKg:x.days.reduce((a,d)=>a+productionGroups(d.production).finito,0),rate:productiveMinutes?x.days.reduce((a,d)=>a+producedOf(d),0)*60/productiveMinutes:0}}
+function staffTotals(s){const totals=new Map();for(const n of db.staff)totals.set(n,{minutes:0,days:0});for(const d of s.days){for(const [n,p] of Object.entries(d.people||{})){if(!totals.has(n))totals.set(n,{minutes:0,days:0});const v=totals.get(n);const m=Number(p.minutes)||0;if(m>0){v.minutes+=m;v.days++}}}return [...totals.entries()].map(([name,v])=>({name,...v})).filter(x=>x.minutes>0).sort((a,b)=>a.name.localeCompare(b.name,'it'))}
+function staffTable(s){const rows=staffTotals(s);return '<h3>Ore per dipendente nel periodo</h3>'+(rows.length?'<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:13px"><thead><tr><th style="text-align:left">Dipendente</th><th>Giorni</th><th>Ore effettive</th></tr></thead><tbody>'+rows.map(x=>'<tr><td>'+escape(x.name)+'</td><td>'+x.days+'</td><td>'+hfmt(x.minutes)+'</td></tr>').join('')+'</tbody></table></div>':'<p class="muted">Nessuna presenza nel periodo.</p>')}
+function reportTitle(s){return {day:'Giornaliero',week:'Settimanale progressivo',month:'Mensile progressivo',year:'Annuale progressivo'}[s.type]}
+function reportHTML(s){return `<p class="muted"><b>${reportTitle(s)}</b><br>Dal ${escape(s.from)} al ${escape(s.ref)} · ${s.days.length} giornate registrate</p><div class="metric-grid"><div class="metric"><b>${hfmt(s.minutes)}</b><span>Ore effettive</span></div><div class="metric"><b>${fmt(s.kg)}</b><span>Kg totali</span></div><div class="metric"><b>${s.productiveMinutes?fmt(s.rate):'—'}</b><span>Kg/ora</span></div><div class="metric"><b>${s.days.length}</b><span>Giornate</span></div></div><p class="muted">Pulizie straordinarie: <b>${hfmt(s.cleaningMinutes)}</b> · Carrelli sanificati: <b>${s.cartsSanitized}</b> (${hfmt(s.cartsMinutes)}) · Ore nette produzione: <b>${hfmt(s.productiveMinutes)}</b></p><p class="muted">Pezzi prodotti: <b>${s.pieces||0}</b> · Kg venduti/usciti: <b>${fmt(s.salesKg||0)}</b> · Fatturato uscite: <b>€ ${fmt(s.revenue||0)}</b></p><p class="muted">Le uscite sono un dato distinto: non incidono sul totale prodotto né sul calcolo dei kg/ora.</p><p class="notice"><b>Produzione filoni:</b> ${fmt(s.filoniKg)} kg<br><b>Prodotto finito realizzato:</b> ${fmt(s.finishedKg)} kg<br><b>Totale effettivamente prodotto:</b> ${fmt(s.kg)} kg</p><details><summary>Dettaglio kg per prodotto</summary>${Object.entries(PROD_FIELDS).map(([k,label])=>`<p>${escape(label)}: <b>${fmt(s.productionTotals?.[k]||0)} kg</b></p>`).join('')}</details>${(s.days.length?'<div style="overflow:auto"><table style="width:100%;font-size:12px;border-collapse:collapse"><tr><th>Data</th><th>Ore</th><th>Kg</th><th>Kg/h</th></tr>'+s.days.map(d=>`<tr><td>${escape(d.date)}</td><td>${hfmt(d.minutes)}</td><td>${fmt(producedOf(d))}</td><td>${d.minutes-Number(d.cleaningHours||0)*60-Number(d.cartsSanitized||0)*8>0?fmt((producedOf(d))*60/(d.minutes-Number(d.cleaningHours||0)*60-Number(d.cartsSanitized||0)*8)):'—'}</td></tr>`).join('')+'</table></div>':'<p class="notice">Nessuna giornata registrata nel periodo.</p>')+staffTable(s)}`}
+function renderReport(){$('report-content').innerHTML=reportHTML(summary())}$('period').onchange=renderReport;$('reference').onchange=renderReport;
+function printHTML(s){let rows=s.days.map(d=>`<tr><td>${escape(d.date)}</td><td>${hfmt(d.minutes)}</td><td>${fmt(productionGroups(d.production).filoni)}</td><td>${fmt(productionGroups(d.production).finito)}</td><td>${fmt(producedOf(d))}</td><td>${d.minutes-Number(d.cleaningHours||0)*60-Number(d.cartsSanitized||0)*8>0?fmt((producedOf(d))*60/(d.minutes-Number(d.cleaningHours||0)*60-Number(d.cartsSanitized||0)*8)):'—'}</td></tr>`).join('');let people=s.type==='day'&&s.days[0]?'<h2>Dettaglio presenze</h2><table><tr><th>Dipendente</th><th>Ingresso</th><th>Uscita</th><th>Ore effettive</th></tr>'+Object.entries(s.days[0].people).map(([n,p])=>`<tr><td>${escape(n)}</td><td>${escape(p.in)}</td><td>${escape(p.out)}</td><td>${hfmt(p.minutes)}</td></tr>`).join('')+'</table>':'';return `<h1>PRODUTTIVITÀ COROMEU</h1><h2>Report ${reportTitle(s)}</h2><p>Periodo: ${s.from} — ${s.ref} · Giornate registrate: ${s.days.length}</p><table><tr><th>Ore effettive</th><th>Produzione filoni</th><th>Prodotto finito</th><th>Kg totali</th><th>Produttività kg/h</th></tr><tr><td>${hfmt(s.minutes)}</td><td>${fmt(s.filoniKg)}</td><td>${fmt(s.finishedKg)}</td><td>${fmt(s.kg)}</td><td><b>${s.productiveMinutes?fmt(s.rate):'—'}</b></td></tr></table><p><b>Pezzi prodotti:</b> ${s.pieces||0} · <b>Kg venduti/usciti:</b> ${fmt(s.salesKg||0)} · <b>Fatturato uscite:</b> € ${fmt(s.revenue||0)}</p><p><b>Pulizie straordinarie:</b> ${hfmt(s.cleaningMinutes)} · <b>Ore nette produzione:</b> ${hfmt(s.productiveMinutes)}</p><p><b>Produzione filoni:</b> ${fmt(s.filoniKg)} kg · <b>Prodotto finito:</b> ${fmt(s.finishedKg)} kg · <b>Totale prodotto:</b> ${fmt(s.kg)} kg</p><h2>Dettaglio giornate</h2><table><tr><th>Data</th><th>Ore</th><th>Produzione filoni</th><th>Prodotto finito</th><th>Totale kg</th><th>Kg/h</th></tr>${rows}</table>${'<h2>Produzione per prodotto</h2><table>'+Object.entries(PROD_FIELDS).map(([k,label])=>'<tr><td>'+escape(label)+'</td><td>'+fmt(s.productionTotals?.[k]||0)+' kg</td></tr>').join('')+'</table>'}${people}<h2>Ore per dipendente nel periodo</h2><table><tr><th>Dipendente</th><th>Giornate lavorate</th><th>Ore effettive</th></tr>${staffTotals(s).map(x=>`<tr><td>${escape(x.name)}</td><td>${x.days}</td><td>${hfmt(x.minutes)}</td></tr>`).join('')}</table><p class="foot">Ore effettive = uscita − ingresso − 15 minuti di pausa per dipendente. Produttività = kg totali / (ore lavorate − ore pulizie straordinarie). Report progressivo fino alla data indicata. Generato il ${new Date().toLocaleString('it-IT')}.</p>`}
+
+function makePDF(s){
+ // PDF vettoriale nativo: funziona anche senza rete.
+ const pages=[];let ops=[],y=0,pg=0;
+ const navy=[0.075,0.145,0.215],teal=[0.02,0.48,0.49],pale=[0.92,0.96,0.96],muted=[0.38,0.44,0.49],white=[1,1,1];
+ const clean=t=>String(t??'').normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^\x20-\x7e]/g,' ');
+ const esc=t=>clean(t).replace(/\\/g,'\\\\').replace(/\(/g,'\\(').replace(/\)/g,'\\)');
+ const rgb=c=>c.join(' ')+' rg';
+ function rect(x,yy,w,h,c){ops.push(rgb(c)+' '+x+' '+yy+' '+w+' '+h+' re f')}
+ function txt(t,x,yy,size=10,bold=false,c=navy){ops.push(rgb(c)+' BT /'+(bold?'F2':'F1')+' '+size+' Tf '+x+' '+yy+' Td ('+esc(t)+') Tj ET')}
+ function start(){
+  if(ops.length)pages.push(ops.join('\n'));ops=[];pg++;
+  rect(0,0,595,842,white);rect(0,775,595,67,navy);
+  txt('COROMEU  /  PRODUTTIVITA',35,807,18,true,white);
+  txt('REPORT OPERATIVO  -  '+clean(reportTitle(s)).toUpperCase(),36,787,9,false,[0.67,0.86,0.86]);
+  rect(35,37,525,1,[0.85,0.89,0.9]);
+  txt('Produttivita Coromeu  |  Generato '+new Date().toLocaleDateString('it-IT'),35,23,8,false,muted);
+  txt('Pag. '+pg,525,23,8,false,muted);y=750;
+ }
+ function need(h){if(y-h<55)start()}
+ function section(label){need(37);y-=13;txt(label.toUpperCase(),36,y,11,true,teal);y-=17;rect(36,y,523,1,[0.82,0.88,0.89]);y-=13}
+ function row(cols,i,widths,head=false){
+  need(26);const h=24;rect(35,y-h,525,h,i%2===0?pale:white);
+  let x=43;cols.forEach((v,k)=>{let max=Math.max(5,Math.floor(widths[k]/(head?6:5.6)));let t=clean(v);if(t.length>max)t=t.slice(0,max-2)+'..';txt(t,x,y-16,head?8:9,head,head?teal:navy);x+=widths[k]});y-=h;
+ }
+ start();
+ txt('PERIODO: '+clean(s.from)+'  -  '+clean(s.ref),36,y,12,true);y-=22;
+ txt('Giornate registrate: '+s.days.length,36,y,10,false,muted);y-=26;
+ const cards=[
+  ['PRODUTTIVITA',s.minutes?fmt(s.rate)+' kg/ora':'--'],
+  ['KG TOTALI',fmt(s.kg)+' kg'],
+  ['ORE PRODUZIONE',hfmt(s.productiveMinutes)]
+ ];
+ cards.forEach((c,i)=>{let x=35+i*179;rect(x,y-82,168,82,pale);rect(x,y-82,4,82,teal);txt(c[0],x+13,y-22,9,true,muted);txt(c[1],x+13,y-53,17,true,navy)});
+ y-=105;
+ txt('Pulizie straordinarie: '+hfmt(s.cleaningMinutes)+'  |  Ore nette produzione: '+hfmt(s.productiveMinutes),40,y,10,true);y-=19;txt('Pezzi prodotti: '+(s.pieces||0)+'  |  Kg venduti/usciti: '+fmt(s.salesKg||0),40,y,10,true);y-=19;txt('Fatturato uscite: EUR '+fmt(s.revenue||0)+' (separato dalla produzione)',40,y,10,true);y-=19;txt('Filoni: '+fmt(s.filoniKg)+' kg',40,y,10,true);txt('Prodotto finito: '+fmt(s.finishedKg)+' kg',300,y,10,true);y-=21;
+ section('Riepilogo produzione');row(['Produzione filoni (tonno + spada)',fmt(s.filoniKg)+' kg'],0,[345,180]);row(['Prodotto finito della giornata',fmt(s.finishedKg)+' kg'],1,[345,180]);row(['Totale effettivamente prodotto',fmt(s.kg)+' kg'],2,[345,180]);section('Produzione per categoria');for(const [k,label] of Object.entries(PROD_FIELDS)){row([label,fmt(s.productionTotals?.[k]||0)+' kg'],0,[345,180])}section('Tempi delle fasi di lavorazione');for(const k of PHASE_KEYS){let total=0,count=0;for(const d of s.days){const t=d.phaseTimes?.[k],m=phaseDuration(t?.start,t?.end);if(m!==null){total+=m;count++}}row([PHASE_NAMES[k],count?hfmt(total):'--'],0,[345,180])}section('Andamento giornaliero');
+ row(['DATA','ORE','KG TOTALI','KG/ORA'],0,[115,115,150,145],true);
+ s.days.forEach((d,i)=>row([d.date,hfmt(d.minutes),fmt(producedOf(d)),d.minutes?fmt((producedOf(d))*60/d.minutes):'--'],i,[115,115,150,145]));
+ section('Ore lavorate per dipendente');
+ row(['DIPENDENTE','GIORNI','ORE EFFETTIVE'],0,[280,95,150],true);
+ staffTotals(s).forEach((x,i)=>row([x.name,String(x.days),hfmt(x.minutes)],i,[280,95,150]));
+ if(s.type==='day'&&s.days[0]){
+  section('Dettaglio presenze');
+  row(['DIPENDENTE','ENTRATA','USCITA','ORE'],0,[250,95,95,85],true);
+  Object.entries(s.days[0].people).forEach(([name,p],i)=>row([name,p.in||'--',p.out||'--',hfmt(p.minutes||0)],i,[250,95,95,85]));
+ }
+ need(35);y-=15;txt('Metodo: kg prodotti / (ore lavorate - ore pulizie).' ,36,y,9,false,muted);y-=16;
+ txt('Le ore sono calcolate al netto di 15 minuti di pausa per turno.',36,y,9,false,muted);
+ if(s.notes?.length){section('Note e osservazioni');for(const n of s.notes){let title=n.date+'  '+n.by+'  '+new Date(n.at).toLocaleString('it-IT');need(40);txt(title,36,y,9,true,teal);y-=16;let words=clean(n.text).split(/\s+/),line='';for(const w of words){if((line+' '+w).length>87){need(15);txt(line,38,y,9);y-=14;line=w}else line+=(line?' ':'')+w}if(line){need(15);txt(line,38,y,9);y-=17}y-=7}}
+ pages.push(ops.join('\n'));
+ const objects=[null],add=t=>(objects.push(t),objects.length-1);
+ const root=add(''),pagesObj=add(''),f1=add('<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>'),f2=add('<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>'),kids=[];
+ for(const content of pages){let stream=add('<< /Length '+content.length+' >>\nstream\n'+content+'\nendstream');let pgobj=add('<< /Type /Page /Parent '+pagesObj+' 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 '+f1+' 0 R /F2 '+f2+' 0 R >> >> /Contents '+stream+' 0 R >>');kids.push(pgobj+' 0 R')}
+ objects[root]='<< /Type /Catalog /Pages '+pagesObj+' 0 R >>';objects[pagesObj]='<< /Type /Pages /Kids ['+kids.join(' ')+'] /Count '+kids.length+' >>';
+ let pdf='%PDF-1.4\n',offsets=[0];for(let i=1;i<objects.length;i++){offsets.push(pdf.length);pdf+=i+' 0 obj\n'+objects[i]+'\nendobj\n'}
+ let at=pdf.length;pdf+='xref\n0 '+objects.length+'\n0000000000 65535 f \n';for(let i=1;i<objects.length;i++)pdf+=String(offsets[i]).padStart(10,'0')+' 00000 n \n';
+ pdf+='trailer\n<< /Size '+objects.length+' /Root '+root+' 0 R >>\nstartxref\n'+at+'\n%%EOF';
+ return new Blob([pdf],{type:'application/pdf'});
+}
+async function sharePDF(s,afterSave=false){let blob=makePDF(s);if(!blob){alert('Giornata salvata, ma il PDF non e disponibile offline. Connettiti a Internet e apri Report > Stampa/PDF.');return}let filename='Produttivita_Coromeu_'+s.type+'_'+s.ref+'.pdf',file=new File([blob],filename,{type:'application/pdf'});if(navigator.canShare?.({files:[file]})&&navigator.share){try{await navigator.share({files:[file],title:'Produttivita Coromeu'});return}catch(e){if(e.name==='AbortError')return}}download(filename,blob);alert('PDF scaricato. Aprilo in File e premi Condividi per WhatsApp.')}
+$('print').onclick=()=>{$('print-area').innerHTML=printHTML(summary());window.print()};function reportText(s){return `PRODUTTIVITÀ COROMEU\n${reportTitle(s)} (${s.from} → ${s.ref})\nGiornate: ${s.days.length}\nOre effettive: ${hfmt(s.minutes)}\nProduzione filoni: ${fmt(s.filoniKg)}\nProdotto finito: ${fmt(s.finishedKg)}\nTotale kg: ${fmt(s.kg)}\nProduttività: ${s.productiveMinutes?fmt(s.rate):'—'} kg/ora`}
+$('share').onclick=()=>sharePDF(summary());
+async function shareTextFallback(){let s=summary(),t=reportText(s);if(navigator.share){try{await navigator.share({title:'Produttività Coromeu',text:t});return}catch(e){if(e.name==='AbortError')return}}try{await navigator.clipboard.writeText(t);alert('Riepilogo copiato. Incollalo in WhatsApp. Per inviare un PDF usa Stampa / PDF → Condividi.')}catch{alert('Usa Stampa / PDF per condividere il documento.')}};
+function renderHistory(){let days=Object.values(db.days).sort((a,b)=>b.date.localeCompare(a.date));$('history').innerHTML=days.map(d=>`<div class="list-item"><div><b>${escape(d.date)}</b><div class="small">${hfmt(d.minutes)} · ${fmt(producedOf(d))} kg · ${fmt((producedOf(d))*60/d.minutes)} kg/h</div></div><div class="actions" style="margin:0;flex:0"><button class="btn alt edit" data-date="${escape(d.date)}">Modifica</button><button class="btn warn del" data-date="${escape(d.date)}">Elimina</button></div></div>`).join('')||'<p class="muted">Nessuna giornata salvata.</p>';$('history').querySelectorAll('.edit').forEach(b=>b.onclick=()=>openDay(b.dataset.date));$('history').querySelectorAll('.del').forEach(b=>b.onclick=()=>{alert('Nella versione condivisa non è prevista la cancellazione diretta. Usa Modifica per correggere la giornata.')})}
+function download(name,blob){let a=document.createElement('a'),u=URL.createObjectURL(blob);a.href=u;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1000)}$('export').onclick=()=>download('Produttivita_Coromeu_Backup_'+today()+'.json',new Blob([JSON.stringify({app:'Produttivita Coromeu',version:1,exported:new Date().toISOString(),...db},null,2)],{type:'application/json'}));$('import').onchange=async e=>{let f=e.target.files[0];if(!f)return;try{let x=JSON.parse(await f.text());if(!Array.isArray(x.staff)||!x.days||typeof x.days!=='object'||Array.isArray(x.days))throw Error('Formato non valido');throw Error('Importazione locale disabilitata nella versione condivisa. Usa il backup soltanto per sicurezza.');db={staff:x.staff,days:x.days};persist();blank();renderNames();alert('Backup ripristinato')}catch(err){alert('Backup non valido: '+err.message)}e.target.value=''};
+
+// Sincronizzazione beta: scritture per singolo dipendente; non sovrascrivere l'intera giornata.
+const allowedNames={'ZE3YtwFtAgfQkK4Fqic6pWfJre42':'Andrea Masala','GM8UHnoiMdShIEaw9g4sa8UaefH2':'Riccardo Ballone','el0dBvUTjHegNj9bJu6qFoUJ9vi1':'Sergio Arminiu','DE7NcoFEuUQZx7vRliB1ANA8cdg2':'Gianmarco Marras'};
+let auth=null,store=null,who=null,unsub=null,notesByDate={},statuses={},baseSnapshot={};
+function cloudMessage(t){$('cloud-state').textContent=t}
+function cloudReady(){if(!who)throw Error('Effettua prima l’accesso a Firebase')}
+function stamp(){return new Date().toISOString()}
+function noteRender(){let date=$('date').value,notes=notesByDate[date]||[];$('notes-list').innerHTML=notes.map(n=>'<p class="notice"><b>'+escape(n.by||'Operatore')+'</b> · '+escape(new Date(n.at).toLocaleString('it-IT'))+'<br>'+escape(n.text)+'</p>').join('')||'<p class="muted">Nessuna nota.</p>';$('day-status').textContent=statuses[date]?'🔒 Giornata chiusa (modificabile)':'🟢 Giornata aperta'}
+const oldOpenDay=openDay;openDay=function(date){oldOpenDay(date);noteRender();baseSnapshot=structuredClone(db.days[date]||{people:{},usciti:0,previsti:0})};
+$('date').addEventListener('change',()=>{let date=$('date').value;openDay(date);$('audit-date').value=date;loadAudit()});
+async function cloudSave(){
+ cloudReady();let v=readForm();const crewErrors=[]; // Pianificazione nominativa non bloccanteif(v.issues.length)throw Error(v.issues.join('\n'));if(!v.date)throw Error('Seleziona una data');
+ const date=v.date,ref=store.collection('giornate').doc(date);
+ const old=baseSnapshot||{people:{},usciti:0,previsti:0};let changed=[];
+ const keys=new Set([...Object.keys(old.people||{}),...Object.keys(v.people)]);
+ for(const name of keys){let a=old.people?.[name]||null,b=v.people[name]||null;
+   if(JSON.stringify({in:a?.in||'',out:a?.out||'',minutes:Number(a?.minutes)||0})!==JSON.stringify({in:b?.in||'',out:b?.out||'',minutes:Number(b?.minutes)||0}))changed.push([name,b])}
+ const kgChanged=JSON.stringify(old.phaseTimes||{})!==JSON.stringify(v.phaseTimes)||Number(old.cleaningHours||0)!==v.cleaningHours||Number(old.cartsSanitized||0)!==v.cartsSanitized||Number(old.pieces||0)!==v.pieces||Number(old.revenue||0)!==v.revenue||Number(old.salesKg??old.usciti??0)!==v.salesKg||JSON.stringify(Object.fromEntries(Object.keys(PROD_FIELDS).map(k=>[k,Number(old.production?.[k]||0)])))!==JSON.stringify(v.production);
+ if(!changed.length&&!kgChanged){alert('Nessuna modifica da salvare.');return false}
+ if(!confirm('Salvare '+date+'? Verranno aggiornati solo i campi modificati.'))return false;
+ const whoName=allowedNames[who.uid],chunks=[];
+ for(let i=0;i<changed.length;i+=5)chunks.push(changed.slice(i,i+5));
+ if(!chunks.length)chunks.push([]);
+ // Ogni lotto ha un registro proprio: rispetta il limite Firestore di accessi
+ // alle regole e non richiede una scrittura unica per 17-20 dipendenti.
+ let done=0;
+ try{
+  for(let i=0;i<chunks.length;i++){
+   const batch=store.batch(),now=stamp(),auditRef=ref.collection('modifiche').doc(),auditId=auditRef.id,group=chunks[i];
+   const parent={date,updated:now,updatedBy:whoName,lastAuditId:auditId};
+   if(i===0&&kgChanged){parent.production={...(old.production||{}),...v.production};parent.pieces=v.pieces;parent.revenue=v.revenue;parent.salesKg=v.salesKg;parent.cleaningHours=v.cleaningHours;parent.cartsSanitized=v.cartsSanitized;parent.phaseTimes={...(old.phaseTimes||{}),...v.phaseTimes}}
+   batch.set(ref,parent,{merge:true});
+   for(const [name,p] of group){
+    const pr=ref.collection('presenze').doc(encodeURIComponent(name));
+    batch.set(pr,{name,in:p?.in||'',out:p?.out||'',minutes:p?.minutes||0,updated:now,updatedBy:whoName,auditId});
+   }
+   batch.set(auditRef,{at:now,by:whoName,uid:who.uid,action:'salvataggio',
+      employees:group.map(x=>x[0]),kgChanged:i===0&&kgChanged,day:date,auditId});
+   await batch.commit();done+=group.length;
+  }
+ }catch(err){
+  await fetchCloud();openDay(date);
+  throw Error('Salvati '+done+' dipendenti su '+changed.length+'. '+err.message+
+  '. I dati già confermati restano online. Aggiorna prima di riprovare.');
+ }
+ cloudMessage('Salvataggio completato · '+new Date().toLocaleTimeString('it-IT'));
+ await fetchCloud();openDay(date);return true;
+}
+$('save').onclick=async()=>{try{if(!await cloudSave())return;$('reference').value=$('date').value;$('period').value='day';renderReport();await sharePDF(summary(),true)}catch(e){alert('Salvataggio non riuscito: '+e.message)}};
+// Su iPhone il menu Condividi può richiedere un nuovo tocco dopo una richiesta di rete.
+const pdfRetry=document.createElement('button');pdfRetry.className='btn alt';pdfRetry.textContent='📄 Apri / condividi PDF della giornata';pdfRetry.style.width='100%';pdfRetry.style.marginTop='12px';pdfRetry.onclick=()=>{$('reference').value=$('date').value;$('period').value='day';renderReport();sharePDF(summary())};$('save').parentElement.appendChild(pdfRetry);
+$('add-note').onclick=async()=>{try{cloudReady();let date=$('date').value,t=$('new-note').value.trim();if(!t)return alert('Scrivi una nota');let ref=store.collection('giornate').doc(date),batch=store.batch(),at=stamp();let auditRef=ref.collection('modifiche').doc(),auditId=auditRef.id;batch.set(ref,{date,updated:at,updatedBy:allowedNames[who.uid],lastAuditId:auditId},{merge:true});batch.set(ref.collection('note').doc(),{text:t,at,by:allowedNames[who.uid],uid:who.uid,auditId});batch.set(auditRef,{at,by:allowedNames[who.uid],uid:who.uid,action:'nota aggiunta',day:date,auditId});await batch.commit();$('new-note').value='';await fetchCloud();noteRender()}catch(e){alert(e.message)}};
+$('close-day').onclick=async()=>{try{cloudReady();let date=$('date').value,closed=!statuses[date],ref=store.collection('giornate').doc(date),batch=store.batch(),at=stamp();let auditRef=ref.collection('modifiche').doc(),auditId=auditRef.id;batch.set(ref,{date,closed,updated:at,updatedBy:allowedNames[who.uid],lastAuditId:auditId},{merge:true});batch.set(auditRef,{at,by:allowedNames[who.uid],uid:who.uid,action:closed?'chiusura':'riapertura',day:date,auditId});await batch.commit();await fetchCloud();noteRender()}catch(e){alert(e.message)}};
+async function fetchCloud(){
+ cloudReady();cloudMessage('Sincronizzazione in corso…');
+ let ds=await store.collection('giornate').get(),days={},notes={},states={};
+ for(const doc of ds.docs){let d=doc.data(),date=doc.id,pres=await doc.ref.collection('presenze').get(),ns=await doc.ref.collection('note').get(),people={};pres.forEach(x=>{let p=x.data();people[p.name]={in:p.in||'',out:p.out||'',minutes:Number(p.minutes)||0}});
+ let minutes=Object.values(people).reduce((n,p)=>n+p.minutes,0);
+ days[date]={date,usciti:Number(d.usciti)||0,previsti:Number(d.previsti)||0,production:d.production||null,pieces:Number(d.pieces)||0,revenue:Number(d.revenue)||0,salesKg:Number(d.salesKg??d.usciti??0)||0,cleaningHours:Number(d.cleaningHours)||0,cartsSanitized:Number(d.cartsSanitized)||0,phaseTimes:d.phaseTimes||{},people,minutes,workers:Object.values(people).filter(p=>p.minutes>0).length,updated:d.updated};
+ notes[date]=ns.docs.map(x=>x.data()).sort((a,b)=>a.at.localeCompare(b.at));states[date]=!!d.closed;
+ }
+ // Non toccare l'archivio V3.6: la beta usa una chiave diversa.
+ db.days=days;notesByDate=notes;statuses=states;persist();renderHistory();renderReport();loadAudit();cloudMessage('Online · '+Object.keys(days).length+' giornate sincronizzate');
+}
+$('login-btn').onclick=async()=>{try{if(!auth)throw Error('Firebase non inizializzato. Controlla la connessione e il messaggio sopra.');cloudMessage('Accesso…');await auth.signInWithEmailAndPassword($('login-email').value.trim(),$('login-password').value)}catch(e){cloudMessage('Accesso non riuscito: '+e.message)}};
+$('logout-btn').onclick=()=>auth.signOut();
+$('refresh-cloud').onclick=()=>fetchCloud().catch(e=>cloudMessage(e.message));
+$('cloud-export').onclick=()=>download('Coromeu_V4_backup_'+today()+'.json',new Blob([JSON.stringify(db,null,2)],{type:'application/json'}));
+$('migrate-file').onchange=async e=>{let f=e.target.files[0];if(!f)return;try{cloudReady();let x=JSON.parse(await f.text());if(!x.days||typeof x.days!=='object')throw Error('Backup non valido');let existing=await store.collection('giornate').limit(1).get();if(!existing.empty)throw Error('Archivio online non vuoto: importazione bloccata per evitare sovrascritture');if(!confirm('Importare '+Object.keys(x.days).length+' giornate nello storico online?'))return;
+ for(const [date,d] of Object.entries(x.days)){if(!/^\d{4}-\d{2}-\d{2}$/.test(date))continue;let ref=store.collection('giornate').doc(date),batch=store.batch();batch.set(ref,{date,usciti:Number(d.usciti)||0,previsti:Number(d.previsti)||0,closed:false,updated:stamp()});for(const [name,p] of Object.entries(d.people||{}))batch.set(ref.collection('presenze').doc(encodeURIComponent(name)),{name,in:p.in||'',out:p.out||'',minutes:Number(p.minutes)||0,updated:stamp(),updatedBy:allowedNames[who.uid]});await batch.commit()}
+ await fetchCloud();alert('Importazione completata')}catch(err){alert('Importazione non riuscita: '+err.message)}e.target.value=''};
+
+function auditDetails(a){if(a.action==='salvataggio'){let names=(a.employees||[]).join(', ');return (names?'Presenze: '+names:'')+(a.kgChanged?(names?' · ':'')+'Produzione (kg) aggiornata':'')}if(a.action==='nota aggiunta')return 'Nuova nota';if(a.action==='chiusura')return 'Giornata chiusa';if(a.action==='riapertura')return 'Giornata riaperta';return a.action||'Operazione'}
+async function loadAudit(){let box=$('audit-list'),date=$('audit-date').value||$('date').value;if(!who){box.innerHTML='<p class="muted">Effettua l’accesso per consultare il registro.</p>';return}box.innerHTML='<p class="muted">Caricamento registro…</p>';try{let q=await store.collection('giornate').doc(date).collection('modifiche').get();let entries=q.docs.map(d=>d.data()).sort((a,b)=>(b.at||'').localeCompare(a.at||''));box.innerHTML=entries.map(a=>'<div class="notice" style="margin:8px 0"><b>'+escape(a.by||'Operatore')+'</b> · '+escape(a.at?new Date(a.at).toLocaleString('it-IT'):'Data non disponibile')+'<br>'+escape(auditDetails(a))+'</div>').join('')||'<p class="muted">Nessuna modifica registrata per questa giornata.</p>'}catch(e){box.textContent='Impossibile leggere il registro: '+e.message}}
+$('audit-refresh').onclick=loadAudit;
+$('audit-date').value=$('date').value||today();
+
+const recovery26={"GABRIELE CARLINI": {"in": "05:50", "out": "13:00"}, "FABRIZIO CELESTE": {"in": "06:05", "out": "13:00"}, "ANTONIO CARBONI": {"in": "07:45", "out": "15:30"}, "MARIUS SCURTU": {"in": "06:00", "out": "13:15"}, "SERGIO ARMINIU": {"in": "", "out": ""}, "GIOMARIA SECHI": {"in": "06:00", "out": "12:50"}, "GIUSEPPE LIGIOS": {"in": "06:00", "out": "12:50"}, "IOAN ARDELEANU": {"in": "05:50", "out": "13:13"}, "GIOVANNI COSSU": {"in": "05:50", "out": "12:50"}, "GIANMARCO MARRAS": {"in": "06:00", "out": "14:50"}, "MASSIMO PALA": {"in": "05:50", "out": "12:51"}, "MAURIZIO COSSU": {"in": "", "out": ""}, "TETYANA MARTSYNOVSKA": {"in": "06:00", "out": "14:00"}, "RICCARDO BALLONE": {"in": "06:00", "out": "14:25"}, "ALICE MURA": {"in": "05:40", "out": "13:00"}, "GIAN LUCA PAOLINO": {"in": "05:40", "out": "13:00"}, "MORENO MARTINEZ": {"in": "05:40", "out": "13:00"}, "VALTER ARDUINI": {"in": "05:30", "out": "14:30"}, "ANDREA MASALA": {"in": "06:15", "out": "13:25"}};
+$('restore-26').onclick=()=>{
+ if(!who)return alert('Accedi prima a Firebase');
+ const date='2026-10-26';
+ if(!confirm('Caricare nel modulo gli orari del 26 ottobre letti dalle foto? Non vengono ancora salvati online.'))return;
+ openDay(date);
+ for(const el of document.querySelectorAll('#people-inputs .person')){
+  const p=recovery26[el.dataset.name];if(!p)continue;
+  el.querySelector('.in').value=p.in;
+  el.querySelector('.out').value=p.out;
+ }
+ // Nessuna cancellazione di presenze non presenti nelle foto.
+ update();$('date').scrollIntoView({behavior:'smooth',block:'start'});
+ alert('Orari del 26 ottobre caricati nel modulo. Verifica i dati e premi Salva e invia PDF.');
+};
+
+// Bozze locali per non perdere ingressi prima del salvataggio online.
+const DRAFT_KEY='coromeu-v49-drafts';
+function getDrafts(){try{return JSON.parse(localStorage.getItem(DRAFT_KEY)||'{}')}catch{return {}}}
+function storeDraft(){if(!who)return;const date=$('date').value;if(!date)return;const fields={};for(const el of document.querySelectorAll('#people-inputs .person'))fields[el.dataset.name]={in:el.querySelector('.in').value,out:el.querySelector('.out').value};const d=getDrafts();d[date]={fields,pieces:$('pieces').value,revenue:$('revenue').value,cleaningHours:$('cleaning-hours').value,cartsSanitized:$('carts-sanitized').value,production:Object.fromEntries(Object.keys(PROD_FIELDS).map(k=>[k,$('prod_'+k).value])),phaseTimes:readPhaseTimes(),at:Date.now()};try{localStorage.setItem(DRAFT_KEY,JSON.stringify(d))}catch(e){}}
+function clearDraft(date){let d=getDrafts();delete d[date];localStorage.setItem(DRAFT_KEY,JSON.stringify(d))}
+function offerDraft(date){let d=getDrafts()[date];if(!d)return;let msg='È presente una bozza locale del '+date+' ('+new Date(d.at).toLocaleString('it-IT')+'). Ripristinarla nel modulo?';if(!confirm(msg))return;for(const el of document.querySelectorAll('#people-inputs .person')){const p=d.fields[el.dataset.name];if(p){el.querySelector('.in').value=p.in;el.querySelector('.out').value=p.out}}$('pieces').value=d.pieces;$('revenue').value=d.revenue;$('cleaning-hours').value=d.cleaningHours||'';$('carts-sanitized').value=d.cartsSanitized||'';for(const k of Object.keys(PROD_FIELDS))$('prod_'+k).value=d.production[k]||'';writePhaseTimes(d.phaseTimes||{});update()}
+const openDayBeforeDraft=openDay;openDay=function(date){openDayBeforeDraft(date)};
+$('people-inputs').addEventListener('input',storeDraft);
+$('people-inputs').addEventListener('click',()=>setTimeout(storeDraft,50));
+for(const id of ['pieces','revenue','cleaning-hours','carts-sanitized',...Object.keys(PROD_FIELDS).map(k=>'prod_'+k)])$(id).addEventListener('input',storeDraft);
+// Recupero da backup: nessun dato del personale viene incluso nel codice pubblico.
+$('recover-file').addEventListener('change',async function(e){
+ const file=e.target.files?.[0];if(!file)return;
+ try{
+  cloudReady();
+  const backup=JSON.parse(await file.text());
+  const date=$('date').value;
+  const day=backup.days?.[date];
+  if(!day||!day.people||!day.production)throw Error('Nel backup non è presente la giornata '+date+' completa.');
+  if(!confirm('Recuperare dal backup gli orari e la produzione del '+date+'? Verranno caricati sul modulo SENZA salvare su Firebase.'))return;
+  // Rileggi i dati condivisi prima di ricostruire il modulo.
+  await fetchCloud();
+  openDay(date);
+  for(const el of document.querySelectorAll('#people-inputs .person')){
+   const p=day.people[el.dataset.name];
+   el.querySelector('.in').value=p?.in||'';
+   el.querySelector('.out').value=p?.out||'';
+  }
+  for(const k of Object.keys(PROD_FIELDS))$('prod_'+k).value=day.production[k]??'';
+  $('pieces').value=day.pieces??'';
+  $('revenue').value=day.revenue??'';
+  $('sales-kg').value=day.salesKg??day.usciti??'';
+  $('cleaning-hours').value=day.cleaningHours??'';$('carts-sanitized').value=day.cartsSanitized??'';writePhaseTimes(day.phaseTimes||{});
+  update();storeDraft();
+  alert('Recupero sul modulo completato. Controlla tutti i dati prima di salvare.');
+ }catch(err){alert('Recupero non riuscito: '+err.message)}
+ finally{e.target.value=''}
+});
+$('restore-local-draft').onclick=()=>offerDraft($('date').value);
+const cloudSaveBeforeDraft=cloudSave;cloudSave=async function(){let saved=await cloudSaveBeforeDraft();if(saved)clearDraft($('date').value);return saved};
+
+try{
+ firebase.initializeApp(FIREBASE_CONFIG);auth=firebase.auth();store=firebase.firestore();
+ auth.onAuthStateChanged(async u=>{who=u&&allowedNames[u.uid]?u:null;$('login-fields').classList.toggle('hidden',!!who);$('cloud-actions').classList.toggle('hidden',!who);$('save').disabled=!who;if(who){try{await fetchCloud();openDay(today())}catch(e){cloudMessage('Errore database: '+e.message)}}else cloudMessage(u?'Account non autorizzato':'Accedi per lavorare sull’archivio condiviso')});
+}catch(e){cloudMessage('Firebase non disponibile: serve Internet. '+e.message);$('save').disabled=true}
+
+// V4.17: orari fasi e report venduto; nessuna migrazione o cancellazione dello storico.
+function phaseDuration(a,b){if(!a||!b)return null;const x=mins(a),y=mins(b);if(x===null||y===null)return null;return (y-x+1440)%1440}
+
+// V4.17.9: squadre condivise, orari prodotto separati, ore-uomo per intervallo.
+
+const crewEscape=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function crewKg(k){
+ const p=productionFromForm().production;
+ if(k==='burger_bistecche')return Object.entries(p).filter(([name])=>name.startsWith('burger_')||name.startsWith('bistecche_')).reduce((n,[,v])=>n+(Number(v)||0),0);
+ if(k==='bottarga')return (Number(p.bottarga_grattugiata)||0)+(Number(p.bottarga_baffa)||0);
+ return CREW_GROUPS[k].reduce((n,key)=>n+(Number(p[key])||0),0);
+}
+function crewPresent(){
+ const v=readForm();
+ return [...new Set([...db.staff,...extra,...Object.keys(v.people)])].filter(Boolean).sort((a,b)=>a.localeCompare(b,'it'));
+}
+function crewIntervals(a,b){
+ if(!a||!b)return null;
+ const x=mins(a),y=mins(b);
+ if(x===null||y===null)return null;
+ return [x,y<x?y+1440:y];
+}
+function crewOverlap(a,b){return Math.max(0,Math.min(a[1],b[1])-Math.max(a[0],b[0]));}
+function crewSpan(k){
+ const intervals=CREW_GROUPS[k].map(key=>crewIntervals($('phase_'+key+'_start').value,$('phase_'+key+'_end').value)).filter(Boolean);
+ if(!intervals.length)return null;
+ return [Math.min(...intervals.map(x=>x[0])),Math.max(...intervals.map(x=>x[1]))];
+}
+function crewCheck(k,entry){
+ if(!entry.name)return 'Seleziona un operatore';
+ if(!entry.start&&!entry.end)return ''; // Pianificazione consentita senza orari
+ if(!entry.start||!entry.end)return ''; // Orario parziale: bozza non bloccante
+ const range=crewIntervals(entry.start,entry.end),p=readForm().people[entry.name];
+ if(!range||range[1]<=range[0])return 'Orario non valido';
+ if(!p||!p.in||!p.out)return ''; // Turno non ancora inserito: pianificazione valida
+ const shiftRange=crewIntervals(p.in,p.out),phaseRange=crewSpan(k);
+ if(!shiftRange||!phaseRange)return ''; // La fase puo essere pianificata in anticipo
+ if(range[0]<shiftRange[0]||range[1]>shiftRange[1])return 'Orario fuori dal turno';
+ // La permanenza oltre l'ultima lavorazione e' consentita: misura attesa e mancata riassegnazione.
+ if(range[0]<phaseRange[0])return 'Inizio precedente alla fase';
+ for(const other of CREW_KEYS)for(const o of phaseCrew[other]||[]){
+  if(o===entry||o.name!==entry.name||!o.start||!o.end)continue;
+  const r=crewIntervals(o.start,o.end);
+  if(r&&crewOverlap(range,r)>0)return 'Sovrapposizione con '+PHASE_NAMES[other];
+ }
+ return '';
+}
+function renderCrew(k){
+ const el=document.querySelector('[data-crew="'+k+'"]');if(!el)return;
+ const people=crewPresent(),entries=phaseCrew[k]||[];
+ el.querySelector('.crew-count').textContent=String(new Set(entries.map(e=>e.name).filter(Boolean)).size);
+ const wrap=el.querySelector('.crew-entries');wrap.innerHTML='';
+ let total=0,warnings=[];
+ entries.forEach((entry,i)=>{
+  const div=document.createElement('div');div.className='crew-entry';
+  const choices=[...new Set([...people,entry.name].filter(Boolean))];
+  const options='<option value="">Seleziona operatore</option>'+choices.map(name=>'<option value="'+crewEscape(name)+'" '+(entry.name===name?'selected':'')+'>'+crewEscape(name)+'</option>').join('');
+  div.innerHTML='<div class="crew-line"><select aria-label="Operatore">'+options+'</select><button type="button" class="crew-remove" aria-label="Rimuovi operatore">×</button></div><div class="crew-times"><span>Da</span><input type="time" value="'+crewEscape(entry.start||'')+'"><span>A</span><input type="time" value="'+crewEscape(entry.end||'')+'"></div>';
+  const select=div.querySelector('select'),times=div.querySelectorAll('input');
+  select.onchange=()=>{entry.name=select.value;renderAllCrew();storeDraft()};
+  times.forEach((input,j)=>input.onchange=()=>{entry[j?'end':'start']=input.value;renderAllCrew();storeDraft()});
+  div.querySelector('button').onclick=()=>{entries.splice(i,1);renderAllCrew();storeDraft()};
+  wrap.append(div);
+  const error=crewCheck(k,entry);
+  if(error)warnings.push((entry.name||'Operatore '+(i+1))+': '+error);
+  else{const range=crewIntervals(entry.start,entry.end);if(range)total+=range[1]-range[0]}
+ });
+ const kg=crewKg(k),rate=total?fmt(kg*60/total)+' kg/h':'— kg/h';
+ el.querySelector('.crew-rate').textContent=rate;
+ el.querySelector('.crew-metric').textContent='Ore-uomo: '+hfmt(total)+' · '+fmt(kg)+' kg · '+rate;
+ el.querySelector('.crew-warning').textContent=warnings.join(' · ');
+}
+function renderAllCrew(){for(const k of CREW_KEYS)renderCrew(k)}
+for(const k of CREW_KEYS){
+ document.querySelector('[data-crew="'+k+'"] .crew-add').onclick=()=>{
+  const names=crewPresent(),used=new Set((phaseCrew[k]||[]).map(x=>x.name));
+  const name=names.find(n=>!used.has(n))||'';
+  // I nominativi sono assegnabili anche senza presenze e senza orari della fase.
+  const span=crewSpan(k);
+  phaseCrew[k].push({name,start:'',end:''});
+  renderAllCrew();storeDraft();
+ };
+}
+function readPhaseTimes(){const result={};for(const k of PHASE_KEYS){const start=$('phase_'+k+'_start').value,end=$('phase_'+k+'_end').value;result[k]={start,end,operators:CREW_KEYS.includes(k)?phaseCrew[k]||[]:[]};}return result}
+function writePhaseTimes(data){
+ for(const k of PHASE_KEYS){const t=data?.[k]||{};$('phase_'+k+'_start').value=t.start||'';$('phase_'+k+'_end').value=t.end||'';}
+ for(const k of CREW_KEYS){
+  const main=Array.isArray(data?.[k]?.operators)?data[k].operators.map(x=>({...x})):[];
+  const legacy=CREW_GROUPS[k].slice(1).flatMap(key=>Array.isArray(data?.[key]?.operators)?data[key].operators:[]);
+  const seen=new Set(main.map(x=>[x.name,x.start,x.end].join('|')));
+  for(const e of legacy){const id=[e.name,e.start,e.end].join('|');if(!seen.has(id)){main.push({...e});seen.add(id)}}
+  phaseCrew[k]=main;
+ }
+ refreshPhaseTimes();renderAllCrew();
+}
+function refreshPhaseTimes(){for(const k of PHASE_KEYS){const a=$('phase_'+k+'_start').value,b=$('phase_'+k+'_end').value,d=phaseDuration(a,b);$('phase_'+k+'_total').textContent=d===null?'—':hfmt(d)}}
+for(const k of PHASE_KEYS){for(const suffix of ['start','end'])$('phase_'+k+'_'+suffix).addEventListener('input',()=>{refreshPhaseTimes();renderAllCrew();storeDraft()})}
+document.querySelectorAll('.prod-field,.person input').forEach(el=>el.addEventListener('change',()=>renderAllCrew()));
+const SALES_EXCLUDED=new Set(['VALTER ARDUINI','WALTER ARDUINO','ANTONIO CARBONI','ANDREA MASALA','RICCARDO BALLONE','SERGIO ARMINIU','SERGIO ARMINU','GIANMARCO MARRAS']);
+function salesIncluded(name){return !SALES_EXCLUDED.has(String(name).normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim().replace(/\s+/g,' ').toUpperCase())}
+function salesSummary(){
+ const ref=$('sales-reference').value||today(),type=$('sales-period').value;
+ const r=new Date(ref+'T12:00:00'),fromDate=new Date(r);
+ if(type==='week')fromDate.setDate(r.getDate()-(r.getDay()+6)%7);
+ if(type==='month')fromDate.setDate(1);
+ const from=[fromDate.getFullYear(),String(fromDate.getMonth()+1).padStart(2,'0'),String(fromDate.getDate()).padStart(2,'0')].join('-');
+ const days=Object.values(db.days).filter(d=>d.date>=from&&d.date<=ref);
+ let kg=0,grossMinutes=0,cartsMinutes=0;
+ for(const d of days){
+  kg+=Number(d.salesKg??d.usciti??0)||0;
+  for(const [name,p] of Object.entries(d.people||{}))
+   if(salesIncluded(name))grossMinutes+=Number(p.minutes)||0;
+  cartsMinutes+=Math.max(0,Number(d.cartsSanitized)||0)*8;
+ }
+ const minutes=Math.max(0,grossMinutes-cartsMinutes);
+ return {ref,from,type,days,kg,minutes,cartsMinutes,rate:minutes>0?kg*60/minutes:null};
+}
+function salesReportHTML(s){return '<p class="muted">Dal '+escape(s.from)+' al '+escape(s.ref)+' · '+s.days.length+' giornate registrate</p><div class="metric-grid"><div class="metric"><b>'+fmt(s.kg)+' kg</b><span>Totale kg venduti</span></div><div class="metric"><b>'+hfmt(s.minutes)+'</b><span>Ore lavorate valide</span></div><div class="metric"><b>'+(s.rate===null?'—':fmt(s.rate)+' kg/h')+'</b><span>Produttività del venduto</span></div></div>'+(s.minutes===0?'<p class="notice">Nessuna ora valida nel periodo: la produttività non è calcolabile.</p>':'')}
+function renderSalesReport(){$('sales-report-content').innerHTML=salesReportHTML(salesSummary())}
+$('sales-reference').value=today();$('sales-reference').addEventListener('change',renderSalesReport);$('sales-period').addEventListener('change',renderSalesReport);
+// V4.17.3: PDF venduto generato direttamente, senza finestra di stampa iOS.
+function makeSalesPDF(s){
+ const clean=v=>String(v??'').normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^\x20-\x7e]/g,' ');
+ const esc=v=>clean(v).replace(/\\/g,'\\\\').replace(/\(/g,'\\(').replace(/\)/g,'\\)');
+ const cmds=[];
+ const navy='0.035 0.270 0.325',teal='0.02 0.46 0.51',muted='0.36 0.40 0.43',white='1 1 1',ink='0.06 0.11 0.14';
+ function txt(value,x,y,size=12,bold=false,color=ink){cmds.push(color+' rg BT /'+(bold?'F2':'F1')+' '+size+' Tf '+x+' '+y+' Td ('+esc(value)+') Tj ET')}
+ function rect(x,y,w,h,color){cmds.push(color+' rg '+x+' '+y+' '+w+' '+h+' re f')}
+ function strokeRect(x,y,w,h,color,width=1.5){cmds.push(color+' RG '+width+' w '+x+' '+y+' '+w+' '+h+' re S')}
+ function centered(value,y,size=12,bold=false,color=ink){
+  const width=clean(value).length*size*(bold?0.55:0.50);
+  txt(value,Math.max(22,(595-width)/2),y,size,bold,color);
+ }
+ const dateObj=iso=>new Date(iso+'T12:00:00');
+ const monthLabel=iso=>dateObj(iso).toLocaleDateString('it-IT',{month:'long',year:'numeric'}).toUpperCase();
+ const dateLabel=iso=>dateObj(iso).toLocaleDateString('it-IT',{day:'numeric',month:'long',year:'numeric'}).toUpperCase();
+ const period={day:'REPORT GIORNALIERO',week:'REPORT SETTIMANALE',month:'REPORT MENSILE'}[s.type]||'REPORT';
+ rect(0,0,595,842,white);
+ // Intestazione verde petrolio, sfondo pagina sempre bianco.
+ rect(27,667,541,149,navy);
+ centered('COROMEU  ·  '+period,769,14,false,white);
+ centered('PRODUTTIVITA DEL VENDUTO',706,27,true,white);
+ if(s.type==='day'){
+  centered(dateObj(s.ref).toLocaleDateString('it-IT',{weekday:'long'}).toUpperCase(),616,22,false,muted);
+  centered(dateLabel(s.ref),564,31,true,ink);
+ }else if(s.type==='week'){
+  centered('SETTIMANA',616,22,false,muted);
+  const sameMonth=s.from.slice(0,7)===s.ref.slice(0,7);
+  const label=sameMonth
+   ?Number(s.from.slice(8))+' - '+dateLabel(s.ref)
+   :dateLabel(s.from)+' - '+dateLabel(s.ref);
+  centered(label,565,sameMonth?28:19,true,ink);
+ }else{
+  centered('MESE',616,22,false,muted);
+  centered(monthLabel(s.ref),565,35,true,ink);
+ }
+ rect(30,522,535,2,teal);
+ // Riquadri affiancati su bianco, senza note.
+ const left=30,right=304,cardY=335,cardW=261,cardH=150;
+ strokeRect(left,cardY,cardW,cardH,teal,2.5);
+ strokeRect(right,cardY,cardW,cardH,teal,2.5);
+ txt('KG VENDUTI',left+56,cardY+109,17,true,ink);
+ txt('ORE EFFETTIVE',right+35,cardY+109,17,true,ink);
+ const kg=fmt(s.kg)+' kg';
+ const hours=hfmt(s.minutes);
+ txt(kg,left+24,cardY+42,Math.min(31,kg.length>12?25:31),true,ink);
+ txt(hours,right+45,cardY+42,35,true,ink);
+ // Evidenza produttivita in verde petrolio, bianco circostante.
+ rect(30,124,535,179,navy);
+ strokeRect(30,124,535,179,teal,3);
+ centered('PRODUTTIVITA',253,21,true,white);
+ centered(s.rate===null?'--':fmt(s.rate)+' kg/h',167,51,true,white);
+ const stream=cmds.join('\n')+'\n';
+ const objects=[null],add=o=>(objects.push(o),objects.length-1);
+ const root=add(''),pages=add('');
+ const font=add('<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>');
+ const bold=add('<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>');
+ const content=add('<< /Length '+stream.length+' >>\nstream\n'+stream+'endstream');
+ const page=add('<< /Type /Page /Parent '+pages+' 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 '+font+' 0 R /F2 '+bold+' 0 R >> >> /Contents '+content+' 0 R >>');
+ objects[root]='<< /Type /Catalog /Pages '+pages+' 0 R >>';
+ objects[pages]='<< /Type /Pages /Kids ['+page+' 0 R] /Count 1 >>';
+ let pdf='%PDF-1.4\n',offsets=[0];
+ for(let i=1;i<objects.length;i++){offsets.push(pdf.length);pdf+=i+' 0 obj\n'+objects[i]+'\nendobj\n'}
+ const xref=pdf.length;
+ pdf+='xref\n0 '+objects.length+'\n0000000000 65535 f \n';
+ for(let i=1;i<objects.length;i++)pdf+=String(offsets[i]).padStart(10,'0')+' 00000 n \n';
+ pdf+='trailer\n<< /Size '+objects.length+' /Root '+root+' 0 R >>\nstartxref\n'+xref+'\n%%EOF';
+ return new Blob([pdf],{type:'application/pdf'});
+}
+$('sales-pdf').onclick=async()=>{
+ try{
+  const s=salesSummary();
+  const blob=makeSalesPDF(s);
+  const filename='Coromeu_Venduto_'+s.type+'_'+s.ref+'.pdf';
+  const file=new File([blob],filename,{type:'application/pdf'});
+  // Su iPhone il menu Condividi consente di scegliere Salva su File.
+  if(navigator.share && navigator.canShare?.({files:[file]})){
+   try{
+    await navigator.share({files:[file],title:'Produttivita Coromeu - Venduto'});
+    return;
+   }catch(err){if(err.name==='AbortError')return;}
+  }
+  // Ripiego: prova ad aprire l'anteprima PDF; se bloccata, scarica il file.
+  const url=URL.createObjectURL(blob);
+  const preview=window.open(url,'_blank');
+  if(!preview){download(filename,blob);alert('PDF generato. Controlla i download di Safari.');}
+  setTimeout(()=>URL.revokeObjectURL(url),60000);
+ }catch(err){alert('Impossibile creare il PDF del venduto: '+err.message)}
+};
+const fetchCloudV416=fetchCloud;fetchCloud=async function(){await fetchCloudV416();renderSalesReport()};
+
+
+const reportHTMLV416=reportHTML;reportHTML=function(s){const old=reportHTMLV416(s);const rows=PHASE_KEYS.map(k=>{let total=0,count=0;for(const d of s.days){const t=d.phaseTimes?.[k];const m=phaseDuration(t?.start,t?.end);if(m!==null){total+=m;count++}}return '<tr><td>'+escape(PHASE_NAMES[k])+'</td><td>'+(count?hfmt(total):'—')+'</td></tr>'}).join('');return old+'<h3>Tempi delle fasi di lavorazione</h3><table><tr><th>Fase</th><th>Durata totale</th></tr>'+rows+'</table>'};
+const printHTMLV416=printHTML;printHTML=function(s){const old=printHTMLV416(s);const rows=PHASE_KEYS.map(k=>{let total=0,count=0;for(const d of s.days){const t=d.phaseTimes?.[k];const m=phaseDuration(t?.start,t?.end);if(m!==null){total+=m;count++}}return '<tr><td>'+escape(PHASE_NAMES[k])+'</td><td>'+(count?hfmt(total):'—')+'</td></tr>'}).join('');return old+'<h2>Tempi delle fasi di lavorazione</h2><table><tr><th>Fase</th><th>Durata</th></tr>'+rows+'</table>'};
+const oldSummary=summary;summary=function(){let s=oldSummary();s.notes=s.days.flatMap(d=>(notesByDate[d.date]||[]).map(n=>({...n,date:d.date})));return s};
+const oldReportHTML=reportHTML;reportHTML=function(s){return oldReportHTML(s)+(s.notes.length?'<h3>Note e osservazioni</h3>'+s.notes.map(n=>'<p class="notice"><b>'+escape(n.date)+' · '+escape(n.by)+'</b><br>'+escape(n.text)+'</p>').join(''):'')};
+
+// V4.18 PROVA: produttivita attribuita, senza modificare il modello Firebase.
+// V4.18.1: impiego personale, prototipo locale isolato dai dati cloud.
+const IMP_LABELS={ufficio:'Ufficio',inventario:'Inventario',magazzino:'Magazzino',manutenzione:'Manutenzione',filoni_tonno_estratti:'Estrazione',filoni_tonno:'Siringatura e confezionamento',filoni_tonno_pesati:'Pesatura ed etichettatura',burger_bistecche:'Burger e bistecche',bottarga:'Bottarga',scarico:'Scarico camion',pulizia:'Pulizia locali',trasporto:'Trasporto merci',celle:'Sistemazione celle',carico:'Carico camion',altro:'Altra lavorazione'};
+const IMP_KEY='coromeu-impiego-v4181';
+let impRows=[];
+function impDateKey(){return IMP_KEY+'-'+($('date').value||today())}
+function impLoad(){try{const x=JSON.parse(localStorage.getItem(impDateKey())||'[]');impRows=Array.isArray(x)?x:[]}catch{impRows=[]}impRender()}
+function impPersist(){try{localStorage.setItem(impDateKey(),JSON.stringify(impRows));$('imp-status').textContent='Bozza salvata su questo dispositivo alle '+new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'})}catch(e){$('imp-status').textContent='Salvataggio locale non riuscito: esporta un backup'}}
+function impMin(a,b){const r=crewIntervals(a,b);return r&&r[1]>r[0]?r[1]-r[0]:0}
+function impHistoricalRows(){
+ const date=$('date').value||today(),day=db.days[date];
+ const phase=day?.phaseTimes||{};
+ const found=[],seen=new Set();
+ for(const key of CREW_KEYS){
+  const keys=CREW_GROUPS[key],all=[];
+  for(const k of keys)for(const r of (phase[k]?.operators||[]))all.push(r);
+  for(const r of all){
+   if(!r?.name)continue;
+   const signature=[key,r.name,r.start||'',r.end||''].join('|');
+   if(seen.has(signature))continue;
+   seen.add(signature);
+   found.push({name:r.name,type:key,start:r.start||'',end:r.end||'',source:'storico'});
+  }
+ }
+ return found;
+}
+function impAnalyze(){
+ const date=$('date').value||today(),day=db.days[date];
+ const people=day?.people||readForm().people;
+ const historical=impHistoricalRows();
+ const allRows=[...historical,...impRows];
+ const names=new Set([...Object.keys(people),...allRows.map(r=>r.name).filter(Boolean)]);
+ return [...names].sort((a,b)=>a.localeCompare(b,'it')).map(name=>{
+  const p=people[name]||{},shiftRange=crewIntervals(p.in,p.out),net=Number(p.minutes)||0;
+  const rows=allRows.filter(r=>r.name===name&&r.start&&r.end);
+  const intervals=rows.map(r=>({r,iv:crewIntervals(r.start,r.end)})).filter(x=>x.iv&&x.iv[1]>x.iv[0]);
+  let overlap=false,outside=false,assigned=0;
+  intervals.forEach((x,i)=>{assigned+=x.iv[1]-x.iv[0];if(shiftRange&&(x.iv[0]<shiftRange[0]||x.iv[1]>shiftRange[1]))outside=true;for(let j=0;j<i;j++)if(crewOverlap(x.iv,intervals[j].iv)>0)overlap=true});
+  const classified=intervals.reduce((acc,x)=>{const label=x.r.type==='altro'?(x.r.custom||'Altra lavorazione'):IMP_LABELS[x.r.type]||x.r.type;acc[label]=(acc[label]||0)+x.iv[1]-x.iv[0];return acc},{});
+  return {name,net,assigned,unassigned:Math.max(0,net-assigned),overlap,outside,classified,incomplete:allRows.some(r=>r.name===name&&(!r.start||!r.end))};
+ });
+}
+function impRender(){
+ const el=$('imp-rows');if(!el)return;
+ const names=[...new Set([...db.staff,...Object.keys(readForm().people),...impRows.map(r=>r.name).filter(Boolean)])];
+ el.innerHTML=impRows.map((r,i)=>`<div class="imp-person" data-imp="${i}" style="display:block;border:1px solid #d9e4e7;padding:10px;margin:8px 0"><div class="row"><div><label>Dipendente</label><select data-f="name"><option value="">Seleziona</option>${names.map(n=>`<option value="${escape(n)}" ${r.name===n?'selected':''}>${escape(n)}</option>`).join('')}</select></div><div><label>Attività</label><select data-f="type">${Object.entries(IMP_LABELS).map(([k,v])=>`<option value="${k}" ${r.type===k?'selected':''}>${escape(v)}</option>`).join('')}</select></div></div><div class="row"><div><label>Inizio</label><input type="time" data-f="start" value="${escape(r.start||'')}"></div><div><label>Fine</label><input type="time" data-f="end" value="${escape(r.end||'')}"></div></div><div class="row"><div><label>Descrizione personalizzata</label><input data-f="custom" placeholder="Facoltativa" value="${escape(r.custom||'')}"></div><div><label>Durata</label><div class="notice">${hfmt(impMin(r.start,r.end))}</div></div></div><button class="btn warn" type="button" data-del="${i}" style="margin-top:8px">Rimuovi assegnazione</button></div>`).join('')||'<p class="muted">Nessuna assegnazione. Aggiungi una lavorazione per iniziare.</p>';
+ el.querySelectorAll('[data-imp]').forEach(div=>{const i=Number(div.dataset.imp);div.querySelectorAll('[data-f]').forEach(input=>input.addEventListener('change',()=>{impRows[i][input.dataset.f]=input.value;impPersist();impRender()}))});
+ el.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{impRows.splice(Number(b.dataset.del),1);impPersist();impRender()});
+ const history=impHistoricalRows();
+ $('imp-historical').innerHTML='<h3>Assegnazioni già registrate nelle lavorazioni</h3>'+(history.length?'<div style="overflow-x:auto"><table style="width:100%;font-size:12px"><tr><th>Dipendente</th><th>Fase</th><th>Inizio</th><th>Fine</th></tr>'+history.map(r=>'<tr><td>'+escape(r.name)+'</td><td>'+escape(IMP_LABELS[r.type]||r.type)+'</td><td>'+escape(r.start||'Da verificare')+'</td><td>'+escape(r.end||'Da verificare')+'</td></tr>').join('')+'</table></div>':'<p class="muted">Nessuna assegnazione nominativa trovata per questa data. Le sole ore della fase non identificano gli operatori.</p>');
+ const data=impAnalyze();$('imp-summary').innerHTML='<p class="muted"><b>Indice di tempo classificato</b> = minuti registrati nelle attività / minuti netti timbrati. Il tempo da verificare non equivale necessariamente a tempo perso. Le pause sono detratte automaticamente dalle ore nette, ma senza orario preciso non è possibile attribuirle correttamente alle singole fasi.</p>'+'<table style="width:100%;font-size:12px"><tr><th>Dipendente</th><th>Ore nette</th><th>Assegnate</th><th>Da verificare</th><th>Classificato</th></tr>'+data.map(p=>`<tr><td>${escape(p.name)}</td><td>${hfmt(p.net)}</td><td>${hfmt(p.assigned)}</td><td>${hfmt(p.unassigned)}</td><td>${p.net>0?fmt(Math.min(100,p.assigned*100/p.net),1)+'%':'—'}</td></tr><tr><td colspan="5" style="font-size:11px">${Object.entries(p.classified).map(([k,m])=>escape(k)+': '+hfmt(m)).join(' · ')||'Nessuna attività'}${p.overlap?' · ⚠️ Sovrapposizione':''}${p.outside?' · ⚠️ Fuori turno':''}${p.incomplete?' · ⚠️ Orari incompleti':''}${p.assigned>p.net?' · ⚠️ Ore assegnate superiori alle ore nette':''}</td></tr>`).join('')+'</table>';
+}
+(function impInit(){
+ const box=document.createElement('details');box.className='card';box.id='imp-panel';box.open=true;
+ box.innerHTML='<summary style="font-weight:750;cursor:pointer">👥 Impiego del personale · V4.18.4</summary><p class="notice"><b>Anteprima sicura:</b> queste assegnazioni si salvano automaticamente solo su questo dispositivo, separate da Firebase. Non sostituiscono i dati ufficiali.</p><p class="muted">Registra anche scarico camion, pulizia locali, trasporto merci e altre attività. Per i passaggi tra fasi, inserisci l’ora del cambio. I 15 minuti di pausa sono già sottratti dalle ore nette timbrate: il tempo non assegnato è indicativo finché non viene registrata la pausa effettiva.</p><button class="btn alt" type="button" id="imp-add">+ Aggiungi assegnazione</button><button class="btn alt" type="button" id="imp-export" style="margin-left:5px">Esporta assegnazioni JSON</button><div id="imp-historical"></div><div id="imp-rows"></div><h3>Ripartizione delle ore timbrate</h3><div id="imp-summary"></div><p id="imp-status" class="muted"></p>';
+ const nav=document.querySelector('.tabs');
+ const tabButton=document.createElement('button');
+ tabButton.type='button';tabButton.dataset.tab='impiego';tabButton.textContent='Impiego personale';
+ nav.insertBefore(tabButton,nav.querySelector('[data-tab="storico"]'));
+ const section=document.createElement('section');
+ section.id='impiego';section.className='hidden';
+ document.querySelector('main.wrap').appendChild(section);
+ section.appendChild(box);
+ tabButton.onclick=()=>tab('impiego');
+ 
+ $('imp-add').onclick=()=>{impRows.push({name:'',type:'scarico',start:'',end:'',custom:''});impPersist();impRender();box.open=true};
+ $('imp-export').onclick=()=>{const blob=new Blob([JSON.stringify({date:$('date').value,assignments:impRows},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='Coromeu_Impiego_'+$('date').value+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)};
+ $('date').addEventListener('change',()=>setTimeout(impLoad,0));
+ const prevFetchImpiego=fetchCloud;fetchCloud=async function(){await prevFetchImpiego();impRender()};
+ const prevOpen=openDay;openDay=function(date){prevOpen(date);impLoad()};
+ const prevBlank=blank;blank=function(){prevBlank();impLoad()};
+ box.addEventListener('toggle',()=>{if(box.open)impRender()});
+ impLoad();
+})();
+
+// V4.18.4: attività aggiuntive, menu a tendina e ripartizione visiva.
+const IMP_OFFICE=new Set(['GIANMARCO MARRAS','ANDREA MASALA','SERGIO ARMINIU','RICCARDO BALLONE']);
+const IMP_COLORS={Ufficio:'#64748b',Inventario:'#8b5cf6',Magazzino:'#2563eb',Manutenzione:'#ea580c','Da verificare':'#cbd5e1',Estrazione:'#0d9488','Siringatura e confezionamento':'#0f766e','Pesatura ed etichettatura':'#14b8a6','Burger e bistecche':'#0ea5e9',Bottarga:'#a855f7'};
+const impAnalyzeOld=impAnalyze;
+function impVisualDay(date){
+ const day=db.days[date]||{}, people=day.people||((date===($('date').value||today()))?readForm().people:{});
+ let local=[];try{local=JSON.parse(localStorage.getItem(IMP_KEY+'-'+date)||'[]')}catch(e){};
+ if(!Array.isArray(local))local=[];
+ const history=[];const seen=new Set();
+ for(const key of CREW_KEYS){for(const k of CREW_GROUPS[key])for(const r of (day.phaseTimes?.[k]?.operators||[])){
+  if(!r?.name)continue;const sig=[key,r.name,r.start||'',r.end||''].join('|');if(seen.has(sig))continue;seen.add(sig);
+  history.push({name:r.name,type:key,start:r.start,end:r.end,source:'storico'});
+ }}
+ const rows=[...history,...local];const names=new Set([...db.staff,...Object.keys(people),...rows.map(r=>r.name).filter(Boolean)]);
+ return [...names].filter(Boolean).map(name=>{
+  const p=people[name]||{},net=Math.max(0,Number(p.minutes)||0),shift=crewIntervals(p.in,p.out);
+  const ivs=rows.filter(r=>r.name===name&&r.start&&r.end).map(r=>({r,iv:crewIntervals(r.start,r.end)})).filter(x=>x.iv&&x.iv[1]>x.iv[0]);
+  const cuts=new Set();if(shift){cuts.add(shift[0]);cuts.add(shift[1]);}
+  ivs.forEach(x=>{if(shift){cuts.add(Math.max(shift[0],Math.min(shift[1],x.iv[0])));cuts.add(Math.max(shift[0],Math.min(shift[1],x.iv[1])))}else{cuts.add(x.iv[0]);cuts.add(x.iv[1])}});
+  const pts=[...cuts].sort((a,b)=>a-b),classified={};let overlaps=false;
+  for(let i=1;i<pts.length;i++){
+   const a=pts[i-1],b=pts[i];if(b<=a||shift&&(a<shift[0]||b>shift[1]))continue;
+   const active=ivs.filter(x=>x.iv[0]<b&&x.iv[1]>a);if(active.length>1)overlaps=true;
+   if(!active.length)continue;
+   const x=active.find(x=>x.r.source!=='storico')||active[0];
+   const label=x.r.type==='altro'?(x.r.custom?.trim()||'Altro'):IMP_LABELS[x.r.type]||x.r.type;
+   classified[label]=(classified[label]||0)+b-a;
+  }
+  const sum=Object.values(classified).reduce((a,b)=>a+b,0);
+  if(sum>net&&sum>0){for(const k in classified)classified[k]=classified[k]*net/sum;}
+  const assigned=Object.values(classified).reduce((a,b)=>a+b,0),remaining=Math.max(0,net-assigned);
+  if(IMP_OFFICE.has(name.trim().toLocaleUpperCase('it'))&&remaining)classified.Ufficio=(classified.Ufficio||0)+remaining;
+  else if(remaining)classified['Da verificare']=remaining;
+  return {name,net,classified,overlaps};
+ });
+}
+function impVisualRange(){
+ const period=$('imp-period')?.value||'day',ref=$('imp-reference')?.value||$('date').value||today();
+ const start=new Date(ref+'T12:00:00');if(period==='week')start.setDate(start.getDate()-(start.getDay()+6)%7);if(period==='month')start.setDate(1);
+ const from=[start.getFullYear(),String(start.getMonth()+1).padStart(2,'0'),String(start.getDate()).padStart(2,'0')].join('-');
+ const dates=period==='day'?[ref]:[...new Set([...Object.keys(db.days),...Object.keys(localStorage).filter(k=>k.startsWith(IMP_KEY+'-')).map(k=>k.slice((IMP_KEY+'-').length))])].filter(d=>d>=from&&d<=ref);
+ const totals=new Map();for(const date of dates)for(const p of impVisualDay(date)){
+  if(!totals.has(p.name))totals.set(p.name,{name:p.name,net:0,classified:{},overlaps:false});
+  const t=totals.get(p.name);t.net+=p.net;t.overlaps ||= p.overlaps;
+  for(const [k,v] of Object.entries(p.classified))t.classified[k]=(t.classified[k]||0)+v;
+ }
+ // Anche gli assenti compaiono nella vista giornaliera, senza ore fittizie.
+ if(period==='day')for(const name of db.staff)if(!totals.has(name))totals.set(name,{name,net:0,classified:{},overlaps:false});
+ return [...totals.values()].sort((a,b)=>a.name.localeCompare(b.name,'it'));
+}
+function impVisualRender(){
+ const el=$('imp-visual');if(!el)return;
+ const data=impVisualRange(),legend=new Map();
+ el.innerHTML=data.map(p=>{
+  const parts=Object.entries(p.classified).filter(x=>x[1]>0),total=parts.reduce((n,x)=>n+x[1],0);
+  const bars=parts.map(([k,v])=>{const c=IMP_COLORS[k]||'#d946a3';legend.set(k,c);return '<span title="'+escape(k)+' · '+hfmt(Math.round(v))+'" style="width:'+(total?100*v/total:0)+'%;background:'+c+';height:22px"></span>'}).join('');
+  return '<div style="border:1px solid #d9e4e7;border-radius:10px;padding:11px;margin:9px 0"><div style="display:flex;justify-content:space-between;gap:8px"><strong>'+escape(p.name)+'</strong><span class="small">'+hfmt(Math.round(p.net))+'</span></div><div style="display:flex;background:#edf2f4;overflow:hidden;border-radius:6px;min-height:22px;margin:9px 0">'+bars+'</div><div class="small">'+(parts.map(([k,v])=>escape(k)+': '+hfmt(Math.round(v))+' ('+(total?fmt(v*100/total,1):'0')+'%)').join(' · ')||'Nessuna presenza registrata')+'</div>'+(p.overlaps?'<p class="error">⚠️ Orari sovrapposti: controllare le attività</p>':'')+'</div>';
+ }).join('');
+ $('imp-legend').innerHTML=[...legend].map(([k,c])=>'<span style="display:inline-flex;align-items:center;gap:5px;margin:4px 12px 4px 0"><i style="display:inline-block;width:12px;height:12px;border-radius:3px;background:'+c+'"></i>'+escape(k)+'</span>').join('');
+}
+const impRenderV4183=impRender;
+impRender=function(){
+ impRenderV4183();
+ $('imp-rows')?.querySelectorAll('[data-imp]').forEach(div=>{
+  const select=div.querySelector('[data-f="type"]'),input=div.querySelector('[data-f="custom"]');if(!select||!input)return;
+  const wrapper=input.closest('div');if(wrapper)wrapper.style.display=select.value==='altro'?'':'none';
+  input.placeholder='Descrivi l’attività non prevista';
+ });
+ impVisualRender();
+};
+(function impVisualInit(){
+ const summary=$('imp-summary');if(!summary)return;
+ const block=document.createElement('div');block.innerHTML='<h3>Distribuzione delle ore per operatore</h3><p class="muted">Le ore nette sono ripartite senza doppio conteggio. Gianmarco, Andrea, Sergio e Riccardo hanno Ufficio come attività predefinita. Le nuove assegnazioni rimangono salvate sul dispositivo, non su Firebase.</p><div class="row"><div><label>Periodo</label><select id="imp-period"><option value="day">Giornaliero</option><option value="week">Settimanale</option><option value="month">Mensile</option></select></div><div><label>Data di riferimento</label><input type="date" id="imp-reference"></div></div><div id="imp-visual"></div><div id="imp-legend" class="small"></div>';
+ summary.parentNode.insertBefore(block,summary);$('imp-reference').value=$('date').value||today();
+ $('imp-period').addEventListener('change',impVisualRender);$('imp-reference').addEventListener('change',impVisualRender);
+ $('date').addEventListener('change',()=>{$('imp-reference').value=$('date').value;impVisualRender()});
+ impRender();
+})();
+
+// V4.18.5 - Attribuzione dei minuti non classificati e stampa PDF.
+// Le nuove assegnazioni rimangono locali, senza modificare Firebase.
+const impVisualDayV4184=impVisualDay;
+impVisualDay=function(date){
+ const result=impVisualDayV4184(date);
+ let local=[];try{local=JSON.parse(localStorage.getItem(IMP_KEY+'-'+date)||'[]')}catch(e){}
+ if(!Array.isArray(local))local=[];
+ for(const p of result){
+  p.durationOverflow=false;
+  for(const r of local.filter(r=>r.name===p.name&&r.mode==='duration')){
+   const requested=Math.max(0,Math.round(Number(r.duration)||0));
+   let left=requested;
+   for(const source of ['Da verificare','Ufficio']){
+    const used=Math.min(left,Math.max(0,p.classified[source]||0));
+    if(used){p.classified[source]-=used;left-=used;}
+   }
+   const label=r.type==='altro'?(r.custom?.trim()||'Altro'):IMP_LABELS[r.type]||r.type;
+   if(requested-left)p.classified[label]=(p.classified[label]||0)+(requested-left);
+   if(left)p.durationOverflow=true;
+  }
+ }
+ return result;
+};
+const impVisualRenderV4184=impVisualRender;
+impVisualRender=function(){
+ impVisualRenderV4184();
+ const data=impVisualRange();
+ const el=$('imp-visual');if(!el)return;
+ const children=[...el.children];
+ data.forEach((p,i)=>{
+  const card=children[i];if(!card)return;
+  if(p.net>0){
+   const btn=document.createElement('button');btn.type='button';btn.className='btn alt';
+   btn.style.cssText='font-size:12px;padding:7px 10px;margin-top:9px';
+   btn.textContent='+ Assegna tempo da verificare';
+   btn.onclick=()=>{const period=$('imp-period').value;if(period!=='day'){$('imp-period').value='day';impVisualRender();} $('imp-assign-name').value=p.name;$('imp-assign-date').value=$('imp-reference').value; $('imp-assign-panel').scrollIntoView({behavior:'smooth',block:'start'});};
+   card.appendChild(btn);
+  }
+ });
+};
+function impSaveDuration(){
+ const date=$('imp-assign-date').value,name=$('imp-assign-name').value,type=$('imp-assign-type').value;
+ const hours=Number($('imp-assign-hours').value||0),minutes=Number($('imp-assign-minutes').value||0);
+ const duration=Math.round(hours*60+minutes),custom=$('imp-assign-custom').value.trim();
+ if(!date||!name)return alert('Seleziona data e dipendente.');
+ if(!Number.isFinite(duration)||duration<=0||hours<0||minutes<0||minutes>=60)return alert('Inserisci una durata valida.');
+ if(type==='altro'&&!custom)return alert('Specifica la lavorazione.');
+ const p=impVisualDay(date).find(x=>x.name===name);
+ if(!p||p.net<=0)return alert('Non ci sono ore nette registrate per questo dipendente nella giornata.');
+ const available=Math.round((p.classified['Da verificare']||0)+(p.classified.Ufficio||0));
+ if(duration>available)return alert('Tempo disponibile: '+hfmt(available)+'. Riduci la durata per evitare il doppio conteggio.');
+ const key=IMP_KEY+'-'+date;
+ let rows=[];try{rows=JSON.parse(localStorage.getItem(key)||'[]')}catch(e){}
+ if(!Array.isArray(rows))rows=[];
+ rows.push({name,type,custom,mode:'duration',duration,createdAt:new Date().toISOString()});
+ try{localStorage.setItem(key,JSON.stringify(rows))}catch(e){return alert('Impossibile salvare sul dispositivo. Esporta un backup dei dati.');}
+ if(date===($('date').value||today()))impLoad();
+ $('imp-assign-hours').value='';$('imp-assign-minutes').value='';$('imp-assign-custom').value='';
+ impVisualRender();impDurationList();
+ $('imp-duration-status').textContent='Assegnazione salvata localmente: '+hfmt(duration)+' a '+name+' ('+date+').';
+}
+function impDurationList(){
+ const date=$('imp-assign-date').value,key=IMP_KEY+'-'+date;
+ let rows=[];try{rows=JSON.parse(localStorage.getItem(key)||'[]')}catch(e){}
+ if(!Array.isArray(rows))rows=[];
+ const el=$('imp-duration-list');if(!el)return;
+ el.innerHTML=rows.map((r,i)=>r.mode==='duration'?'<div class="list-item"><span class="small">'+escape(r.name)+' · '+escape(r.type==='altro'?(r.custom||'Altro'):(IMP_LABELS[r.type]||r.type))+' · '+hfmt(r.duration)+'</span><button class="btn warn" type="button" data-duration-remove="'+i+'">Elimina</button></div>':'').join('')||'<p class="muted">Nessuna assegnazione a durata per questa giornata.</p>';
+ el.querySelectorAll('[data-duration-remove]').forEach(btn=>btn.onclick=()=>{
+  if(!confirm('Eliminare questa assegnazione?'))return;
+  rows.splice(Number(btn.dataset.durationRemove),1);
+  localStorage.setItem(key,JSON.stringify(rows));
+  if(date===($('date').value||today()))impLoad();impVisualRender();impDurationList();
+ });
+}
+function impPrintPDF(){
+ const period=$('imp-period').value,ref=$('imp-reference').value||today();
+ const label={day:'Giornaliero',week:'Settimanale',month:'Mensile'}[period];
+ const data=impVisualRange();
+ const color=k=>IMP_COLORS[k]||'#d946a3';
+ const html='<h1>IMPIEGO PERSONALE · COROMEU</h1><p><b>Report '+label+'</b> · Data riferimento: '+escape(ref)+' · Generato: '+new Date().toLocaleString('it-IT')+'</p>'+
+ '<p>Ore nette ripartite per attività. I dati di assegnazione aggiuntivi sono salvati localmente sul dispositivo.</p>'+
+ data.map(p=>{
+  const parts=Object.entries(p.classified).filter(x=>x[1]>0),total=parts.reduce((a,x)=>a+x[1],0);
+  return '<div style="break-inside:avoid;page-break-inside:avoid;margin:14px 0;padding:9px;border:1px solid #ccd"><b>'+escape(p.name)+'</b> · '+hfmt(Math.round(p.net))+'<div style="display:flex;height:18px;overflow:hidden;margin:7px 0;background:#eee">'+parts.map(([k,v])=>'<span style="display:block;width:'+(total?100*v/total:0)+'%;background:'+color(k)+'"></span>').join('')+'</div><div style="font-size:11px">'+(parts.map(([k,v])=>'<span style="display:inline-block;margin:3px 8px 3px 0"><b style="color:'+color(k)+'">■</b> '+escape(k)+': '+hfmt(Math.round(v))+' ('+(total?fmt(v*100/total,1):'0')+'%)</span>').join('')||'Nessuna presenza')+'</div>'+(p.overlaps?'<p>ATTENZIONE: orari sovrapposti</p>':'')+(p.durationOverflow?'<p>ATTENZIONE: durata superiore al tempo disponibile</p>':'')+'</div>';
+ }).join('');
+ $('print-area').innerHTML=html;
+ window.print();
+}
+(function impV4185Init(){
+ const target=$('imp-visual');if(!target)return;
+ const panel=document.createElement('div');panel.className='card';panel.id='imp-assign-panel';
+ panel.innerHTML='<h3>Assegna il tempo da verificare</h3><p class="muted">Inserisci una durata anche senza conoscere l’ora esatta. I minuti vengono sottratti dal tempo Da verificare (o da Ufficio per gli operatori predefiniti), senza aumentare le ore nette. Per le attività con inizio/fine usa il modulo Aggiungi assegnazione qui sopra.</p><div class="row"><div><label>Data della lavorazione</label><input id="imp-assign-date" type="date"></div><div><label>Operatore</label><select id="imp-assign-name"></select></div></div><label>Attività</label><select id="imp-assign-type"></select><div id="imp-assign-custom-wrap" class="hidden"><label>Descrizione</label><input id="imp-assign-custom" placeholder="Specifica attività"></div><div class="row"><div><label>Ore</label><input id="imp-assign-hours" type="number" min="0" step="1" value="0" inputmode="numeric"></div><div><label>Minuti (0–59)</label><input id="imp-assign-minutes" type="number" min="0" max="59" step="1" value="0" inputmode="numeric"></div></div><button type="button" class="btn" id="imp-assign-save" style="margin-top:12px;width:100%">Salva lavorazione</button><p id="imp-duration-status" class="muted"></p><h4>Assegnazioni a durata della giornata</h4><div id="imp-duration-list"></div>';
+ target.parentNode.insertBefore(panel,target.nextSibling);
+ const pdf=document.createElement('button');pdf.type='button';pdf.className='btn';pdf.id='imp-print-pdf';pdf.style.cssText='width:100%;margin:10px 0;background:#137d4b';pdf.textContent='🖨️ Stampa / Salva PDF impiego personale';
+ target.parentNode.insertBefore(pdf,target);
+ $('imp-assign-date').value=$('imp-reference').value||today();
+ $('imp-assign-name').innerHTML=db.staff.map(n=>'<option value="'+escape(n)+'">'+escape(n)+'</option>').join('');
+ $('imp-assign-type').innerHTML=Object.entries(IMP_LABELS).map(([k,v])=>'<option value="'+escape(k)+'">'+escape(v)+'</option>').join('');
+ $('imp-assign-type').value='inventario';
+ $('imp-assign-type').onchange=()=>$('imp-assign-custom-wrap').classList.toggle('hidden',$('imp-assign-type').value!=='altro');
+ $('imp-assign-date').onchange=impDurationList;
+ $('imp-assign-save').onclick=impSaveDuration;
+ $('imp-print-pdf').onclick=impPrintPDF;
+ $('imp-reference').addEventListener('change',()=>{$('imp-assign-date').value=$('imp-reference').value;impDurationList()});
+ impDurationList();impVisualRender();
+ document.querySelector('footer').textContent='Produttività Coromeu · Versione 4.18.5 PROVA · Archivio condiviso Firebase';
+ const title=$('imp-panel').querySelector('summary');if(title)title.textContent='👥 Impiego del personale · V4.18.5';
+})();
+
+// V4.18.6 - Modulo di attribuzione direttamente sotto ogni dipendente.
+// Non modifica le presenze ufficiali né la struttura Firebase.
+const impVisualRenderV4185=impVisualRender;
+let impInlineOpen=null;
+function impInlineSave(name,form){
+ const date=form.querySelector('[data-inline-date]').value;
+ const type=form.querySelector('[data-inline-type]').value;
+ const custom=form.querySelector('[data-inline-custom]').value.trim();
+ const mode=form.querySelector('[data-inline-mode]').value;
+ if(!date)return alert('Seleziona la data della lavorazione.');
+ if(type==='altro'&&!custom)return alert('Specifica la lavorazione.');
+ const day=impVisualDay(date).find(p=>p.name.toLocaleLowerCase('it')===name.toLocaleLowerCase('it'));
+ if(!day||day.net<=0)return alert('Nessuna ora netta registrata per questa giornata.');
+ let row={name,type,custom,createdAt:new Date().toISOString()};
+ if(mode==='duration'){
+  const hours=Number(form.querySelector('[data-inline-hours]').value||0);
+  const minutes=Number(form.querySelector('[data-inline-minutes]').value||0);
+  if(!Number.isInteger(hours)||hours<0||!Number.isInteger(minutes)||minutes<0||minutes>59)return alert('Inserisci ore e minuti validi.');
+  const duration=hours*60+minutes;
+  if(duration<=0)return alert('Inserisci una durata superiore a zero.');
+  const available=Math.round((day.classified['Da verificare']||0)+(day.classified.Ufficio||0));
+  if(duration>available)return alert('Tempo disponibile: '+hfmt(available)+'.');
+  row={...row,mode:'duration',duration};
+ }else{
+  const start=form.querySelector('[data-inline-start]').value;
+  const end=form.querySelector('[data-inline-end]').value;
+  const interval=crewIntervals(start,end);
+  if(!interval||interval[1]<=interval[0])return alert('Inserisci orari di inizio e fine validi.');
+  const person=db.days[date]?.people?.[name]||(date===($('date').value||today())?readForm().people[name]:null);
+  const shiftRange=person?crewIntervals(person.in,person.out):null;
+  if(shiftRange&&(interval[0]<shiftRange[0]||interval[1]>shiftRange[1]))return alert('La lavorazione deve rientrare nell’orario di presenza.');
+  const available=Math.round((day.classified['Da verificare']||0)+(day.classified.Ufficio||0));
+  if(interval[1]-interval[0]>available)return alert('Tempo residuo insufficiente: '+hfmt(available)+'.');
+  row={...row,start,end};
+ }
+ const key=IMP_KEY+'-'+date;
+ let rows=[];try{rows=JSON.parse(localStorage.getItem(key)||'[]')}catch(e){}
+ if(!Array.isArray(rows))rows=[];
+ rows.push(row);
+ try{localStorage.setItem(key,JSON.stringify(rows))}catch(e){return alert('Salvataggio non riuscito: controlla lo spazio disponibile.');}
+ impInlineOpen=null;
+ if(date===($('date').value||today()))impLoad();
+ impVisualRender();impDurationList();
+ $('imp-duration-status').textContent='Lavorazione salvata per '+name+' il '+date+'.';
+}
+impVisualRender=function(){
+ impVisualRenderV4185();
+ const cards=[...($('imp-visual')?.children||[])];
+ const people=impVisualRange();
+ people.forEach((p,i)=>{
+  const card=cards[i];if(!card)return;
+  // Nascondi il vecchio pulsante che portava al modulo generale.
+  [...card.querySelectorAll('button')].filter(b=>b.textContent.includes('Assegna tempo da verificare')).forEach(b=>b.remove());
+  const button=document.createElement('button');button.type='button';button.className='btn alt';
+  button.style.cssText='font-size:12px;padding:9px 11px;margin-top:9px;width:100%';
+  button.textContent=impInlineOpen===p.name?'− Chiudi assegnazione':'+ Riassegna ore mancanti';
+  card.appendChild(button);
+  button.onclick=()=>{impInlineOpen=impInlineOpen===p.name?null:p.name;impVisualRender()};
+  if(impInlineOpen!==p.name)return;
+  const available=Math.round((p.classified['Da verificare']||0)+(p.classified.Ufficio||0));
+  const form=document.createElement('div');form.style.cssText='background:#f3f8f9;border:1px solid #d7e5e7;border-radius:9px;padding:10px;margin-top:10px';
+  form.innerHTML='<strong>Nuova lavorazione · '+escape(p.name)+'</strong><p class="small">Residuo disponibile nel periodo: '+hfmt(available)+'. Per il riepilogo settimanale o mensile scegli la giornata esatta.</p>'+
+   '<label>Data lavorazione</label><input type="date" data-inline-date value="'+escape($('imp-reference').value||today())+'">'+
+   '<label>Attività</label><select data-inline-type>'+Object.entries(IMP_LABELS).map(([k,v])=>'<option value="'+escape(k)+'">'+escape(v)+'</option>').join('')+'</select>'+
+   '<div data-inline-custom-wrap class="hidden"><label>Specifica attività</label><input data-inline-custom placeholder="Descrizione lavorazione"></div>'+
+   '<label>Modalità</label><select data-inline-mode><option value="duration">Durata (ore e minuti)</option><option value="times">Orario inizio e fine</option></select>'+
+   '<div data-inline-duration class="row"><div><label>Ore</label><input type="number" min="0" step="1" inputmode="numeric" data-inline-hours value="0"></div><div><label>Minuti</label><input type="number" min="0" max="59" step="1" inputmode="numeric" data-inline-minutes value="0"></div></div>'+
+   '<div data-inline-times class="row hidden"><div><label>Inizio</label><input type="time" data-inline-start></div><div><label>Fine</label><input type="time" data-inline-end></div></div>'+
+   '<button type="button" class="btn" data-inline-save style="width:100%;margin-top:12px">Salva lavorazione</button>';
+  card.appendChild(form);
+  form.querySelector('[data-inline-type]').value='inventario';
+  form.querySelector('[data-inline-type]').onchange=()=>form.querySelector('[data-inline-custom-wrap]').classList.toggle('hidden',form.querySelector('[data-inline-type]').value!=='altro');
+  form.querySelector('[data-inline-mode]').onchange=()=>{
+   const times=form.querySelector('[data-inline-mode]').value==='times';
+   form.querySelector('[data-inline-duration]').classList.toggle('hidden',times);
+   form.querySelector('[data-inline-times]').classList.toggle('hidden',!times);
+  };
+  form.querySelector('[data-inline-save]').onclick=()=>impInlineSave(p.name,form);
+ });
+};
+(function impV4186Init(){
+ // Il modulo generale rimane disponibile per le assegnazioni già salvate,
+ // ma il comando operativo è ora presente sotto ogni barra personale.
+ const general=$('imp-assign-panel');if(general){general.open=false;general.style.display='none';}
+ const title=$('imp-panel')?.querySelector('summary');if(title)title.textContent='👥 Impiego del personale · V4.22 TEST';
+ document.querySelector('footer').textContent='Produttività Coromeu · Versione 4.18.7 PROVA · Archivio condiviso Firebase';
+ impVisualRender();
+})();
+
+// V4.18.7: presenze e assegnazioni impiego usano selettori distinti.
+
+// V4.19.0 - Fasi aggiuntive e analisi sanificazione, isolate dal database ufficiale.
+Object.assign(IMP_LABELS,{pulizia_carrelli:'Pulizia e sanificazione carrelli',preparazione_burger:'Preparazione burger tonno e spada',inscatolamento:'Inscatolamento',estrazione_bottarga:'Estrazione bottarga'});
+Object.assign(IMP_COLORS,{'Pulizia e sanificazione carrelli':'#b45309','Preparazione burger tonno e spada':'#c026d3','Inscatolamento':'#0891b2','Estrazione bottarga':'#7c3aed'});
+const EXTRA_PHASES=[['pulizia_carrelli','Pulizia e sanificazione carrelli'],['estrazione_bottarga','Estrazione bottarga'],['preparazione_burger','Preparazione burger tonno e spada'],['inscatolamento','Inscatolamento']];
+const extraKey=d=>'coromeu-fasi-v419-'+d;
+function extraRead(d){try{return JSON.parse(localStorage.getItem(extraKey(d))||'{}')}catch(e){return {}}}
+function extraSave(){const d=$('date').value||today(),out={};for(const [k] of EXTRA_PHASES){const el=$('extra-'+k);out[k]={start:el.querySelector('[data-start]').value,end:el.querySelector('[data-end]').value,operator:el.querySelector('[data-operator]').value,kg:Number(el.querySelector('[data-kg]').value||0),pieces:Number(el.querySelector('[data-pieces]').value||0)};}try{localStorage.setItem(extraKey(d),JSON.stringify(out))}catch(e){alert('Impossibile salvare la bozza locale. Esporta un backup.')}extraReport()}
+function extraLoad(){const v=extraRead($('date').value||today());for(const [k] of EXTRA_PHASES){const el=$('extra-'+k),r=v[k]||{};for(const [a,b] of [['start','start'],['end','end'],['operator','operator'],['kg','kg'],['pieces','pieces']])el.querySelector('[data-'+a+']').value=r[b]??'';}extraReport()}
+function extraMinutes(a,b){const x=crewIntervals(a,b);return x?Math.max(0,x[1]-x[0]):0}
+function extraPeriod(){const ref=$('extra-reference').value||today(),mode=$('extra-period').value,d=new Date(ref+'T12:00:00');if(mode==='week')d.setDate(d.getDate()-(d.getDay()+6)%7);if(mode==='month')d.setDate(1);const from=[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');const dates=[];for(let dt=new Date(from+'T12:00:00');dt<=new Date(ref+'T12:00:00');dt.setDate(dt.getDate()+1))dates.push([dt.getFullYear(),String(dt.getMonth()+1).padStart(2,'0'),String(dt.getDate()).padStart(2,'0')].join('-'));return {ref,from,dates,mode}}
+function extraReport(){const el=$('extra-report');if(!el)return;const period=extraPeriod(),by=new Map(),daily=[];let carts=0,minutes=0,days=0;for(const d of period.dates){const r=extraRead(d).pulizia_carrelli||{},n=Number(r.pieces||0),m=extraMinutes(r.start,r.end);if(!n&&!m)continue;carts+=n;minutes+=m;days++;daily.push({d,n,m});if(r.operator){const a=by.get(r.operator)||{m:0,n:0};a.m+=m;a.n+=n;by.set(r.operator,a)}}const avg=carts?minutes/carts:0;el.innerHTML='<div class="metric-grid"><div class="metric"><b>'+carts+'</b><span>Carrelli lavati</span></div><div class="metric"><b>'+hfmt(minutes)+'</b><span>Ore-uomo pulizia</span></div><div class="metric"><b>'+fmt(avg,1)+' min</b><span>Media effettiva/carrello</span></div><div class="metric"><b>'+hfmt(days?Math.round(minutes/days):0)+'</b><span>Media per giornata con pulizia</span></div></div><p class="small">Tempo teorico (8 min/carrello): '+hfmt(carts*8)+' · Scostamento effettivo: '+(minutes-carts*8)+' minuti. Nessun costo orario richiesto.</p><h4>Ore per dipendente</h4>'+(by.size?[...by].map(([name,v])=>'<p class="small">'+escape(name)+': <b>'+hfmt(v.m)+'</b> · '+v.n+' carrelli</p>').join(''):'<p class="small">Nessuna pulizia registrata nel periodo.</p>')+'<h4>Dettaglio giornaliero</h4>'+daily.map(v=>'<p class="small">'+v.d+' · '+v.n+' carrelli · '+hfmt(v.m)+'</p>').join('');}
+function extraPrint(){const html='<h1>Coromeu · Pulizia e sanificazione carrelli</h1><p>Periodo: '+escape($('extra-period').selectedOptions[0].text)+' · '+escape($('extra-reference').value)+'</p>'+$('extra-report').innerHTML+'<p>Tempi reali, non stime. Standard: 8 minuti per carrello. Registrazioni locali al dispositivo.</p>';$('print-area').innerHTML=html;window.print()}
+(function extraInit(){
+ const host=document.createElement('details');host.className='card';host.open=false;host.id='extra-phases';host.innerHTML='<summary>🧼 Nuove fasi operative · V4.19.3</summary><p class="notice">I nuovi dati sono salvati in una bozza locale su questo dispositivo, senza modificare Firebase. Per ogni fase inserisci un solo orario generale e scegli l’operatore. Se due attività si sovrappongono, puoi scegliere la priorità nella sezione Impiego personale.</p>';
+ for(const [key,label] of EXTRA_PHASES){const item=document.createElement('div');item.className='phase-group';item.id='extra-'+key;item.innerHTML='<details class="extra-phase-toggle"><summary>'+label+'</summary><div class="extra-phase-fields"><div class="row"><div><label>Inizio fase</label><input type="time" data-start></div><div><label>Fine fase</label><input type="time" data-end></div></div><label>Operatore responsabile</label><select data-operator><option value="">Da assegnare</option></select><div class="row"><div><label>'+(key==='pulizia_carrelli'?'Carrelli lavati':'Kg lavorati (facoltativo)')+'</label><input type="number" min="0" step="'+(key==='pulizia_carrelli'?'1':'0.01')+'" data-'+(key==='pulizia_carrelli'?'pieces':'kg')+'></div><div><label>'+(key==='pulizia_carrelli'?'Kg (non richiesti)':'Pezzi (facoltativo)')+'</label><input type="number" min="0" step="1" data-'+(key==='pulizia_carrelli'?'kg':'pieces')+' '+(key==='pulizia_carrelli'?'disabled':'')+'></div></div>'+(key==='pulizia_carrelli'?'<p class="small">Riferimento teorico: 8 minuti per carrello. Le ore-uomo sono calcolate sugli orari effettivi.</p>':'')+'</div></details>';host.appendChild(item);item.querySelectorAll('input,select').forEach(x=>x.addEventListener('change',extraSave));}
+ const existing=document.querySelector('#oggi .prod-details');existing.parentNode.insertBefore(host,existing);
+ const r=document.createElement('div');r.className='card';r.innerHTML='<h2>📊 Analisi pulizia carrelli</h2><div class="row"><div><label>Periodo</label><select id="extra-period"><option value="day">Giornaliero</option><option value="week">Settimanale</option><option value="month">Mensile</option></select></div><div><label>Data riferimento</label><input type="date" id="extra-reference"></div></div><div id="extra-report"></div><button class="btn" id="extra-print" type="button">🖨️ Stampa / PDF pulizia carrelli</button><p class="muted">Il report comprende solo i dati salvati su questo dispositivo. Per una vista aziendale condivisa servirà una successiva migrazione controllata su Firebase.</p>';
+ $('report-content').parentNode.appendChild(r);$('extra-reference').value=today();$('extra-period').onchange=extraReport;$('extra-reference').onchange=extraReport;$('extra-print').onclick=extraPrint;
+ const oldOpen=openDay;openDay=function(date){oldOpen(date);extraLoad()};const oldBlank=blank;blank=function(){oldBlank();extraLoad()};$('date').addEventListener('change',()=>setTimeout(extraLoad,0));
+ const oldVisualDay=impVisualDay;impVisualDay=function(date){const out=oldVisualDay(date),ph=extraRead(date);for(const [k] of EXTRA_PHASES){const v=ph[k];if(!v?.operator||!v.start||!v.end)continue;const p=out.find(p=>p.name===v.operator);if(!p||!p.net)continue;const m=Math.min(extraMinutes(v.start,v.end),Math.max(0,(p.classified['Da verificare']||0)+(p.classified.Ufficio||0)));let remain=m;for(const source of ['Da verificare','Ufficio']){const taken=Math.min(remain,p.classified[source]||0);p.classified[source]=(p.classified[source]||0)-taken;remain-=taken;}const label=IMP_LABELS[k];p.classified[label]=(p.classified[label]||0)+m;}return out;};
+ const oldVisualRender=impVisualRender;impVisualRender=function(){oldVisualRender();const el=$('imp-visual');if(!el)return;for(const p of impVisualRange()){if(!p.overlaps)continue;const cards=[...el.children],i=impVisualRange().findIndex(x=>x.name===p.name),card=cards[i];if(!card)continue;const select=document.createElement('select');select.innerHTML='<option value="">Scegli fase predominante in caso di sovrapposizione</option>'+Object.entries(IMP_LABELS).map(([k,v])=>'<option value="'+escape(k)+'">'+escape(v)+'</option>').join('');const key='coromeu-priorita-v419-'+($('imp-reference').value||today())+'-'+p.name;select.value=localStorage.getItem(key)||'';select.onchange=()=>{localStorage.setItem(key,select.value);};card.appendChild(select);}}
+ for(const [key] of EXTRA_PHASES){const select=$('extra-'+key).querySelector('[data-operator]');select.innerHTML='<option value="">Da assegnare</option>'+db.staff.map(n=>'<option value="'+escape(n)+'">'+escape(n)+'</option>').join('');}
+ extraLoad();impVisualRender();document.querySelector('footer').textContent='Produttività Coromeu · Versione 4.19.3 PROVA · Archivio condiviso Firebase';$('cloud-card').querySelector('h2').textContent='☁️ Archivio condiviso Firebase · V4.19.3';
+})();
+
+// V4.21 - controllo personale e report: aggiornamento isolato, senza cambiare Firebase.
+(function(){
+const moveKey=d=>'coromeu-moves-v421-'+d;
+const moves=d=>{try{return JSON.parse(localStorage.getItem(moveKey(d))||'[]')}catch(e){return []}};
+const interval=(a,b)=>crewIntervals(a,b);
+const sourceDay=impVisualDay;
+function phaseAssignments(date){
+ const day=db.days[date]||{},cur=date===($('date').value||today()),pt=cur?readPhaseTimes():day.phaseTimes||{},rows=[];
+ for(const k of CREW_KEYS){
+  const ranges=CREW_GROUPS[k].map(id=>interval(pt[id]?.start,pt[id]?.end)).filter(Boolean);
+  if(!ranges.length)continue;
+  const start=Math.min(...ranges.map(x=>x[0])),end=Math.max(...ranges.map(x=>x[1]));
+  for(const e of pt[k]?.operators||[])if(e.name)rows.push({name:e.name,type:IMP_LABELS[k]||PHASE_NAMES[k]||k,start,end});
+ }
+ const extra=extraRead(date);
+ for(const [key,label] of EXTRA_PHASES){const x=extra[key]||{},r=interval(x.start,x.end);if(!r)continue;
+  const names=Array.isArray(x.operators)?x.operators:(x.operator?[x.operator]:[]);
+  for(const name of [...new Set(names)])if(name)rows.push({name,type:label,start:r[0],end:r[1]});
+ }
+ return rows;
+}
+impVisualDay=function(date){
+ const old=sourceDay(date),people=(date===($('date').value||today())?readForm().people:db.days[date]?.people)||{},rows=phaseAssignments(date),transfers=moves(date);
+ const names=new Set([...db.staff,...Object.keys(people),...rows.map(x=>x.name)]);
+ return [...names].filter(Boolean).map(name=>{
+  const person=people[name]||{},net=Number(person.minutes)||0,shift=interval(person.in,person.out);
+  const assigned=rows.filter(x=>x.name===name).map(x=>({...x}));
+  for(const m of transfers.filter(x=>x.name===name)){
+   const at=mins(m.at);if(at===null)continue;
+   for(const x of assigned){if(x.type===m.from&&x.start<at&&x.end>at)x.end=at;if(x.type===m.to&&x.start<at&&x.end>at)x.start=at;}
+  }
+  const ticks=new Set();if(shift){ticks.add(shift[0]);ticks.add(shift[1])}
+  for(const x of assigned){ticks.add(x.start);ticks.add(x.end)}
+  const pts=[...ticks].sort((a,b)=>a-b),classified={},overlaps=[];
+  for(let i=1;i<pts.length;i++){
+   const a=pts[i-1],b=pts[i];if(b<=a||shift&&(a<shift[0]||b>shift[1]))continue;
+   const active=assigned.filter(x=>x.start<b&&x.end>a);
+   if(active.length>1)overlaps.push([a,b]);
+   if(active.length!==1)continue;
+   classified[active[0].type]=(classified[active[0].type]||0)+(b-a);
+  }
+  let taken=Object.values(classified).reduce((a,b)=>a+b,0);
+  if(taken>net&&taken){for(const k in classified)classified[k]*=net/taken;taken=net}
+  let remaining=Math.max(0,net-taken),local=[];
+  try{local=JSON.parse(localStorage.getItem(IMP_KEY+'-'+date)||'[]')}catch(e){}
+  for(const r of (Array.isArray(local)?local:[]).filter(x=>x.name===name&&x.mode==='duration')){
+   const n=Math.min(remaining,Math.max(0,Number(r.duration)||0));
+   if(n){const label=r.type==='altro'?(r.custom||'Altro'):(IMP_LABELS[r.type]||r.type);classified[label]=(classified[label]||0)+n;remaining-=n}
+  }
+  if(remaining){const label=IMP_OFFICE.has(name.trim().toLocaleUpperCase('it'))?'Ufficio':'Da verificare';classified[label]=(classified[label]||0)+remaining}
+  return {name,net,classified,overlaps:overlaps.length>0,durationOverflow:false};
+ }).sort((a,b)=>a.name.localeCompare(b.name,'it'));
+};
+// Gli orari individuali vengono nascosti: i tempi sono quelli delle fasi e delle timbrature.
+function hideCrewTimes(){document.querySelectorAll('.crew-times').forEach(el=>el.style.display='none');document.querySelectorAll('.phase-crew').forEach(el=>{const note=el.querySelector('.crew-warning');if(note)note.textContent='Calcolo automatico dagli orari della fase e dalle presenze.'})}
+const previousCrew=renderCrew;
+renderCrew=function(k){
+ previousCrew(k);
+ hideCrewTimes();
+ const el=document.querySelector('[data-crew="'+k+'"]');if(!el)return;
+ const date=$('date').value||today(),people=readForm().people,pt=readPhaseTimes();
+ const ranges=CREW_GROUPS[k].map(id=>interval(pt[id]?.start,pt[id]?.end)).filter(Boolean);
+ const span=ranges.length?[Math.min(...ranges.map(r=>r[0])),Math.max(...ranges.map(r=>r[1]))]:null;
+ let minutes=0;
+ for(const e of phaseCrew[k]||[]){
+  if(!e.name||!span)continue;
+  const person=people[e.name]||db.days[date]?.people?.[e.name],shift=interval(person?.in,person?.out);
+  if(shift)minutes+=crewOverlap(span,shift);
+ }
+ const kg=crewKg(k);
+ el.querySelector('.crew-metric').textContent='Ore-uomo: '+hfmt(minutes)+' · '+fmt(kg)+' kg · '+(minutes?fmt(kg*60/minutes)+' kg/h':'— kg/h');
+ el.querySelector('.crew-rate').textContent=minutes?fmt(kg*60/minutes)+' kg/h':'— kg/h';
+ el.querySelector('.crew-warning').textContent=span?'Calcolo dagli orari della fase e dalle timbrature.':'Inserisci inizio e fine della fase.';
+};
+const previousVisual=impVisualRender;
+impVisualRender=function(){
+ const el=$('imp-visual');if(!el)return;
+ const all=impVisualRange();
+ const pending=all.filter(p=>(p.classified['Da verificare']||0)>0.5||p.overlaps||p.durationOverflow);
+ let legend=new Map();
+ el.innerHTML=pending.map(p=>{
+  const parts=Object.entries(p.classified).filter(([,v])=>v>0.5);
+  const total=parts.reduce((n,[,v])=>n+v,0);
+  const bars=parts.map(([k,v])=>{
+   const color=IMP_COLORS[k]||'#d946a3';legend.set(k,color);
+   return '<span title="'+escape(k)+' · '+hfmt(Math.round(v))+'" style="display:block;width:'+(total?100*v/total:0)+'%;background:'+color+';height:22px"></span>';
+  }).join('');
+  return '<div style="border:1px solid #d9e4e7;border-left:4px solid #d8a12d;border-radius:10px;padding:11px;margin:9px 0">'+
+   '<div style="display:flex;justify-content:space-between;gap:8px"><strong>'+escape(p.name)+'</strong><span class="small">'+hfmt(Math.round(p.net))+'</span></div>'+
+   '<div style="display:flex;background:#edf2f4;overflow:hidden;border-radius:6px;min-height:22px;margin:9px 0">'+bars+'</div>'+
+   '<div class="small">'+parts.map(([k,v])=>escape(k)+': '+hfmt(Math.round(v))+' ('+(total?fmt(v*100/total,1):'0')+'%)').join(' · ')+'</div>'+
+   '<p class="small" style="color:#a53a20">⚠ Da verificare: <b>'+hfmt(Math.round(p.classified['Da verificare']||0))+'</b>'+(p.overlaps?' · Sovrapposizione tra fasi':'')+(p.durationOverflow?' · Ore assegnate oltre il residuo':'')+'</p>'+
+   '<button type="button" class="btn alt" data-review="'+escape(p.name)+'">+ Sistema ore mancanti</button></div>';
+ }).join('');
+ if(!pending.length)el.innerHTML='<p class="notice" style="background:#e1f4e8;color:#1a6038">✓ Tutte le ore risultano attribuite. Nessun operatore da verificare.</p>';
+ el.querySelectorAll('[data-review]').forEach(button=>button.onclick=()=>{
+  impInlineOpen=button.dataset.review;
+  const panel=$('imp-rows');if(panel)panel.scrollIntoView({behavior:'smooth',block:'start'});
+  // Il pannello delle assegnazioni manuali rimane disponibile senza richiedere nuovi orari di fase.
+  if($('imp-period').value!=='day'){$('imp-period').value='day';impVisualRender();}
+ });
+ const legendEl=$('imp-legend');if(legendEl)legendEl.innerHTML=[...legend].map(([k,c])=>'<span style="display:inline-flex;align-items:center;gap:5px;margin:4px 12px 4px 0"><i style="width:12px;height:12px;border-radius:3px;background:'+c+'"></i>'+escape(k)+'</span>').join('');
+ let summary=document.getElementById('imp-pending-count');if(!summary){summary=document.createElement('p');summary.id='imp-pending-count';el.parentNode.insertBefore(summary,el)}
+ summary.textContent=pending.length?'⚠ '+pending.length+' operatori da verificare':'✓ Nessuna anomalia';
+};
+const host=$('imp-visual');if(host){
+ const box=document.createElement('div');box.className='card';box.innerHTML='<h3>Trasferimento straordinario · Regia</h3><p class="small">Compila soltanto quando un operatore cambia fase mentre le lavorazioni si sovrappongono.</p><label>Operatore</label><select id="v421-name"></select><label>Fase di provenienza</label><select id="v421-from"></select><label>Fase di destinazione</label><select id="v421-to"></select><label>Ora effettiva del trasferimento</label><input id="v421-at" type="time"><label>Motivazione (facoltativa)</label><input id="v421-why"><button class="btn" type="button" id="v421-save" style="margin-top:10px">Registra trasferimento</button><div id="v421-history"></div><p class="small">Trasferimenti salvati localmente sul dispositivo.</p>';
+ host.parentNode.insertBefore(box,host);
+ const field=id=>document.getElementById(id);
+ function refresh(){const d=$('imp-reference').value||today(),rows=phaseAssignments(d),names=[...new Set([...db.staff,...rows.map(x=>x.name)])],phases=[...new Set(rows.map(x=>x.type))];
+  for(const [id,values] of [['v421-name',names],['v421-from',phases],['v421-to',phases]]){const el=field(id),old=el.value;el.innerHTML=values.map(x=>'<option value="'+escape(x)+'">'+escape(x)+'</option>').join('');if(values.includes(old))el.value=old}
+  field('v421-history').innerHTML=moves(d).map((x,i)=>'<p class="small">'+escape(x.name)+' · '+escape(x.from)+' → '+escape(x.to)+' · '+escape(x.at)+' <button type="button" data-delete="'+i+'">Elimina</button></p>').join('');
+  field('v421-history').querySelectorAll('[data-delete]').forEach(b=>b.onclick=()=>{const v=moves(d);v.splice(Number(b.dataset.delete),1);localStorage.setItem(moveKey(d),JSON.stringify(v));refresh();impVisualRender()});
+ }
+ field('v421-save').onclick=()=>{const d=$('imp-reference').value||today(),name=field('v421-name').value,from=field('v421-from').value,to=field('v421-to').value,at=field('v421-at').value;
+  if(!name||!from||!to||from===to||!at)return alert('Compila operatore, fasi diverse e ora del trasferimento.');
+  const v=moves(d);v.push({name,from,to,at,reason:field('v421-why').value});localStorage.setItem(moveKey(d),JSON.stringify(v));refresh();impVisualRender();
+ };
+ $('imp-reference').addEventListener('change',refresh);$('date').addEventListener('change',()=>setTimeout(refresh,80));refresh();
+}
+// Report separato: tutti gli operatori nel PDF, anche se il pannello mostra solo le anomalie.
+const btn=$('imp-print-pdf');if(btn){
+ const opts=document.createElement('div');opts.className='card';opts.innerHTML='<label>Stampa</label><select id="v421-scope"><option value="all">Tutti i dipendenti</option><option value="one">Singolo dipendente</option></select><select id="v421-person" style="display:none;margin-top:8px"></select><label>Progressivo incluso insieme al giornaliero</label><select id="v421-progress"><option value="week">Settimanale</option><option value="month" selected>Mensile</option><option value="all">Complessivo</option></select><p class="small" id="v421-pdf-status"></p>';
+ btn.parentNode.insertBefore(opts,btn);
+ const scope=$('v421-scope'),person=$('v421-person');person.innerHTML=db.staff.map(n=>'<option>'+escape(n)+'</option>').join('');scope.onchange=()=>person.style.display=scope.value==='one'?'':'none';
+ btn.onclick=()=>{
+  const date=$('imp-reference').value||today(),mode=$('v421-progress').value,start=new Date(date+'T12:00:00');
+  if(mode==='week')start.setDate(start.getDate()-(start.getDay()+6)%7);if(mode==='month')start.setDate(1);
+  const from=mode==='all'?'0000-01-01':[start.getFullYear(),String(start.getMonth()+1).padStart(2,'0'),String(start.getDate()).padStart(2,'0')].join('-');
+  const dates=[...new Set([...Object.keys(db.days),date])].filter(d=>d>=from&&d<=date).sort();
+  function collect(ds){const map=new Map();for(const d of ds)for(const p of impVisualDay(d)){if(!map.has(p.name))map.set(p.name,{name:p.name,net:0,classified:{},overlaps:false});const q=map.get(p.name);q.net+=p.net;q.overlaps ||=p.overlaps;for(const [k,v] of Object.entries(p.classified))q.classified[k]=(q.classified[k]||0)+v}return [...map.values()].filter(x=>scope.value==='all'||x.name===person.value).sort((a,b)=>a.name.localeCompare(b.name,'it'))}
+  function section(label,rows){return '<h2>'+label+'</h2>'+(rows.map(p=>'<section><h3>'+escape(p.name)+' · '+hfmt(Math.round(p.net))+'</h3><table>'+Object.entries(p.classified).filter(([,v])=>v>0).map(([k,v])=>'<tr><td>'+escape(k)+'</td><td>'+hfmt(Math.round(v))+'</td></tr>').join('')+'</table><p>Da verificare: '+hfmt(Math.round(p.classified['Da verificare']||0))+(p.overlaps?' · ⚠ Sovrapposizioni':'')+'</p></section>').join('')||'<p>Nessuna presenza</p>')}
+  const html='<!doctype html><html lang="it"><head><meta charset="utf-8"><title>Report personale Coromeu</title><style>@page{size:A4;margin:13mm}body{font:12px Arial;color:#163543}header{background:#123c52;color:white;padding:18px}h1{font-size:22px;margin:0}h2{border-bottom:2px solid #157e8b;padding-bottom:7px}section{border:1px solid #d8e4e7;border-radius:8px;padding:12px;margin:12px 0;break-inside:avoid}h3{margin:0 0 9px}table{width:100%;border-collapse:collapse}td{border-bottom:1px solid #e5ecee;padding:6px}td:last-child{text-align:right}@media print{header{print-color-adjust:exact;-webkit-print-color-adjust:exact}}</style></head><body><header><h1>COROMEU · IMPIEGO PERSONALE</h1><p>'+escape(date)+' · '+(scope.value==='all'?'Tutti':escape(person.value))+'</p></header>'+section('Giornaliero',collect([date]))+section('Progressivo '+(mode==='week'?'settimanale':mode==='month'?'mensile':'complessivo'),collect(dates))+'<p>Assegnazioni locali disponibili solo sul dispositivo corrente.</p></body></html>';
+  const win=window.open('','_blank');if(!win){$('v421-pdf-status').textContent='Consenti i popup di Safari.';return}win.document.open();win.document.write(html);win.document.close();$('v421-pdf-status').textContent='Report aperto: usa Condividi → Stampa / Salva PDF.';
+ };
+}
+hideCrewTimes();impVisualRender();document.querySelector('footer').textContent='Produttività Coromeu · Versione 4.22 TEST · Archivio Firebase invariato';
+})();
+
+</script></body></html>
