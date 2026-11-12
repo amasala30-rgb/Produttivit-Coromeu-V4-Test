@@ -24,7 +24,7 @@
 </style>
 <style>.tabs{grid-template-columns:repeat(3,minmax(0,1fr))}.tabs button{min-height:46px;font-size:12px}@media(min-width:700px){.tabs{grid-template-columns:repeat(6,minmax(0,1fr))}.tabs button{font-size:11px}}</style></head><body><header><h1>Produttività Coromeu</h1><p>Ore effettive · Produzione · Report progressivi</p></header><main class="wrap"><nav class="tabs"><button data-tab="oggi" class="active">Oggi</button><button data-tab="report">Report lavorazione</button><button data-tab="venduto">Venduto</button><button data-tab="storico">Storico</button><button data-tab="personale">Personale</button></nav>
 <section id="oggi"><div class="card" id="cloud-card"><h2>☁️ Archivio condiviso V4.17.10</h2><p id="cloud-state" class="notice">Connettiti con l'account Firebase autorizzato.</p><div id="login-fields"><label>Email</label><input type="email" id="login-email" autocomplete="username"><label>Password</label><input type="password" id="login-password" autocomplete="current-password"><div class="actions"><button class="btn" id="login-btn">Accedi</button></div></div><div id="cloud-actions" class="hidden"><div class="actions"><button class="btn alt" id="refresh-cloud">Aggiorna dati</button><button class="btn alt" id="cloud-export">Backup locale JSON</button><button class="btn warn" id="logout-btn">Esci</button></div><p class="muted">I dati salvati nella V4 rimangono disponibili online. La V3.6 resta separata.</p><p class="notice">Le giornate sono archiviate online su Firebase.</p><input type="file" id="migrate-file" accept=".json" style="display:none"></div></div><div class="card"><h2>Registrazione giornaliera</h2>
-<div class="notice" style="margin:12px 0"><b>🛟 Recupero sicuro da backup</b><p class="muted">Se una giornata appare vuota in modifica, seleziona il backup JSON. I dati vengono caricati soltanto sul modulo, non salvati automaticamente online.</p><label class="btn alt" for="recover-file" style="display:block;text-align:center;cursor:pointer">📂 Seleziona backup JSON e recupera la giornata</label><input type="file" id="recover-file" accept=".json,application/json" style="display:none"><button type="button" class="btn alt" id="restore-local-draft" style="margin-top:10px;width:100%">↩️ Recupera bozza locale (solo se necessaria)</button></div><label for="date">Data</label><input id="date" type="date"><div class="row"><div><label for="cleaning-hours">Pulizie straordinarie (ore)</label><input id="cleaning-hours" type="number" min="0" step="0.25" inputmode="decimal" placeholder="0,00"></div><div><label for="carts-sanitized">Pulizia e sanificazione carrelli (numero)</label><input id="carts-sanitized" type="number" min="0" step="1" inputmode="numeric" placeholder="0"><p class="small">8 minuti per carrello · Tempo totale: <strong id="carts-time">0 h 00 min</strong></p></div><div><label>Ore nette per produttività</label><div class="notice"><strong id="net-production-hours">0 h 00 min</strong></div></div></div><p class="muted">Le ore di pulizia e 8 minuti per ogni carrello lavato/sanificato si sottraggono dalle ore complessive lavorate per calcolare la produttività, senza modificare le ore individuali dei dipendenti.</p><div class="card" style="background:#f1f6f7;margin:16px 0"><h3>🚚 Uscite e fatturato — dati separati dalla produzione</h3><div class="row"><div><label for="sales-kg">Kg venduti / usciti</label><input id="sales-kg" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0,00"></div><div><label for="revenue">Fatturato delle uscite (€)</label><input id="revenue" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0,00"></div></div><p class="muted">Questi valori sono solo informativi e non si sommano né si sottraggono ai kg prodotti. Non modificano la produttività.</p></div><div class="row"><div><label for="pieces">Totale pezzi prodotti</label><input id="pieces" type="number" min="0" step="1" inputmode="numeric" placeholder="0"></div></div><p class="muted">Inserisci il numero complessivo dei pezzi prodotti. I kg venduti e il fatturato delle uscite sono registrati separatamente dalla produzione.</p><details class="prod-details" open><summary>🐟 Tonno e pesce spada · estrazione, siringatura, pesatura</summary><div class="row"><div><label for="prod_filoni_tonno_estratti">Filoni · Tonno estratti</label><input id="prod_filoni_tonno_estratti" class="prod-field" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0,00"><div class="phase-time" data-phase="filoni_tonno_estratti"><span>Ora inizio</span><input type="time" id="phase_filoni_tonno_estratti_start"><span>Ora fine</span><input type="time" id="phase_filoni_tonno_estratti_end"><span>Durata</span><output id="phase_filoni_tonno_estratti_total">—</output></div><details class="phase-crew" data-crew="filoni_tonno_estratti"><summary>Estrazione · Tonno + Spada · Operatori · <span class="crew-count">0</span> · <span class="crew-rate">— kg/h</span></summary><div class="phase-crew-body"><p class="small">Puoi assegnare i nominativi anche prima di registrare turni e orari. Le ore si calcoleranno quando disponibili.</p><div class="crew-entries"></div><button type="button" class="crew-add">+ Assegna operatore (senza orari)</button><div class="crew-metric"></div><div class="crew-warning"></div></div></details></div><div><label for="prod_filoni_spada_estratti">Filoni · Spada estratti</label><input id="prod_filoni_spada_estratti" class="prod-field" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0,00"><div class="phase-time" data-phase="filoni_spada_estratti"><span>Ora inizio</span><input type="time" id="phase_filoni_spada_estratti_start"><span>Ora fine</span><input type="time" id="phase_filoni_spada_estratti_end"><span>Durata</span><output id="phase_filoni_spada_estratti_total">—</output></div></div><div><label for="prod_filoni_tonno">Filoni · Tonno siringati/confezionati</label><input id="prod_filoni_tonno" class="prod-field" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0,00"><div class="phase-time" data-phase="filoni_tonno"><span>Ora inizio</span><input type="time" id="phase_filoni_tonno_start"><span>Ora fine</span><input type="time" id="phase_filoni_tonno_end"><span>Durata</span><output id="phase_filoni_tonno_total">—</output></div><details class="phase-crew" data-crew="filoni_tonno"><summary>Siringatura/confezionamento · Tonno + Spada · Operatori · <span class="crew-count">0</span> · <span class="crew-rate">— kg/h</span></summary><div class="phase-crew-body"><p class="small">Puoi assegnare i nominativi anche prima di registrare turni e orari. Le ore si calcoleranno quando disponibili.</p><div class="crew-entries"></div><button type="button" class="crew-add">+ Assegna operatore (senza orari)</button><div class="crew-metric"></div><div class="crew-warning"></div></div></details></div><div><label for="prod_filoni_spada">Filoni · Spada siringati/confezionati</label><input id="prod_filoni_spada" class="prod-field" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0,00"><div class="phase-time" data-phase="filoni_spada"><span>Ora inizio</span><input type="time" id="phase_filoni_spada_start"><span>Ora fine</span><input type="time" id="phase_filoni_spada_end"><span>Durata</span><output id="phase_filoni_spada_total">—</output></div></div><div><label for="prod_filoni_tonno_pesati">Filoni · Tonno pesati/etichettati</label><input id="prod_filoni_tonno_pesati" class="prod-field" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0,00"><div class="phase-time" data-phase="filoni_tonno_pesati"><span>Ora inizio</span><input type="time" id="phase_filoni_tonno_pesati_start"><span>Ora fine</span><input type="time" id="phase_filoni_tonno_pesati_end"><span>Durata</span><output id="phase_filoni_tonno_pesati_total">—</output></div><details class="phase-crew" data-crew="filoni_tonno_pesati"><summary>Pesatura/etichettatura · Tonno + Spada · Operatori · <span class="crew-count">0</span> · <span class="crew-rate">— kg/h</span></summary><div class="phase-crew-body"><p class="small">Puoi assegnare i nominativi anche prima di registrare turni e orari. Le ore si calcoleranno quando disponibili.</p><div class="crew-entries"></div><button type="button" class="crew-add">+ Assegna operatore (senza orari)</button><div class="crew-metric"></div><div class="crew-warning"></div></div></details></div><div><label for="prod_filoni_spada_pesati">Filoni · Spada pesati/etichettati</label><input id="prod_filoni_spada_pesati" class="prod-field" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0,00"><div class="phase-time" data-phase="filoni_spada_pesati"><span>Ora inizio</span><input type="time" id="phase_filoni_spada_pesati_start"><span>Ora fine</span><input type="time" id="phase_filoni_spada_pesati_end"><span>Durata</span><output id="phase_filoni_spada_pesati_total">—</output></div></div><div><label for="prod_burger_tonno">Burger · Tonno</label><input id="prod_burger_tonno" class="prod-field" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0,00"></div><div><label for="prod_burger_spada">Burger · Pesce spada</label><input id="prod_burger_spada" class="prod-field" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0,00"></div><div><label for="prod_burger_salmone">Burger · Salmone</label><input id="prod_burger_salmone" class="prod-field" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0,00"></div><div><label for="prod_bistecche_tonno">Bistecche · Tonno</label><input id="prod_bistecche_tonno" class="prod-field" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0,00"></div><div><label for="prod_bistecche_spada">Bistecche · Pesce spada</label><input id="prod_bistecche_spada" class="prod-field" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0,00"></div><div><label for="prod_bistecche_salmone">Bistecche · Salmone</label><input id="prod_bistecche_salmone" class="prod-field" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0,00"></div><div><label for="prod_bottarga_grattugiata">Bottarga · Grattugiata</label><input id="prod_bottarga_grattugiata" class="prod-field" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0,00"></div><div><label for="prod_bottarga_baffa">Bottarga · Baffa</label><input id="prod_bottarga_baffa" class="prod-field" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0,00"></div></div><div class="phase-group"><h3>⏱️ Orario unico · Burger e bistecche</h3><p class="muted">I kg rimangono separati per prodotto; l’orario è unico.</p><div class="phase-time" data-phase="burger_bistecche"><span>Ora inizio</span><input type="time" id="phase_burger_bistecche_start"><span>Ora fine</span><input type="time" id="phase_burger_bistecche_end"><span>Durata</span><output id="phase_burger_bistecche_total">—</output></div><details class="phase-crew" data-crew="burger_bistecche"><summary>Operatori · <span class="crew-count">0</span> · <span class="crew-rate">— kg/h</span></summary><div class="phase-crew-body"><p class="small">Puoi assegnare i nominativi anche prima di registrare turni e orari. Le ore si calcoleranno quando disponibili.</p><div class="crew-entries"></div><button type="button" class="crew-add">+ Assegna operatore (senza orari)</button><div class="crew-metric"></div><div class="crew-warning"></div></div></details></div><div class="phase-group"><h3>⏱️ Orario unico · Bottarga grattugiata e in baffa</h3><p class="muted">I kg rimangono separati; l’orario è unico.</p><div class="phase-time" data-phase="bottarga"><span>Ora inizio</span><input type="time" id="phase_bottarga_start"><span>Ora fine</span><input type="time" id="phase_bottarga_end"><span>Durata</span><output id="phase_bottarga_total">—</output></div><details class="phase-crew" data-crew="bottarga"><summary>Operatori · <span class="crew-count">0</span> · <span class="crew-rate">— kg/h</span></summary><div class="phase-crew-body"><p class="small">Puoi assegnare i nominativi anche prima di registrare turni e orari. Le ore si calcoleranno quando disponibili.</p><div class="crew-entries"></div><button type="button" class="crew-add">+ Assegna operatore (senza orari)</button><div class="crew-metric"></div><div class="crew-warning"></div></div></details></div></details><div class="metric-grid" style="margin-top:12px"><div class="metric"><b id="filoni-total">0,00</b><span>Kg produzione filoni (tonno + spada)</span></div><div class="metric"><b id="finished-total">0,00</b><span>Kg prodotto finito realizzato oggi</span></div><div class="metric"><b id="total-produced">0,00</b><span>Kg totali prodotti</span></div></div><p class="muted">Kg totali lavorati = somma dei kg registrati nelle tre fasi dei filoni + prodotto finito. Lo stesso filone può essere conteggiato in più fasi.</p></div>
+<div class="notice" style="margin:12px 0"><b>🛟 Recupero sicuro da backup</b><p class="muted">Se una giornata appare vuota in modifica, seleziona il backup JSON. I dati vengono caricati soltanto sul modulo, non salvati automaticamente online.</p><label class="btn alt" for="recover-file" style="display:block;text-align:center;cursor:pointer">📂 Seleziona backup JSON e recupera la giornata</label><input type="file" id="recover-file" accept=".json,application/json" style="display:none"><button type="button" class="btn alt" id="restore-local-draft" style="margin-top:10px;width:100%">↩️ Recupera bozza locale (solo se necessaria)</button></div><label for="date">Data</label><input id="date" type="date"><div class="row"><div><label for="cleaning-hours">Pulizie straordinarie (ore)</label><input id="cleaning-hours" type="number" min="0" step="0.25" inputmode="decimal" placeholder="0,00"></div><div><label for="carts-sanitized">Pulizia e sanificazione carrelli (numero)</label><input id="carts-sanitized" type="number" min="0" step="1" inputmode="numeric" placeholder="0"><p class="small">8 minuti per carrello · Tempo totale: <strong id="carts-time">0 h 00 min</strong></p></div><div><label>Ore nette per produttività</label><div class="notice"><strong id="net-production-hours">0 h 00 min</strong></div></div></div><p class="muted">Le ore di pulizia e 8 minuti per ogni carrello lavato/sanificato si sottraggono dalle ore complessive lavorate per calcolare la produttività, senza modificare le ore individuali dei dipendenti.</p><div class="card" style="background:#f1f6f7;margin:16px 0"><h3>🚚 Uscite e fatturato — dati separati dalla produzione</h3><div class="row"><div><label for="sales-kg">Kg venduti / usciti</label><input id="sales-kg" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0,00"></div><div><label for="revenue">Fatturato delle uscite (€)</label><input id="revenue" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0,00"></div></div><p class="muted">Questi valori sono solo informativi e non si sommano né si sottraggono ai kg prodotti. Non modificano la produttività.</p></div><div class="row"><div><label for="pieces">Totale pezzi prodotti</label><input id="pieces" type="number" min="0" step="1" inputmode="numeric" placeholder="0"></div></div><p class="muted">Inserisci il numero complessivo dei pezzi prodotti. I kg venduti e il fatturato delle uscite sono registrati separatamente dalla produzione.</p><details class="prod-details" open><summary>🐟 Dettaglio produzione per prodotto</summary><div class="row"><div><label for="prod_filoni_tonno_estratti">Filoni · Tonno estratti</label><input id="prod_filoni_tonno_estratti" class="prod-field" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0,00"><div class="phase-time" data-phase="filoni_tonno_estratti"><span>Ora inizio</span><input type="time" id="phase_filoni_tonno_estratti_start"><span>Ora fine</span><input type="time" id="phase_filoni_tonno_estratti_end"><span>Durata</span><output id="phase_filoni_tonno_estratti_total">—</output></div><details class="phase-crew" data-crew="filoni_tonno_estratti"><summary>Estrazione · Tonno + Spada · Operatori · <span class="crew-count">0</span> · <span class="crew-rate">— kg/h</span></summary><div class="phase-crew-body"><p class="small">Puoi assegnare i nominativi anche prima di registrare turni e orari. Le ore si calcoleranno quando disponibili.</p><div class="crew-entries"></div><button type="button" class="crew-add">+ Aggiungi operatore</button><div class="crew-metric"></div><div class="crew-warning"></div></div></details></div><div><label for="prod_filoni_spada_estratti">Filoni · Spada estratti</label><input id="prod_filoni_spada_estratti" class="prod-field" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0,00"><div class="phase-time" data-phase="filoni_spada_estratti"><span>Ora inizio</span><input type="time" id="phase_filoni_spada_estratti_start"><span>Ora fine</span><input type="time" id="phase_filoni_spada_estratti_end"><span>Durata</span><output id="phase_filoni_spada_estratti_total">—</output></div></div><div><label for="prod_filoni_tonno">Filoni · Tonno siringati/confezionati</label><input id="prod_filoni_tonno" class="prod-field" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0,00"><div class="phase-time" data-phase="filoni_tonno"><span>Ora inizio</span><input type="time" id="phase_filoni_tonno_start"><span>Ora fine</span><input type="time" id="phase_filoni_tonno_end"><span>Durata</span><output id="phase_filoni_tonno_total">—</output></div><details class="phase-crew" data-crew="filoni_tonno"><summary>Siringatura/confezionamento · Tonno + Spada · Operatori · <span class="crew-count">0</span> · <span class="crew-rate">— kg/h</span></summary><div class="phase-crew-body"><p class="small">Puoi assegnare i nominativi anche prima di registrare turni e orari. Le ore si calcoleranno quando disponibili.</p><div class="crew-entries"></div><button type="button" class="crew-add">+ Aggiungi operatore</button><div class="crew-metric"></div><div class="crew-warning"></div></div></details></div><div><label for="prod_filoni_spada">Filoni · Spada siringati/confezionati</label><input id="prod_filoni_spada" class="prod-field" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0,00"><div class="phase-time" data-phase="filoni_spada"><span>Ora inizio</span><input type="time" id="phase_filoni_spada_start"><span>Ora fine</span><input type="time" id="phase_filoni_spada_end"><span>Durata</span><output id="phase_filoni_spada_total">—</output></div></div><div><label for="prod_filoni_tonno_pesati">Filoni · Tonno pesati/etichettati</label><input id="prod_filoni_tonno_pesati" class="prod-field" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0,00"><div class="phase-time" data-phase="filoni_tonno_pesati"><span>Ora inizio</span><input type="time" id="phase_filoni_tonno_pesati_start"><span>Ora fine</span><input type="time" id="phase_filoni_tonno_pesati_end"><span>Durata</span><output id="phase_filoni_tonno_pesati_total">—</output></div><details class="phase-crew" data-crew="filoni_tonno_pesati"><summary>Pesatura/etichettatura · Tonno + Spada · Operatori · <span class="crew-count">0</span> · <span class="crew-rate">— kg/h</span></summary><div class="phase-crew-body"><p class="small">Puoi assegnare i nominativi anche prima di registrare turni e orari. Le ore si calcoleranno quando disponibili.</p><div class="crew-entries"></div><button type="button" class="crew-add">+ Aggiungi operatore</button><div class="crew-metric"></div><div class="crew-warning"></div></div></details></div><div><label for="prod_filoni_spada_pesati">Filoni · Spada pesati/etichettati</label><input id="prod_filoni_spada_pesati" class="prod-field" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0,00"><div class="phase-time" data-phase="filoni_spada_pesati"><span>Ora inizio</span><input type="time" id="phase_filoni_spada_pesati_start"><span>Ora fine</span><input type="time" id="phase_filoni_spada_pesati_end"><span>Durata</span><output id="phase_filoni_spada_pesati_total">—</output></div></div><div><label for="prod_burger_tonno">Burger · Tonno</label><input id="prod_burger_tonno" class="prod-field" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0,00"></div><div><label for="prod_burger_spada">Burger · Pesce spada</label><input id="prod_burger_spada" class="prod-field" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0,00"></div><div><label for="prod_burger_salmone">Burger · Salmone</label><input id="prod_burger_salmone" class="prod-field" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0,00"></div><div><label for="prod_bistecche_tonno">Bistecche · Tonno</label><input id="prod_bistecche_tonno" class="prod-field" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0,00"></div><div><label for="prod_bistecche_spada">Bistecche · Pesce spada</label><input id="prod_bistecche_spada" class="prod-field" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0,00"></div><div><label for="prod_bistecche_salmone">Bistecche · Salmone</label><input id="prod_bistecche_salmone" class="prod-field" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0,00"></div><div><label for="prod_bottarga_grattugiata">Bottarga · Grattugiata</label><input id="prod_bottarga_grattugiata" class="prod-field" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0,00"></div><div><label for="prod_bottarga_baffa">Bottarga · Baffa</label><input id="prod_bottarga_baffa" class="prod-field" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0,00"></div></div><div class="phase-group"><h3>⏱️ Orario unico · Burger e bistecche</h3><p class="muted">I kg rimangono separati per prodotto; l’orario è unico.</p><div class="phase-time" data-phase="burger_bistecche"><span>Ora inizio</span><input type="time" id="phase_burger_bistecche_start"><span>Ora fine</span><input type="time" id="phase_burger_bistecche_end"><span>Durata</span><output id="phase_burger_bistecche_total">—</output></div><details class="phase-crew" data-crew="burger_bistecche"><summary>Operatori · <span class="crew-count">0</span> · <span class="crew-rate">— kg/h</span></summary><div class="phase-crew-body"><p class="small">Puoi assegnare i nominativi anche prima di registrare turni e orari. Le ore si calcoleranno quando disponibili.</p><div class="crew-entries"></div><button type="button" class="crew-add">+ Aggiungi operatore</button><div class="crew-metric"></div><div class="crew-warning"></div></div></details></div><div class="phase-group"><h3>⏱️ Orario unico · Bottarga grattugiata e in baffa</h3><p class="muted">I kg rimangono separati; l’orario è unico.</p><div class="phase-time" data-phase="bottarga"><span>Ora inizio</span><input type="time" id="phase_bottarga_start"><span>Ora fine</span><input type="time" id="phase_bottarga_end"><span>Durata</span><output id="phase_bottarga_total">—</output></div><details class="phase-crew" data-crew="bottarga"><summary>Operatori · <span class="crew-count">0</span> · <span class="crew-rate">— kg/h</span></summary><div class="phase-crew-body"><p class="small">Puoi assegnare i nominativi anche prima di registrare turni e orari. Le ore si calcoleranno quando disponibili.</p><div class="crew-entries"></div><button type="button" class="crew-add">+ Aggiungi operatore</button><div class="crew-metric"></div><div class="crew-warning"></div></div></details></div></details><div class="metric-grid" style="margin-top:12px"><div class="metric"><b id="filoni-total">0,00</b><span>Kg produzione filoni (tonno + spada)</span></div><div class="metric"><b id="finished-total">0,00</b><span>Kg prodotto finito realizzato oggi</span></div><div class="metric"><b id="total-produced">0,00</b><span>Kg totali prodotti</span></div></div><p class="muted">Kg totali lavorati = somma dei kg registrati nelle tre fasi dei filoni + prodotto finito. Lo stesso filone può essere conteggiato in più fasi.</p></div>
 <details class="card" id="notes-panel"><summary>📝 Note e osservazioni</summary><p class="muted">Le note si aggiungono senza cancellare le precedenti, anche dopo la chiusura della giornata.</p><div id="notes-list"></div><textarea id="new-note" rows="3" placeholder="Aggiungi una nota o un chiarimento..."></textarea><div class="actions"><button class="btn alt" id="add-note">Aggiungi nota</button><button class="btn alt" id="close-day">Chiudi / Riapri giornata</button></div><p id="day-status" class="muted"></p></details><details class="card" id="audit-panel"><summary>📋 Registro modifiche</summary><p class="muted">Visibile a tutti e quattro gli operatori. Le registrazioni non possono essere modificate o eliminate dall’app.</p><label for="audit-date">Giornata da consultare</label><input id="audit-date" type="date"><div class="actions"><button id="audit-refresh" class="btn alt">Aggiorna registro</button></div><div id="audit-list"><p class="muted">Accedi per consultare il registro.</p></div></details><div class="card"><div class="actions"><button type="button" id="restore-26" class="btn alt" style="width:100%">↩️ Recupera orari del 26 ottobre dalle foto</button></div><p class="muted">Carica gli orari sul modulo senza salvarli: verifica i dati, poi premi Salva.</p><h2>Presenze e orari</h2><p class="muted">Inserisci ingresso e uscita per ogni dipendente. Si sottraggono automaticamente 15 minuti di pausa per ogni persona con turno valido.</p><p class="muted">Nominativi precaricati dal foglio presenze aziendale. Compila solo ingresso e uscita: 15 minuti di pausa sono sottratti automaticamente. Gli assenti restano vuoti.</p><div class="notice" style="margin:12px 0"><strong>📷 Foglio presenze</strong><p class="muted">Scegli una foto dalla galleria o scattane una nuova. La foto si apre sotto, ingrandibile; trascrivi solo entrata e uscita nei campi già associati ai nominativi.</p><div class="actions"><label class="btn alt" style="margin:0;text-align:center">🖼️ Scegli dalla galleria<input id="gallery-presenze" type="file" accept="image/*" style="display:none"></label><label class="btn alt" style="margin:0;text-align:center">📸 Scatta foto<input id="camera-presenze" type="file" accept="image/*" capture="environment" style="display:none"></label></div><div id="photo-area" class="hidden" style="margin-top:12px"><a id="photo-open" target="_blank" rel="noopener" title="Apri foto ingrandita"><img id="photo-preview" alt="Foto foglio presenze" style="display:block;width:100%;max-height:520px;object-fit:contain;border:1px solid #ccd;border-radius:9px"></a><button id="remove-photo" type="button" class="btn alt" style="margin-top:8px">Rimuovi foto</button></div><p class="small">La foto è un riferimento visivo: gli orari scritti a mano non vengono letti automaticamente.</p></div><div id="people-inputs"></div><div class="actions"><button class="btn alt" id="add-temp">+ Dipendente per oggi</button></div></div>
 <div class="card"><h2>Riepilogo automatico</h2><div class="metric-grid"><div class="metric"><b id="sum-hours">0 h 00</b><span>Ore lavorate</span></div><div class="metric"><b id="sum-kg">0,00</b><span>Kg totali</span></div><div class="metric"><b id="sum-prod">—</b><span>Kg per ora lavorata</span></div><div class="metric"><b id="sum-workers">0</b><span>Dipendenti presenti</span></div></div><p id="form-error" class="error"></p><div class="actions"><button id="save" class="btn">Salva e invia PDF</button><button id="reset" class="btn alt">Nuova giornata</button></div></div></section>
 <section id="report" class="hidden"><div class="card"><h2>Report produttività</h2><label for="period">Periodo</label><select id="period"><option value="day">Giornaliero</option><option value="week">Settimanale progressivo</option><option value="month">Mensile progressivo</option><option value="year">Annuale progressivo</option></select><label for="reference">Data di riferimento (fino a questo giorno)</label><input type="date" id="reference"><div id="report-content"></div><div class="actions"><button id="print" class="btn">🖨️ Stampa / PDF</button><button id="share" class="btn alt">📲 Condividi PDF</button></div><p class="muted">Su iPhone, da Stampa puoi salvare il PDF tramite Condividi → Salva su File. La condivisione PDF diretta dipende dal browser; in alternativa condividi il riepilogo testuale.</p></div></section>
@@ -284,7 +284,8 @@ function crewKg(k){
  return CREW_GROUPS[k].reduce((n,key)=>n+(Number(p[key])||0),0);
 }
 function crewPresent(){
- return [...new Set([...db.staff,...extra,...Object.keys(db.days?.[$('date').value]?.people||{})])].filter(Boolean).sort((a,b)=>a.localeCompare(b,'it'));
+ const v=readForm();
+ return [...new Set([...db.staff,...extra,...Object.keys(v.people)])].filter(Boolean).sort((a,b)=>a.localeCompare(b,'it'));
 }
 function crewIntervals(a,b){
  if(!a||!b)return null;
@@ -299,7 +300,7 @@ function crewSpan(k){
  return [Math.min(...intervals.map(x=>x[0])),Math.max(...intervals.map(x=>x[1]))];
 }
 function crewCheck(k,entry){
- if(!entry.name)return ''; // Riga di programmazione ancora da completare
+ if(!entry.name)return 'Seleziona un operatore';
  if(!entry.start&&!entry.end)return ''; // Pianificazione consentita senza orari
  if(!entry.start||!entry.end)return ''; // Orario parziale: bozza non bloccante
  const range=crewIntervals(entry.start,entry.end),p=readForm().people[entry.name];
@@ -345,8 +346,10 @@ function renderCrew(k){
 function renderAllCrew(){for(const k of CREW_KEYS)renderCrew(k)}
 for(const k of CREW_KEYS){
  document.querySelector('[data-crew="'+k+'"] .crew-add').onclick=()=>{
-  const name=''; // Scegli manualmente: non richiede presenze
+  const names=crewPresent(),used=new Set((phaseCrew[k]||[]).map(x=>x.name));
+  const name=names.find(n=>!used.has(n))||'';
   // I nominativi sono assegnabili anche senza presenze e senza orari della fase.
+  const span=crewSpan(k);
   phaseCrew[k].push({name,start:'',end:''});
   renderAllCrew();storeDraft();
  };
@@ -832,7 +835,7 @@ impVisualRender=function(){
  // Il modulo generale rimane disponibile per le assegnazioni già salvate,
  // ma il comando operativo è ora presente sotto ogni barra personale.
  const general=$('imp-assign-panel');if(general){general.open=false;general.style.display='none';}
- const title=$('imp-panel')?.querySelector('summary');if(title)title.textContent='👥 Impiego del personale · V4.20.0';
+ const title=$('imp-panel')?.querySelector('summary');if(title)title.textContent='👥 Impiego del personale · V4.19.3';
  document.querySelector('footer').textContent='Produttività Coromeu · Versione 4.18.7 PROVA · Archivio condiviso Firebase';
  impVisualRender();
 })();
@@ -840,200 +843,127 @@ impVisualRender=function(){
 // V4.18.7: presenze e assegnazioni impiego usano selettori distinti.
 
 // V4.19.0 - Fasi aggiuntive e analisi sanificazione, isolate dal database ufficiale.
-Object.assign(IMP_LABELS,{pulizia_carrelli:'Pulizia e sanificazione carrelli',preparazione_burger:'Preparazione burger tonno e spada',inscatolamento:'Inscatolamento',estrazione_bottarga:'Estrazione bottarga',confezionamento_bottarga:'Confezionamento bottarga',estrazione_salmone:'Estrazione salmone',lavorazione_salmone:'Lavorazione salmone',confezionamento_salmone:'Confezionamento salmone',estrazione_polpo:'Estrazione polpo',lavorazione_polpo:'Lavorazione polpo'});
-Object.assign(IMP_COLORS,{'Pulizia e sanificazione carrelli':'#b45309','Preparazione burger tonno e spada':'#c026d3','Inscatolamento':'#0891b2','Estrazione bottarga':'#7c3aed','Confezionamento bottarga':'#6d28d9','Estrazione salmone':'#e11d48','Lavorazione salmone':'#be123c','Confezionamento salmone':'#9f1239'});
-const EXTRA_PHASES=[['pulizia_carrelli','Pulizia e sanificazione carrelli'],['estrazione_bottarga','Estrazione bottarga'],['confezionamento_bottarga','Confezionamento bottarga'],['preparazione_burger','Preparazione burger tonno e spada'],['inscatolamento','Inscatolamento'],['estrazione_salmone','Estrazione salmone'],['lavorazione_salmone','Lavorazione salmone'],['confezionamento_salmone','Confezionamento salmone'],['estrazione_polpo','Estrazione polpo'],['lavorazione_polpo','Lavorazione polpo']];
+Object.assign(IMP_LABELS,{pulizia_carrelli:'Pulizia e sanificazione carrelli',preparazione_burger:'Preparazione burger tonno e spada',inscatolamento:'Inscatolamento',estrazione_bottarga:'Estrazione bottarga'});
+Object.assign(IMP_COLORS,{'Pulizia e sanificazione carrelli':'#b45309','Preparazione burger tonno e spada':'#c026d3','Inscatolamento':'#0891b2','Estrazione bottarga':'#7c3aed'});
+const EXTRA_PHASES=[['pulizia_carrelli','Pulizia e sanificazione carrelli'],['estrazione_bottarga','Estrazione bottarga'],['preparazione_burger','Preparazione burger tonno e spada'],['inscatolamento','Inscatolamento']];
 const extraKey=d=>'coromeu-fasi-v419-'+d;
 function extraRead(d){try{return JSON.parse(localStorage.getItem(extraKey(d))||'{}')}catch(e){return {}}}
-function extraOperators(r){return [...new Set((Array.isArray(r?.operators)?r.operators:(r?.operator?[r.operator]:[])).filter(Boolean))]}
-function extraSave(){const d=$('date').value||today(),out={};for(const [k] of EXTRA_PHASES){const el=$('extra-'+k);out[k]={start:el.querySelector('[data-start]').value,end:el.querySelector('[data-end]').value,operator:[...el.querySelectorAll('[data-operator]')].map(x=>x.value).find(Boolean)||'',operators:[...new Set([...el.querySelectorAll('[data-operator]')].map(x=>x.value).filter(Boolean))],kg:Number(el.querySelector('[data-kg]').value||0),pieces:Number(el.querySelector('[data-pieces]').value||0)};}try{localStorage.setItem(extraKey(d),JSON.stringify(out))}catch(e){alert('Impossibile salvare la bozza locale. Esporta un backup.')}extraReport()}
-function extraLoad(){const v=extraRead($('date').value||today());for(const [k] of EXTRA_PHASES){const el=$('extra-'+k),r=v[k]||{};for(const [a,b] of [['start','start'],['end','end'],['kg','kg'],['pieces','pieces']])el.querySelector('[data-'+a+']').value=r[b]??'';extraSetOperators(el,extraOperators(r));}extraReport()}
-function extraSetOperators(el,names){
- const host=el.querySelector('[data-operator-list]');if(!host)return;
- host.innerHTML='';const all=[...new Set([...(db.staff||[]),...(typeof extra!=='undefined'?extra:[]),...names].filter(Boolean))].sort((a,b)=>a.localeCompare(b,'it'));
- function add(name=''){
-  const row=document.createElement('div');row.className='crew-line';row.style.cssText='display:flex;gap:8px;align-items:center;margin:6px 0';
-  const select=document.createElement('select');select.setAttribute('data-operator','');select.setAttribute('aria-label','Operatore della fase');
-  select.innerHTML='<option value="">Seleziona operatore</option>'+all.map(n=>'<option value="'+escape(n)+'">'+escape(n)+'</option>').join('');select.value=name;
-  const remove=document.createElement('button');remove.type='button';remove.className='btn';remove.textContent='×';remove.setAttribute('aria-label','Rimuovi operatore');remove.onclick=()=>{row.remove();if(!host.children.length)add();extraSave()};
-  select.onchange=extraSave;row.append(select,remove);host.append(row);
- }
- (names.length?names:['']).forEach(add);
- const btn=el.querySelector('[data-add-operator]');btn.onclick=()=>{add();};
-}
+function extraSave(){const d=$('date').value||today(),out={};for(const [k] of EXTRA_PHASES){const el=$('extra-'+k);out[k]={start:el.querySelector('[data-start]').value,end:el.querySelector('[data-end]').value,operator:el.querySelector('[data-operator]').value,kg:Number(el.querySelector('[data-kg]').value||0),pieces:Number(el.querySelector('[data-pieces]').value||0)};}try{localStorage.setItem(extraKey(d),JSON.stringify(out))}catch(e){alert('Impossibile salvare la bozza locale. Esporta un backup.')}extraReport()}
+function extraLoad(){const v=extraRead($('date').value||today());for(const [k] of EXTRA_PHASES){const el=$('extra-'+k),r=v[k]||{};for(const [a,b] of [['start','start'],['end','end'],['operator','operator'],['kg','kg'],['pieces','pieces']])el.querySelector('[data-'+a+']').value=r[b]??'';}extraReport()}
 function extraMinutes(a,b){const x=crewIntervals(a,b);return x?Math.max(0,x[1]-x[0]):0}
 function extraPeriod(){const ref=$('extra-reference').value||today(),mode=$('extra-period').value,d=new Date(ref+'T12:00:00');if(mode==='week')d.setDate(d.getDate()-(d.getDay()+6)%7);if(mode==='month')d.setDate(1);const from=[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');const dates=[];for(let dt=new Date(from+'T12:00:00');dt<=new Date(ref+'T12:00:00');dt.setDate(dt.getDate()+1))dates.push([dt.getFullYear(),String(dt.getMonth()+1).padStart(2,'0'),String(dt.getDate()).padStart(2,'0')].join('-'));return {ref,from,dates,mode}}
-function extraReport(){const el=$('extra-report');if(!el)return;const period=extraPeriod(),by=new Map(),daily=[];let carts=0,minutes=0,days=0;for(const d of period.dates){const r=extraRead(d).pulizia_carrelli||{},n=Number(r.pieces||0),m=extraMinutes(r.start,r.end);if(!n&&!m)continue;carts+=n;minutes+=m*Math.max(1,extraOperators(r).length);days++;daily.push({d,n,m});for(const name of extraOperators(r)){const a=by.get(name)||{m:0,n:0};a.m+=m;a.n+=n/Math.max(1,extraOperators(r).length);by.set(name,a)}}const avg=carts?minutes/carts:0;el.innerHTML='<div class="metric-grid"><div class="metric"><b>'+carts+'</b><span>Carrelli lavati</span></div><div class="metric"><b>'+hfmt(minutes)+'</b><span>Ore-uomo pulizia</span></div><div class="metric"><b>'+fmt(avg,1)+' min</b><span>Media effettiva/carrello</span></div><div class="metric"><b>'+hfmt(days?Math.round(minutes/days):0)+'</b><span>Media per giornata con pulizia</span></div></div><p class="small">Tempo teorico (8 min/carrello): '+hfmt(carts*8)+' · Scostamento effettivo: '+(minutes-carts*8)+' minuti. Nessun costo orario richiesto.</p><h4>Ore per dipendente</h4>'+(by.size?[...by].map(([name,v])=>'<p class="small">'+escape(name)+': <b>'+hfmt(v.m)+'</b> · '+v.n+' carrelli</p>').join(''):'<p class="small">Nessuna pulizia registrata nel periodo.</p>')+'<h4>Dettaglio giornaliero</h4>'+daily.map(v=>'<p class="small">'+v.d+' · '+v.n+' carrelli · '+hfmt(v.m)+'</p>').join('');}
+function extraReport(){const el=$('extra-report');if(!el)return;const period=extraPeriod(),by=new Map(),daily=[];let carts=0,minutes=0,days=0;for(const d of period.dates){const r=extraRead(d).pulizia_carrelli||{},n=Number(r.pieces||0),m=extraMinutes(r.start,r.end);if(!n&&!m)continue;carts+=n;minutes+=m;days++;daily.push({d,n,m});if(r.operator){const a=by.get(r.operator)||{m:0,n:0};a.m+=m;a.n+=n;by.set(r.operator,a)}}const avg=carts?minutes/carts:0;el.innerHTML='<div class="metric-grid"><div class="metric"><b>'+carts+'</b><span>Carrelli lavati</span></div><div class="metric"><b>'+hfmt(minutes)+'</b><span>Ore-uomo pulizia</span></div><div class="metric"><b>'+fmt(avg,1)+' min</b><span>Media effettiva/carrello</span></div><div class="metric"><b>'+hfmt(days?Math.round(minutes/days):0)+'</b><span>Media per giornata con pulizia</span></div></div><p class="small">Tempo teorico (8 min/carrello): '+hfmt(carts*8)+' · Scostamento effettivo: '+(minutes-carts*8)+' minuti. Nessun costo orario richiesto.</p><h4>Ore per dipendente</h4>'+(by.size?[...by].map(([name,v])=>'<p class="small">'+escape(name)+': <b>'+hfmt(v.m)+'</b> · '+v.n+' carrelli</p>').join(''):'<p class="small">Nessuna pulizia registrata nel periodo.</p>')+'<h4>Dettaglio giornaliero</h4>'+daily.map(v=>'<p class="small">'+v.d+' · '+v.n+' carrelli · '+hfmt(v.m)+'</p>').join('');}
 function extraPrint(){const html='<h1>Coromeu · Pulizia e sanificazione carrelli</h1><p>Periodo: '+escape($('extra-period').selectedOptions[0].text)+' · '+escape($('extra-reference').value)+'</p>'+$('extra-report').innerHTML+'<p>Tempi reali, non stime. Standard: 8 minuti per carrello. Registrazioni locali al dispositivo.</p>';$('print-area').innerHTML=html;window.print()}
 (function extraInit(){
- const host=document.createElement('details');host.className='card';host.open=false;host.id='extra-phases';host.innerHTML='<summary>🧼 Nuove fasi operative · V4.20.0</summary><p class="notice">I nuovi dati sono salvati in una bozza locale su questo dispositivo, senza modificare Firebase. Per ogni fase inserisci un solo orario generale e scegli l’operatore. Se due attività si sovrappongono, puoi scegliere la priorità nella sezione Impiego personale.</p>';
- for(const [key,label] of EXTRA_PHASES){const item=document.createElement('div');item.className='phase-group';item.id='extra-'+key;item.innerHTML='<details class="extra-phase-toggle"><summary>'+label+'</summary><div class="extra-phase-fields"><div class="row"><div><label>Inizio fase</label><input type="time" data-start></div><div><label>Fine fase</label><input type="time" data-end></div></div><label>Operatori assegnati (anche senza orari)</label><div data-operator-list></div><button class="btn" type="button" data-add-operator>+ Aggiungi operatore</button><div class="row"><div><label>'+(key==='pulizia_carrelli'?'Carrelli lavati':'Kg lavorati (facoltativo)')+'</label><input type="number" min="0" step="'+(key==='pulizia_carrelli'?'1':'0.01')+'" data-'+(key==='pulizia_carrelli'?'pieces':'kg')+'></div><div><label>'+(key==='pulizia_carrelli'?'Kg (non richiesti)':'Pezzi (facoltativo)')+'</label><input type="number" min="0" step="1" data-'+(key==='pulizia_carrelli'?'kg':'pieces')+' '+(key==='pulizia_carrelli'?'disabled':'')+'></div></div>'+(key==='pulizia_carrelli'?'<p class="small">Riferimento teorico: 8 minuti per carrello. Le ore-uomo sono calcolate sugli orari effettivi.</p>':'')+'</div></details>';host.appendChild(item);item.querySelectorAll('input,select').forEach(x=>x.addEventListener('change',extraSave));}
+ const host=document.createElement('details');host.className='card';host.open=false;host.id='extra-phases';host.innerHTML='<summary>🧼 Nuove fasi operative · V4.19.3</summary><p class="notice">I nuovi dati sono salvati in una bozza locale su questo dispositivo, senza modificare Firebase. Per ogni fase inserisci un solo orario generale e scegli l’operatore. Se due attività si sovrappongono, puoi scegliere la priorità nella sezione Impiego personale.</p>';
+ for(const [key,label] of EXTRA_PHASES){const item=document.createElement('div');item.className='phase-group';item.id='extra-'+key;item.innerHTML='<details class="extra-phase-toggle"><summary>'+label+'</summary><div class="extra-phase-fields"><div class="row"><div><label>Inizio fase</label><input type="time" data-start></div><div><label>Fine fase</label><input type="time" data-end></div></div><label>Operatore responsabile</label><select data-operator><option value="">Da assegnare</option></select><div class="row"><div><label>'+(key==='pulizia_carrelli'?'Carrelli lavati':'Kg lavorati (facoltativo)')+'</label><input type="number" min="0" step="'+(key==='pulizia_carrelli'?'1':'0.01')+'" data-'+(key==='pulizia_carrelli'?'pieces':'kg')+'></div><div><label>'+(key==='pulizia_carrelli'?'Kg (non richiesti)':'Pezzi (facoltativo)')+'</label><input type="number" min="0" step="1" data-'+(key==='pulizia_carrelli'?'kg':'pieces')+' '+(key==='pulizia_carrelli'?'disabled':'')+'></div></div>'+(key==='pulizia_carrelli'?'<p class="small">Riferimento teorico: 8 minuti per carrello. Le ore-uomo sono calcolate sugli orari effettivi.</p>':'')+'</div></details>';host.appendChild(item);item.querySelectorAll('input,select').forEach(x=>x.addEventListener('change',extraSave));}
  const existing=document.querySelector('#oggi .prod-details');existing.parentNode.insertBefore(host,existing);
  const r=document.createElement('div');r.className='card';r.innerHTML='<h2>📊 Analisi pulizia carrelli</h2><div class="row"><div><label>Periodo</label><select id="extra-period"><option value="day">Giornaliero</option><option value="week">Settimanale</option><option value="month">Mensile</option></select></div><div><label>Data riferimento</label><input type="date" id="extra-reference"></div></div><div id="extra-report"></div><button class="btn" id="extra-print" type="button">🖨️ Stampa / PDF pulizia carrelli</button><p class="muted">Il report comprende solo i dati salvati su questo dispositivo. Per una vista aziendale condivisa servirà una successiva migrazione controllata su Firebase.</p>';
  $('report-content').parentNode.appendChild(r);$('extra-reference').value=today();$('extra-period').onchange=extraReport;$('extra-reference').onchange=extraReport;$('extra-print').onclick=extraPrint;
  const oldOpen=openDay;openDay=function(date){oldOpen(date);extraLoad()};const oldBlank=blank;blank=function(){oldBlank();extraLoad()};$('date').addEventListener('change',()=>setTimeout(extraLoad,0));
- const oldVisualDay=impVisualDay;impVisualDay=function(date){const out=oldVisualDay(date),ph=extraRead(date);for(const [k] of EXTRA_PHASES){const v=ph[k];if(!v?.start||!v.end)continue;for(const name of extraOperators(v)){const p=out.find(p=>p.name===name);if(!p||!p.net)continue;const m=Math.min(extraMinutes(v.start,v.end),Math.max(0,(p.classified['Da verificare']||0)+(p.classified.Ufficio||0)));let remain=m;for(const source of ['Da verificare','Ufficio']){const taken=Math.min(remain,p.classified[source]||0);p.classified[source]=(p.classified[source]||0)-taken;remain-=taken;}const label=IMP_LABELS[k];p.classified[label]=(p.classified[label]||0)+m;}}return out;};
+ const oldVisualDay=impVisualDay;impVisualDay=function(date){const out=oldVisualDay(date),ph=extraRead(date);for(const [k] of EXTRA_PHASES){const v=ph[k];if(!v?.operator||!v.start||!v.end)continue;const p=out.find(p=>p.name===v.operator);if(!p||!p.net)continue;const m=Math.min(extraMinutes(v.start,v.end),Math.max(0,(p.classified['Da verificare']||0)+(p.classified.Ufficio||0)));let remain=m;for(const source of ['Da verificare','Ufficio']){const taken=Math.min(remain,p.classified[source]||0);p.classified[source]=(p.classified[source]||0)-taken;remain-=taken;}const label=IMP_LABELS[k];p.classified[label]=(p.classified[label]||0)+m;}return out;};
  const oldVisualRender=impVisualRender;impVisualRender=function(){oldVisualRender();const el=$('imp-visual');if(!el)return;for(const p of impVisualRange()){if(!p.overlaps)continue;const cards=[...el.children],i=impVisualRange().findIndex(x=>x.name===p.name),card=cards[i];if(!card)continue;const select=document.createElement('select');select.innerHTML='<option value="">Scegli fase predominante in caso di sovrapposizione</option>'+Object.entries(IMP_LABELS).map(([k,v])=>'<option value="'+escape(k)+'">'+escape(v)+'</option>').join('');const key='coromeu-priorita-v419-'+($('imp-reference').value||today())+'-'+p.name;select.value=localStorage.getItem(key)||'';select.onchange=()=>{localStorage.setItem(key,select.value);};card.appendChild(select);}}
- 
- extraLoad();impVisualRender();document.querySelector('footer').textContent='Produttività Coromeu · Versione 4.20.0 PROVA · Archivio condiviso Firebase';$('cloud-card').querySelector('h2').textContent='☁️ Archivio condiviso Firebase · V4.20.0';
+ for(const [key] of EXTRA_PHASES){const select=$('extra-'+key).querySelector('[data-operator]');select.innerHTML='<option value="">Da assegnare</option>'+db.staff.map(n=>'<option value="'+escape(n)+'">'+escape(n)+'</option>').join('');}
+ extraLoad();impVisualRender();document.querySelector('footer').textContent='Produttività Coromeu · Versione 4.19.3 PROVA · Archivio condiviso Firebase';$('cloud-card').querySelector('h2').textContent='☁️ Archivio condiviso Firebase · V4.19.3';
 })();
 
+// V4.21 - controllo personale e report: aggiornamento isolato, senza cambiare Firebase.
 (function(){
-'use strict';
-const phases=[
- ['filoni_tonno_estratti','Estrazione tonno e spada'],
- ['filoni_tonno','Siringatura e confezionamento'],
- ['filoni_tonno_pesati','Pesatura ed etichettatura'],
- ['preparazione_burger','Preparazione burger'],
- ['burger_bistecche','Burger e bistecche'],
- ['inscatolamento','Inscatolamento'],
- ['estrazione_bottarga','Estrazione bottarga'],['confezionamento_bottarga','Confezionamento bottarga'],
- ['bottarga','Lavorazione bottarga'],
- ['estrazione_salmone','Estrazione salmone'],['lavorazione_salmone','Lavorazione salmone'],['confezionamento_salmone','Confezionamento salmone'],
- ['estrazione_polpo','Estrazione polpo'],['lavorazione_polpo','Lavorazione polpo'],
- ['pulizia_carrelli','Pulizia e sanificazione carrelli']
-];
-const key=d=>'coromeu-programmazione-operatori-v4194-'+d;
-const getDate=()=>document.getElementById('date')?.value||today();
-function read(){try{return JSON.parse(localStorage.getItem(key(getDate())))||{}}catch{return {}}}
-function save(data){try{localStorage.setItem(key(getDate()),JSON.stringify(data));return true}catch(e){alert('Non è stato possibile salvare la programmazione su questo dispositivo');return false}}
-const anchor=document.querySelector('.prod-details');
-if(!anchor)return;
-const root=document.createElement('details');
-root.id='planner-v4194';root.className='card';
-root.innerHTML='<summary style="font-weight:800;cursor:pointer;font-size:1.1rem">👥 Programmazione operatori per fase · senza orari</summary>'+
-'<p class="small">Assegna ora le persone che svolgeranno ogni lavorazione. Non è necessario inserire ingresso, uscita o orari della fase. Premi «Salva nominativi» in ciascuna scheda. I dati restano su questo dispositivo.</p>'+
-'<div id="planner-phase-list"></div>';
-anchor.parentNode.insertBefore(root,anchor);
-function staffNames(){return [...new Set([...db.staff,...extra].filter(Boolean))].sort((a,b)=>a.localeCompare(b,'it'))}
-function syncCrew(k,names){
- if(!CREW_KEYS.includes(k))return;
- const previous=phaseCrew[k]||[];
- phaseCrew[k]=names.map(name=>previous.find(x=>x.name===name)||{name,start:'',end:''});
- renderAllCrew();
-}
-function syncExtra(k,names){
- const el=document.getElementById('extra-'+k);
- if(!el)return;
- const sel=el.querySelector('[data-operator]');
- if(el){extraSetOperators(el,names);if(typeof extraSave==='function')extraSave()}
-}
-function render(){
- const data=read(),names=staffNames(),container=document.getElementById('planner-phase-list');
- container.innerHTML='';
- for(const [k,title] of phases){
-  const selected=new Set(data[k]||[]);
-  const detail=document.createElement('details');detail.className='phase-group';
-  detail.innerHTML='<summary style="cursor:pointer;font-weight:700">'+escape(title)+' · <span class="planner-count">'+selected.size+'</span> operatori</summary>'+
-   '<div class="planner-choices" style="padding:10px 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px">'+
-   names.map(n=>'<label style="display:flex;gap:8px;align-items:center;font-size:.9rem"><input type="checkbox" value="'+escape(n)+'" '+(selected.has(n)?'checked':'')+'>'+escape(n)+'</label>').join('')+
-   '</div><button type="button" class="btn planner-save">💾 Salva nominativi</button><span class="planner-status small" style="margin-left:8px"></span>';
-  detail.querySelectorAll('input').forEach(el=>el.onchange=()=>{detail.querySelector('.planner-count').textContent=detail.querySelectorAll('input:checked').length});
-  detail.querySelector('.planner-save').onclick=()=>{
-   const chosen=[...detail.querySelectorAll('input:checked')].map(x=>x.value);
-   const next=read();next[k]=chosen;
-   if(!save(next))return;
-   syncCrew(k,chosen);syncExtra(k,chosen);
-   detail.querySelector('.planner-status').textContent='✓ Nominativi salvati';
-  };
-  container.appendChild(detail);
+const moveKey=d=>'coromeu-moves-v421-'+d;
+const moves=d=>{try{return JSON.parse(localStorage.getItem(moveKey(d))||'[]')}catch(e){return []}};
+const interval=(a,b)=>crewIntervals(a,b);
+const sourceDay=impVisualDay;
+function phaseAssignments(date){
+ const day=db.days[date]||{},cur=date===($('date').value||today()),pt=cur?readPhaseTimes():day.phaseTimes||{},rows=[];
+ for(const k of CREW_KEYS){
+  const ranges=CREW_GROUPS[k].map(id=>interval(pt[id]?.start,pt[id]?.end)).filter(Boolean);
+  if(!ranges.length)continue;
+  const start=Math.min(...ranges.map(x=>x[0])),end=Math.max(...ranges.map(x=>x[1]));
+  for(const e of pt[k]?.operators||[])if(e.name)rows.push({name:e.name,type:IMP_LABELS[k]||PHASE_NAMES[k]||k,start,end});
  }
-}
-root.addEventListener('toggle',()=>{if(root.open)render()});
-document.getElementById('date')?.addEventListener('change',()=>{if(root.open)render()});
-const originalOpen=openDay;
-openDay=function(d){originalOpen(d);if(root.open)render()};
-const originalBlank=blank;
-blank=function(){originalBlank();if(root.open)render()};
-})();
-
-
-(function(){
-'use strict';
-// Le schede sono spostate nel DOM, non ricreate: i valori e gli handler originali rimangono intatti.
-const prod=document.querySelector('#oggi .prod-details');
-const extras=document.getElementById('extra-phases');
-if(!prod||!extras)return;
-const prodGrid=prod.querySelector('.row');
-function card(title,emoji){
- const d=document.createElement('details');d.className='phase-group family-menu';
- d.innerHTML='<summary style="font-weight:800;cursor:pointer;font-size:1.05rem">'+emoji+' '+title+'</summary><div class="family-content" style="padding-top:12px"></div>';
- prod.parentNode.insertBefore(d,prod);return d.querySelector('.family-content');
-}
-function prodInput(key){return document.getElementById('prod_'+key)?.parentElement}
-function take(node,to){if(node)to.appendChild(node)}
-function takeExtra(key,to){const el=document.getElementById('extra-'+key);if(el){const inner=el.querySelector('.extra-phase-toggle');if(inner){inner.open=true;}take(el,to)}}
-function takePhase(key,to){const phase=document.querySelector('.phase-time[data-phase="'+key+'"]');if(phase){const group=phase.closest('.phase-group');if(group){take(group,to)}}}
-const burger=card('Burger e bistecche','🍔');
-const prep=document.createElement('div');prep.className='family-subsection';prep.innerHTML='<h3>1. Preparazione burger</h3>';burger.appendChild(prep);takeExtra('preparazione_burger',prep);
-const products=document.createElement('div');products.className='row';products.innerHTML='<h3 style="width:100%">2. Burger e bistecche · lavorazione e confezionamento</h3>';burger.appendChild(products);
-for(const k of ['burger_tonno','burger_spada','burger_salmone','bistecche_tonno','bistecche_spada','bistecche_salmone'])take(prodInput(k),products);
-takePhase('burger_bistecche',burger);
-const boxes=document.createElement('div');boxes.className='family-subsection';boxes.innerHTML='<h3>3. Inscatolamento</h3>';burger.appendChild(boxes);takeExtra('inscatolamento',boxes);
-const bottarga=card('Bottarga','🐟');
-const extraction=document.createElement('div');extraction.className='family-subsection';extraction.innerHTML='<h3>1. Estrazione</h3>';bottarga.appendChild(extraction);takeExtra('estrazione_bottarga',extraction);
-const processing=document.createElement('div');processing.className='family-subsection';processing.innerHTML='<h3>2. Lavorazione</h3>';bottarga.appendChild(processing);takePhase('bottarga',processing);
-const bottargaProducts=document.createElement('div');bottargaProducts.className='row';processing.appendChild(bottargaProducts);
-for(const k of ['bottarga_grattugiata','bottarga_baffa'])take(prodInput(k),bottargaProducts);
-const packaging=document.createElement('div');packaging.className='family-subsection';packaging.innerHTML='<h3>3. Confezionamento</h3>';bottarga.appendChild(packaging);takeExtra('confezionamento_bottarga',packaging);
-const salmon=card('Salmone','🐟');
-for(const [key,label] of [['estrazione_salmone','1. Estrazione'],['lavorazione_salmone','2. Lavorazione'],['confezionamento_salmone','3. Confezionamento']]){
- const section=document.createElement('div');section.className='family-subsection';section.innerHTML='<h3>'+label+'</h3>';salmon.appendChild(section);takeExtra(key,section);
-}
-const polpo=card('Polpo','🐙');
-for(const [key,label] of [['estrazione_polpo','1. Estrazione'],['lavorazione_polpo','2. Lavorazione']]){
- const section=document.createElement('div');section.className='family-subsection';section.innerHTML='<h3>'+label+'</h3>';polpo.appendChild(section);takeExtra(key,section);
-}
-// Le fasi non appartenenti alle famiglie rimangono disponibili nella sezione originale.
-const style=document.createElement('style');
-style.textContent='.family-menu{background:#f6fafb;margin:12px 0}.family-menu>.family-content{display:block}.family-subsection{padding:8px 0;border-bottom:1px solid #dbe7ea}.family-subsection:last-child{border-bottom:0}.family-subsection h3{margin:8px 0;color:#075a62}.family-menu .phase-group{margin:8px 0}.family-menu .row>div{min-width:0}.family-menu summary{list-style-position:inside}';
-document.head.appendChild(style);
-})();
-
-
-(function(){
-'use strict';
-// Multi-selezione indipendente per TUTTE le nuove lavorazioni.
-// Riutilizza il campo operators[] già previsto in extraSave/extraLoad.
-function namesFor(k){
- const current=extraOperators(extraRead(document.getElementById('date').value||today())[k]||{});
- return [...new Set([...(db.staff||[]),...(typeof extra!=='undefined'?extra:[]),...current].filter(Boolean))].sort((a,b)=>a.localeCompare(b,'it'));
-}
-function selected(el){return [...new Set([...el.querySelectorAll('[data-operator]')].map(x=>x.value).filter(Boolean))]}
-function makeSelector(key){
- const el=document.getElementById('extra-'+key);if(!el)return;
- const old=el.querySelector('[data-add-operator]');
- if(old)old.style.display='none';
- let panel=el.querySelector('.multi-operators-v4200');
- if(!panel){panel=document.createElement('details');panel.className='multi-operators-v4200';
- panel.style.cssText='border:1px solid #bdd5da;border-radius:8px;padding:10px;margin:10px 0;background:#f7fbfc';
- panel.innerHTML='<summary style="font-weight:700;cursor:pointer">👥 Seleziona più operatori <span data-count></span></summary><div data-checks style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:9px;padding:12px 0"></div><button type="button" class="btn" data-apply>✓ Conferma operatori</button><p class="small" data-status></p>';
- const list=el.querySelector('[data-operator-list]');list?.parentNode.insertBefore(panel,list);
- if(list)list.style.display='none';
+ const extra=extraRead(date);
+ for(const [key,label] of EXTRA_PHASES){const x=extra[key]||{},r=interval(x.start,x.end);if(!r)continue;
+  const names=Array.isArray(x.operators)?x.operators:(x.operator?[x.operator]:[]);
+  for(const name of [...new Set(names)])if(name)rows.push({name,type:label,start:r[0],end:r[1]});
  }
- const current=new Set(selected(el));
- const choices=panel.querySelector('[data-checks]');
- choices.innerHTML='';
- for(const name of namesFor(key)){
-  const label=document.createElement('label');label.style.cssText='display:flex;align-items:center;gap:8px;font-size:.9rem';
-  const box=document.createElement('input');box.type='checkbox';box.value=name;box.checked=current.has(name);
-  label.append(box,document.createTextNode(name));choices.append(label);
+ return rows;
+}
+impVisualDay=function(date){
+ const old=sourceDay(date),people=(date===($('date').value||today())?readForm().people:db.days[date]?.people)||{},rows=phaseAssignments(date),transfers=moves(date);
+ const names=new Set([...db.staff,...Object.keys(people),...rows.map(x=>x.name)]);
+ return [...names].filter(Boolean).map(name=>{
+  const person=people[name]||{},net=Number(person.minutes)||0,shift=interval(person.in,person.out);
+  const assigned=rows.filter(x=>x.name===name).map(x=>({...x}));
+  for(const m of transfers.filter(x=>x.name===name)){
+   const at=mins(m.at);if(at===null)continue;
+   for(const x of assigned){if(x.type===m.from&&x.start<at&&x.end>at)x.end=at;if(x.type===m.to&&x.start<at&&x.end>at)x.start=at;}
+  }
+  const ticks=new Set();if(shift){ticks.add(shift[0]);ticks.add(shift[1])}
+  for(const x of assigned){ticks.add(x.start);ticks.add(x.end)}
+  const pts=[...ticks].sort((a,b)=>a-b),classified={},overlaps=[];
+  for(let i=1;i<pts.length;i++){
+   const a=pts[i-1],b=pts[i];if(b<=a||shift&&(a<shift[0]||b>shift[1]))continue;
+   const active=assigned.filter(x=>x.start<b&&x.end>a);
+   if(active.length>1)overlaps.push([a,b]);
+   if(active.length!==1)continue;
+   classified[active[0].type]=(classified[active[0].type]||0)+(b-a);
+  }
+  let taken=Object.values(classified).reduce((a,b)=>a+b,0);
+  if(taken>net&&taken){for(const k in classified)classified[k]*=net/taken;taken=net}
+  let remaining=Math.max(0,net-taken),local=[];
+  try{local=JSON.parse(localStorage.getItem(IMP_KEY+'-'+date)||'[]')}catch(e){}
+  for(const r of (Array.isArray(local)?local:[]).filter(x=>x.name===name&&x.mode==='duration')){
+   const n=Math.min(remaining,Math.max(0,Number(r.duration)||0));
+   if(n){const label=r.type==='altro'?(r.custom||'Altro'):(IMP_LABELS[r.type]||r.type);classified[label]=(classified[label]||0)+n;remaining-=n}
+  }
+  if(remaining){const label=IMP_OFFICE.has(name.trim().toLocaleUpperCase('it'))?'Ufficio':'Da verificare';classified[label]=(classified[label]||0)+remaining}
+  return {name,net,classified,overlaps:overlaps.length>0,durationOverflow:false};
+ }).sort((a,b)=>a.name.localeCompare(b.name,'it'));
+};
+// Gli orari individuali vengono nascosti: i tempi sono quelli delle fasi e delle timbrature.
+function hideCrewTimes(){document.querySelectorAll('.crew-times').forEach(el=>el.style.display='none');document.querySelectorAll('.phase-crew').forEach(el=>{const note=el.querySelector('.crew-warning');if(note)note.textContent='Calcolo automatico dagli orari della fase e dalle presenze.'})}
+const previousCrew=renderCrew;renderCrew=function(k){previousCrew(k);hideCrewTimes()};
+const previousVisual=impVisualRender;
+impVisualRender=function(){
+ previousVisual();const el=$('imp-visual');if(!el)return;
+ const all=impVisualRange(),pending=all.filter(p=>(p.classified['Da verificare']||0)>0.5||p.overlaps||p.durationOverflow);
+ const cards=[...el.children];for(let i=cards.length-1;i>=0;i--)if(!pending.some(p=>p.name===all[i]?.name))cards[i].remove();
+ if(!pending.length)el.innerHTML='<p class="notice" style="background:#e1f4e8;color:#1a6038">✓ Tutte le ore sono attribuite. Nessuna verifica necessaria.</p>';
+ let summary=document.getElementById('imp-pending-count');if(!summary){summary=document.createElement('p');summary.id='imp-pending-count';el.parentNode.insertBefore(summary,el)}
+ summary.textContent=pending.length?'⚠ '+pending.length+' operatori da verificare':'✓ Nessuna anomalia';
+};
+const host=$('imp-visual');if(host){
+ const box=document.createElement('div');box.className='card';box.innerHTML='<h3>Trasferimento straordinario · Regia</h3><p class="small">Compila soltanto quando un operatore cambia fase mentre le lavorazioni si sovrappongono.</p><label>Operatore</label><select id="v421-name"></select><label>Fase di provenienza</label><select id="v421-from"></select><label>Fase di destinazione</label><select id="v421-to"></select><label>Ora effettiva del trasferimento</label><input id="v421-at" type="time"><label>Motivazione (facoltativa)</label><input id="v421-why"><button class="btn" type="button" id="v421-save" style="margin-top:10px">Registra trasferimento</button><div id="v421-history"></div><p class="small">Trasferimenti salvati localmente sul dispositivo.</p>';
+ host.parentNode.insertBefore(box,host);
+ const field=id=>document.getElementById(id);
+ function refresh(){const d=$('imp-reference').value||today(),rows=phaseAssignments(d),names=[...new Set([...db.staff,...rows.map(x=>x.name)])],phases=[...new Set(rows.map(x=>x.type))];
+  for(const [id,values] of [['v421-name',names],['v421-from',phases],['v421-to',phases]]){const el=field(id),old=el.value;el.innerHTML=values.map(x=>'<option value="'+escape(x)+'">'+escape(x)+'</option>').join('');if(values.includes(old))el.value=old}
+  field('v421-history').innerHTML=moves(d).map((x,i)=>'<p class="small">'+escape(x.name)+' · '+escape(x.from)+' → '+escape(x.to)+' · '+escape(x.at)+' <button type="button" data-delete="'+i+'">Elimina</button></p>').join('');
+  field('v421-history').querySelectorAll('[data-delete]').forEach(b=>b.onclick=()=>{const v=moves(d);v.splice(Number(b.dataset.delete),1);localStorage.setItem(moveKey(d),JSON.stringify(v));refresh();impVisualRender()});
  }
- const count=panel.querySelector('[data-count]');count.textContent='('+current.size+' selezionati)';
- panel.querySelector('[data-apply]').onclick=()=>{
-  const picked=[...choices.querySelectorAll('input:checked')].map(x=>x.value);
-  extraSetOperators(el,picked);
-  extraSave();
-  count.textContent='('+picked.length+' selezionati)';
-  panel.querySelector('[data-status]').textContent='✓ Salvati: '+(picked.join(', ')||'nessun operatore');
+ field('v421-save').onclick=()=>{const d=$('imp-reference').value||today(),name=field('v421-name').value,from=field('v421-from').value,to=field('v421-to').value,at=field('v421-at').value;
+  if(!name||!from||!to||from===to||!at)return alert('Compila operatore, fasi diverse e ora del trasferimento.');
+  const v=moves(d);v.push({name,from,to,at,reason:field('v421-why').value});localStorage.setItem(moveKey(d),JSON.stringify(v));refresh();impVisualRender();
  };
- panel.addEventListener('toggle',()=>{if(panel.open){const cur=new Set(selected(el));for(const cb of choices.querySelectorAll('input'))cb.checked=cur.has(cb.value)}},{once:false});
+ $('imp-reference').addEventListener('change',refresh);$('date').addEventListener('change',()=>setTimeout(refresh,80));refresh();
 }
-function refresh(){for(const [k] of EXTRA_PHASES)makeSelector(k)}
-refresh();
-document.getElementById('date')?.addEventListener('change',()=>setTimeout(refresh,30));
-const oldOpen=openDay;openDay=function(d){oldOpen(d);refresh()};
-const oldBlank=blank;blank=function(){oldBlank();refresh()};
+// Report separato: tutti gli operatori nel PDF, anche se il pannello mostra solo le anomalie.
+const btn=$('imp-print-pdf');if(btn){
+ const opts=document.createElement('div');opts.className='card';opts.innerHTML='<label>Stampa</label><select id="v421-scope"><option value="all">Tutti i dipendenti</option><option value="one">Singolo dipendente</option></select><select id="v421-person" style="display:none;margin-top:8px"></select><label>Progressivo incluso insieme al giornaliero</label><select id="v421-progress"><option value="week">Settimanale</option><option value="month" selected>Mensile</option><option value="all">Complessivo</option></select><p class="small" id="v421-pdf-status"></p>';
+ btn.parentNode.insertBefore(opts,btn);
+ const scope=$('v421-scope'),person=$('v421-person');person.innerHTML=db.staff.map(n=>'<option>'+escape(n)+'</option>').join('');scope.onchange=()=>person.style.display=scope.value==='one'?'':'none';
+ btn.onclick=()=>{
+  const date=$('imp-reference').value||today(),mode=$('v421-progress').value,start=new Date(date+'T12:00:00');
+  if(mode==='week')start.setDate(start.getDate()-(start.getDay()+6)%7);if(mode==='month')start.setDate(1);
+  const from=mode==='all'?'0000-01-01':[start.getFullYear(),String(start.getMonth()+1).padStart(2,'0'),String(start.getDate()).padStart(2,'0')].join('-');
+  const dates=[...new Set([...Object.keys(db.days),date])].filter(d=>d>=from&&d<=date).sort();
+  function collect(ds){const map=new Map();for(const d of ds)for(const p of impVisualDay(d)){if(!map.has(p.name))map.set(p.name,{name:p.name,net:0,classified:{},overlaps:false});const q=map.get(p.name);q.net+=p.net;q.overlaps ||=p.overlaps;for(const [k,v] of Object.entries(p.classified))q.classified[k]=(q.classified[k]||0)+v}return [...map.values()].filter(x=>scope.value==='all'||x.name===person.value).sort((a,b)=>a.name.localeCompare(b.name,'it'))}
+  function section(label,rows){return '<h2>'+label+'</h2>'+(rows.map(p=>'<section><h3>'+escape(p.name)+' · '+hfmt(Math.round(p.net))+'</h3><table>'+Object.entries(p.classified).filter(([,v])=>v>0).map(([k,v])=>'<tr><td>'+escape(k)+'</td><td>'+hfmt(Math.round(v))+'</td></tr>').join('')+'</table><p>Da verificare: '+hfmt(Math.round(p.classified['Da verificare']||0))+(p.overlaps?' · ⚠ Sovrapposizioni':'')+'</p></section>').join('')||'<p>Nessuna presenza</p>')}
+  const html='<!doctype html><html lang="it"><head><meta charset="utf-8"><title>Report personale Coromeu</title><style>@page{size:A4;margin:13mm}body{font:12px Arial;color:#163543}header{background:#123c52;color:white;padding:18px}h1{font-size:22px;margin:0}h2{border-bottom:2px solid #157e8b;padding-bottom:7px}section{border:1px solid #d8e4e7;border-radius:8px;padding:12px;margin:12px 0;break-inside:avoid}h3{margin:0 0 9px}table{width:100%;border-collapse:collapse}td{border-bottom:1px solid #e5ecee;padding:6px}td:last-child{text-align:right}@media print{header{print-color-adjust:exact;-webkit-print-color-adjust:exact}}</style></head><body><header><h1>COROMEU · IMPIEGO PERSONALE</h1><p>'+escape(date)+' · '+(scope.value==='all'?'Tutti':escape(person.value))+'</p></header>'+section('Giornaliero',collect([date]))+section('Progressivo '+(mode==='week'?'settimanale':mode==='month'?'mensile':'complessivo'),collect(dates))+'<p>Assegnazioni locali disponibili solo sul dispositivo corrente.</p></body></html>';
+  const win=window.open('','_blank');if(!win){$('v421-pdf-status').textContent='Consenti i popup di Safari.';return}win.document.open();win.document.write(html);win.document.close();$('v421-pdf-status').textContent='Report aperto: usa Condividi → Stampa / Salva PDF.';
+ };
+}
+hideCrewTimes();impVisualRender();document.querySelector('footer').textContent='Produttività Coromeu · Versione 4.21 TEST · Archivio Firebase invariato';
 })();
 
 </script></body></html>
